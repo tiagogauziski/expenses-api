@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Expenses.API</name>
+    </assembly>
+    <members>
+        <member name="T:Expenses.API.Controllers.ExpenseController">
+            <summary>
+            Expenses operations
+            </summary>
+        </member>
+        <member name="M:Expenses.API.Controllers.ExpenseController.#ctor">
+            <summary>
+            Initialize ExpenseController
+            </summary>
+        </member>
+        <member name="M:Expenses.API.Controllers.ExpenseController.Post">
+            <summary>
+            Create an expense entry
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
