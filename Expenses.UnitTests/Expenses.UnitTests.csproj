@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-    <ProjectReference Include="..\Expenses.Infrastructure\Expenses.Infrastructure.csproj" />
+    <ProjectReference Include="..\Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj" />
   </ItemGroup>
 
 </Project>

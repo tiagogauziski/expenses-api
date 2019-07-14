@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Domain", "Expenses
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Domain.Core", "Expenses.Domain.Core\Expenses.Domain.Core.csproj", "{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Infrastructure", "Expenses.Infrastructure\Expenses.Infrastructure.csproj", "{DFA2244C-F5F8-476A-8852-A40D1D872241}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Infra.EventBus", "Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj", "{DFA2244C-F5F8-476A-8852-A40D1D872241}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

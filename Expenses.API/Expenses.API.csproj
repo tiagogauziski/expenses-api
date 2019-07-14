@@ -25,7 +25,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Expenses.Domain.Core\Expenses.Domain.Core.csproj" />
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-    <ProjectReference Include="..\Expenses.Infrastructure\Expenses.Infrastructure.csproj" />
+    <ProjectReference Include="..\Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj" />
   </ItemGroup>
 
 </Project>

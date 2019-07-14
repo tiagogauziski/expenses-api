@@ -8,6 +8,8 @@ using Expenses.Domain.CommandHandlers;
 using Expenses.Domain.Commands;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
+using Expenses.Domain.EventHandlers;
+using Expenses.Domain.Events;
 using Expenses.Infrastructure.Bus;
 using Expenses.Infrastructure.EventStore;
 using MediatR;
@@ -56,6 +58,9 @@ namespace Expenses.API
 
             // Domain - Commands
             services.AddScoped<IRequestHandler<CreateInvoiceCommand, bool>, InvoiceCommandHandler>();
+
+            // Domain - Events
+            services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
