@@ -4,6 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Expenses.Domain.CommandHandlers;
+using Expenses.Domain.Commands;
+using Expenses.Domain.Core.Bus;
+using Expenses.Domain.Core.Events;
+using Expenses.Infrastructure.Bus;
+using Expenses.Infrastructure.EventStore;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -41,6 +48,14 @@ namespace Expenses.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            // Domain Bus (Mediator)
+            services.AddMediatR(typeof(Startup));
+            services.AddScoped<IMediatorHandler, InMemoryBus>();
+            services.AddScoped<IEventStore, InMemoryEventStore>();
+
+            // Domain - Commands
+            services.AddScoped<IRequestHandler<CreateInvoiceCommand, bool>, InvoiceCommandHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
