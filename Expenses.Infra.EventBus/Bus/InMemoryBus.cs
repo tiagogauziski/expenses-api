@@ -25,7 +25,7 @@ namespace Expenses.Infrastructure.Bus
             _eventStore = eventStore;
         }
 
-        public Task SendCommand<T>(T command) where T : Command
+        public Task<bool> SendCommand<T>(T command) where T : Command
         {
             return _mediator.Send(command);
         }

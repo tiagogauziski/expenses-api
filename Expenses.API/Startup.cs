@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Expenses.Application.Invoice;
 using Expenses.Domain.CommandHandlers;
 using Expenses.Domain.Commands;
 using Expenses.Domain.Core.Bus;
@@ -22,7 +23,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
-
+using AutoMapper;
+using Expenses.API.Extensions;
 
 namespace Expenses.API
 {
@@ -50,6 +52,12 @@ namespace Expenses.API
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+            //AutoMapper extension
+            services.AddAutoMapperExtension();
+
+            //Application Services
+            services.AddScoped<IInvoiceService, InvoiceService>();
 
             // Domain Bus (Mediator)
             services.AddMediatR(typeof(Startup));

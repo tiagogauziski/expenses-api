@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Expenses.Domain.Core.Events;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,14 +11,14 @@ namespace Expenses.API.Controllers
     /// <summary>
     /// Expenses operations
     /// </summary>
-    [Route("expenses")]
+    [Route("expense")]
     [ApiController]
-    public class ExpenseController : ControllerBase
+    public class ExpenseController : ApiController
     {
         /// <summary>
         /// Initialize ExpenseController
         /// </summary>
-        public ExpenseController()
+        public ExpenseController(IEventStore eventStore) : base(eventStore)
         {
 
         }
