@@ -7,6 +7,10 @@ namespace Expenses.Domain.Events
 {
     public class DomainValidationEvent : Event
     {
-        public string ValidationMessage { get; set; }
+        public DomainValidationEvent(string validationMessage)
+        {
+            ValidationMessage = validationMessage;
+        }
+        public string ValidationMessage { get; private set; }
     }
 }

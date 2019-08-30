@@ -10,9 +10,11 @@ namespace Expenses.Domain.EventHandlers
 {
     public class InvoiceEventHandler : INotificationHandler<InvoiceCreatedEvent>
     {
-        public Task Handle(InvoiceCreatedEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(InvoiceCreatedEvent notification, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
+            return;
         }
     }
 }
