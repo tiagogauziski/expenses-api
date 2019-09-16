@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Events;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,9 +11,16 @@ namespace Expenses.Domain.EventHandlers
 {
     public class InvoiceEventHandler : INotificationHandler<InvoiceCreatedEvent>
     {
+        private readonly ILogger<InvoiceEventHandler> _logger;
+
+        public InvoiceEventHandler(ILogger<InvoiceEventHandler> logger)
+        {
+            _logger = logger;
+        }
         public async Task Handle(InvoiceCreatedEvent notification, CancellationToken cancellationToken)
         {
             //throw new NotImplementedException();
+            _logger.LogInformation("InvoiceCreatedEvent: {invoice}", notification);
 
             return;
         }

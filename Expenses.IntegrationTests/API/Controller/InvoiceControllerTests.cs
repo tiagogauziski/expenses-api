@@ -26,7 +26,7 @@ namespace Expenses.IntegrationTests.API.Controller
             _factory = factory;
 
             //https://github.com/AutoMapper/AutoMapper/issues/2607
-            Mapper.Reset();
+            //Mapper.Reset();
 
             _client = _factory.WithWebHostBuilder(builder =>
             {
