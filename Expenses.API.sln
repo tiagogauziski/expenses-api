@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.705
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.API", "Expenses.API\Expenses.API.csproj", "{98FB756F-8CA1-4785-8988-AB31285594D4}"
 EndProject
@@ -15,7 +15,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Domain.Core", "Exp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infra.EventBus", "Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj", "{DFA2244C-F5F8-476A-8852-A40D1D872241}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{37AE7C9B-58A0-4393-8464-8AAAF2B48075}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{37AE7C9B-58A0-4393-8464-8AAAF2B48075}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Infra.EntityCore", "Expenses.Infra.EntityCore\Expenses.Infra.EntityCore.csproj", "{E840C193-C908-4FF4-BE3C-20CE171DE31A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{37AE7C9B-58A0-4393-8464-8AAAF2B48075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37AE7C9B-58A0-4393-8464-8AAAF2B48075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37AE7C9B-58A0-4393-8464-8AAAF2B48075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -28,7 +28,9 @@ namespace Expenses.Domain.CommandHandlers
 
             _mediatorHandler.RaiseEvent(new InvoiceCreatedEvent()
             {
-                Description = "Testing"
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                Description = request.Description
             });
 
             return Task.FromResult(true);
