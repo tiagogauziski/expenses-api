@@ -8,6 +8,7 @@ using Expenses.Domain.Commands;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
+using Expenses.Domain.Interfaces.Models;
 
 namespace Expenses.Application.Invoice
 {
@@ -35,7 +36,7 @@ namespace Expenses.Application.Invoice
             if (result)
             {
                 var invoiceEvent = _eventStore.GetEvent<InvoiceCreatedEvent>();
-                return _mapper.Map<InvoiceCreatedEvent, InvoiceResponse>(invoiceEvent);
+                return _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>((Domain.Models.Invoice)invoiceEvent.New);
             }
             return null;
         }

@@ -41,7 +41,7 @@ namespace Expenses.UnitTests.Application.Invoice
             //arrange
             _mocker.GetMock<IEventStore>()
                 .Setup(m => m.GetEvent<InvoiceCreatedEvent>())
-                .Returns(new InvoiceCreatedEvent());
+                .Returns(new InvoiceCreatedEvent() { New = new Expenses.Domain.Models.Invoice() } );
 
             //act
             var result = await _invoiceService.Create(new InvoiceRequest());
