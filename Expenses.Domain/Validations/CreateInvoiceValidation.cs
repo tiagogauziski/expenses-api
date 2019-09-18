@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Expenses.Domain.Validations
 {
-    public class CreateInvoiceValidation : InvoiceValidation<InvoiceCommand>
+    public class CreateInvoiceValidation : InvoiceValidation<CreateInvoiceCommand>
     {
         public CreateInvoiceValidation()
         {

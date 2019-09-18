@@ -12,7 +12,7 @@ namespace Expenses.Application.AutoMapper
     {
         public InvoiceProfile()
         {
-            CreateMap<InvoiceRequest, CreateInvoiceCommand>();
+            CreateMap<CreateInvoiceRequest, CreateInvoiceCommand>();
             CreateMap<CreateInvoiceCommand, Expenses.Domain.Models.Invoice>();
             CreateMap<Expenses.Domain.Models.Invoice, InvoiceResponse>();
         }

@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Expenses.API.ViewModel;
 using Expenses.Application.Invoice;
 using Expenses.Application.Invoice.ViewModel;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expenses.API.Controllers
@@ -20,22 +22,23 @@ namespace Expenses.API.Controllers
         private readonly IInvoiceService _invoiceService;
 
         public InvoiceController(IEventStore eventStore,
-            IInvoiceService invoiceService) : base(eventStore)
+            IInvoiceService invoiceService)
         {
             _invoiceService = invoiceService;
         }
 
         [HttpPost]
         [Route("")]
-        //[ProducesResponseType(typeof(JsonDiffStatusViewModel), StatusCodes.Status200OK)]
-        //[ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Post([FromBody]InvoiceRequest model)
+        [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
+        public async Task<IActionResult> Post([FromBody]CreateInvoiceRequest model)
         {
             var result = await _invoiceService.Create(model);
             if (result != null)
                 return SuccessResponse(result);
             else
-                return FailureResponse();
+                return FailureResponse(result);
         }
     }
 }

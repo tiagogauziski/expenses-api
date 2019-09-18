@@ -21,10 +21,6 @@ namespace Expenses.Domain.Validations
                 .Length(0, 500).WithMessage("The Name must have between 0 and 500 characters");
         }
 
-        protected void ValidateId()
-        {
-            RuleFor(i => i.Id)
-                .NotEqual(Guid.Empty);
-        }
+        
     }
 }

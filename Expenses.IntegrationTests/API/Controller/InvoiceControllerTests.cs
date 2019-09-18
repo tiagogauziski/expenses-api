@@ -41,20 +41,42 @@ namespace Expenses.IntegrationTests.API.Controller
         public async Task Post_SuccessResponse()
         {
             //arrange
-            InvoiceRequest model = new InvoiceRequest()
+            CreateInvoiceRequest model = new CreateInvoiceRequest()
             {
                 Name = "Name",
                 Description = "Description"
             };
 
             //act
-            var response = await _client.PostAsync("/invoice", 
+            var response = await _client.PostAsync("/invoice",
                 new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
             var content = await response.Content.ReadAsStringAsync();
             var responseViewModel = JsonConvert.DeserializeObject<InvoiceResponse>(content);
 
             //assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
+            Assert.Equal(model.Name, responseViewModel.Name);
+            Assert.Equal(model.Description, responseViewModel.Description);
+            Assert.NotEmpty(responseViewModel.Id.ToString());
+        }
+
+        [Fact]
+        public async Task Post_FailureResponse()
+        {
+            //arrange
+            CreateInvoiceRequest model = new CreateInvoiceRequest()
+            {
+                Description = "Description"
+            };
+
+            //act
+            var response = await _client.PostAsync("/invoice",
+                new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            var content = await response.Content.ReadAsStringAsync();
+            var responseViewModel = JsonConvert.DeserializeObject<InvoiceResponse>(content);
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.Equal(model.Name, responseViewModel.Name);
             Assert.Equal(model.Description, responseViewModel.Description);
             Assert.NotEmpty(responseViewModel.Id.ToString());

@@ -18,7 +18,7 @@ namespace Expenses.API.Controllers
         /// <summary>
         /// Initialize ExpenseController
         /// </summary>
-        public ExpenseController(IEventStore eventStore) : base(eventStore)
+        public ExpenseController()
         {
 
         }
