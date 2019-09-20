@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Expenses.Application.Invoice.ViewModel
 {
-    public class InvoiceRequest
+    public class CreateInvoiceRequest
     {
         public string Name { get; set; }
 

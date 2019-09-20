@@ -10,6 +10,7 @@ using Moq;
 using Moq.AutoMock;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -44,25 +45,42 @@ namespace Expenses.UnitTests.Application.Invoice
                 .Returns(new InvoiceCreatedEvent() { New = new Expenses.Domain.Models.Invoice() } );
 
             //act
-            var result = await _invoiceService.Create(new InvoiceRequest());
+            var result = await _invoiceService.Create(new CreateInvoiceRequest());
 
             //assess
             Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.Null(result.Error);
+            Assert.True(result.Successful);
+            Assert.Equal(HttpStatusCode.Created, result.StatusCode);
         }
 
         [Fact]
         public async void Create_FailureResult()
         {
             //arrange
+            const string ERROR_MESSAGE = "ErrorMessage";
+            const string ERROR_CODE = "ErrorCode";
+
+            _mocker.GetMock<IEventStore>()
+                .Setup(m => m.GetEvent<DomainValidationEvent>())
+                .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
+
             _mocker.GetMock<IMediatorHandler>()
                 .Setup(m => m.SendCommand(It.IsAny<CreateInvoiceCommand>()))
                 .ReturnsAsync(false);
 
             //act
-            var result = await _invoiceService.Create(new InvoiceRequest());
+            var result = await _invoiceService.Create(new CreateInvoiceRequest());
 
             //assess
-            Assert.Null(result);
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
+            Assert.NotNull(result.Error);
+            Assert.Equal(ERROR_MESSAGE, result.Error.Message);
+            Assert.Equal(ERROR_CODE, result.Error.ErrorCode);
+            Assert.False(result.Successful);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
     }
 }

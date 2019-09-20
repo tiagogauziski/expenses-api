@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Expenses.Application.Common;
 using Expenses.Application.Invoice.ViewModel;
 using Expenses.Domain.Commands;
 using Expenses.Domain.Core.Bus;
@@ -12,7 +13,7 @@ using Expenses.Domain.Interfaces.Models;
 
 namespace Expenses.Application.Invoice
 {
-    public class InvoiceService : IInvoiceService
+    public class InvoiceService : BaseService, IInvoiceService
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;
@@ -27,18 +28,26 @@ namespace Expenses.Application.Invoice
             _eventStore = eventStore;
         }
 
-        public async Task<InvoiceResponse> Create(InvoiceRequest viewModel)
+        public async Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest request)
         {
-            var createCommand = _mapper.Map<CreateInvoiceCommand>(viewModel);
+            var createCommand = _mapper.Map<CreateInvoiceCommand>(request);
 
             var result = await _mediatorHandler.SendCommand(createCommand);
 
             if (result)
             {
                 var invoiceEvent = _eventStore.GetEvent<InvoiceCreatedEvent>();
-                return _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>((Domain.Models.Invoice)invoiceEvent.New);
+
+                var data = _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>((Domain.Models.Invoice)invoiceEvent.New);
+
+                return SuccessfulResponse(data, invoiceEvent);
             }
-            return null;
+            else
+            {
+                var validationEvent = _eventStore.GetEvent<DomainValidationEvent>();
+
+                return FailureResponse<InvoiceResponse>(validationEvent);
+            }
         }
     }
 }

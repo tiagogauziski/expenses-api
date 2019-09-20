@@ -1,4 +1,5 @@
-﻿using Expenses.Application.Invoice.ViewModel;
+﻿using Expenses.Application.Common;
+using Expenses.Application.Invoice.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Expenses.Application.Invoice
 {
     public interface IInvoiceService
     {
-        Task<InvoiceResponse> Create(InvoiceRequest viewModel);
+        Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest viewModel);
     }
 }
