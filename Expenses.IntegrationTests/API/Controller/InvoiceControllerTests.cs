@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Expenses.API;
+using Expenses.API.ViewModel;
 using Expenses.Application.Invoice.ViewModel;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -51,13 +52,13 @@ namespace Expenses.IntegrationTests.API.Controller
             var response = await _client.PostAsync("/invoice",
                 new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
             var content = await response.Content.ReadAsStringAsync();
-            var responseViewModel = JsonConvert.DeserializeObject<InvoiceResponse>(content);
+            var responseViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(content);
 
             //assert
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
-            Assert.Equal(model.Name, responseViewModel.Name);
-            Assert.Equal(model.Description, responseViewModel.Description);
-            Assert.NotEmpty(responseViewModel.Id.ToString());
+            Assert.Equal(model.Name, responseViewModel.Data.Name);
+            Assert.Equal(model.Description, responseViewModel.Data.Description);
+            Assert.NotEmpty(responseViewModel.Data.Id.ToString());
         }
 
         [Fact]
@@ -73,13 +74,11 @@ namespace Expenses.IntegrationTests.API.Controller
             var response = await _client.PostAsync("/invoice",
                 new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
             var content = await response.Content.ReadAsStringAsync();
-            var responseViewModel = JsonConvert.DeserializeObject<InvoiceResponse>(content);
+            var responseViewModel = JsonConvert.DeserializeObject<FailureResponse>(content);
 
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal(model.Name, responseViewModel.Name);
-            Assert.Equal(model.Description, responseViewModel.Description);
-            Assert.NotEmpty(responseViewModel.Id.ToString());
+            Assert.NotNull(responseViewModel.Message);
         }
     }
 }

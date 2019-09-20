@@ -35,7 +35,7 @@ namespace Expenses.API.Controllers
         public async Task<IActionResult> Post([FromBody]CreateInvoiceRequest model)
         {
             var result = await _invoiceService.Create(model);
-            if (result != null)
+            if (result.Successful)
                 return SuccessResponse(result);
             else
                 return FailureResponse(result);

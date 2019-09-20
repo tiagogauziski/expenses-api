@@ -8,14 +8,19 @@ namespace Expenses.API.ViewModel
 {
     public class FailureResponse
     {
+        public FailureResponse()
+        {
+
+        }
+
         public FailureResponse(string message, string errorCode)
         {
             Message = message;
             Code = errorCode;
         }
 
-        public string Message { get; private set; }
+        public string Message { get; set; }
 
-        public string Code { get; private set; }
+        public string Code { get; set; }
     }
 }
