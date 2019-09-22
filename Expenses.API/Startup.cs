@@ -25,6 +25,9 @@ using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
 using Expenses.API.Extensions;
+using Expenses.Domain.Interfaces.Repositories;
+using Expenses.Infra.EntityCore.Repositories;
+using Expenses.Infra.EntityCore;
 
 namespace Expenses.API
 {
@@ -69,6 +72,12 @@ namespace Expenses.API
 
             // Domain - Events
             services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
+
+            // Infrastructure - Repositories
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+
+            // Infrastructre - DbContext Configuration
+            services.AddDbContext<ExpensesContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

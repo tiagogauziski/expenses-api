@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Expenses.Domain.Validations;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,7 +11,8 @@ namespace Expenses.Domain.Commands
 
         public override bool IsValid()
         {
-            throw new NotImplementedException();
+            ValidationResult = new UpdateInvoiceValidation().Validate(this);
+            return ValidationResult.IsValid;
         }
     }
 }
