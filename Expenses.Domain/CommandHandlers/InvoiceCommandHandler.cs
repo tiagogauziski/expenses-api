@@ -46,5 +46,33 @@ namespace Expenses.Domain.CommandHandlers
 
             return true;
         }
+
+        public async Task<bool> Handle(UpdateInvoiceCommand request, CancellationToken cancellationToken)
+        {
+            if (!request.IsValid())
+            {
+                await _mediatorHandler.RaiseEvent(new DomainValidationEvent(request.ValidationResult.ToString()));
+                return false;
+            }
+
+            var oldInvoice = _invoiceRepository.GetById(request.Id);
+            if (oldInvoice == null)
+            {
+                await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Invoice", "Invoice not found"));
+                return false;
+            }
+
+            var model = _mapper.Map<Invoice>(request);
+
+            _invoiceRepository.Update(model);
+
+            await _mediatorHandler.RaiseEvent(new InvoiceUpdatedEvent()
+            {
+                Old = oldInvoice,
+                New = model
+            });
+
+            return true;
+        }
     }
 }

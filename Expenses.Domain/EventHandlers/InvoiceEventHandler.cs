@@ -19,8 +19,14 @@ namespace Expenses.Domain.EventHandlers
         }
         public async Task Handle(InvoiceCreatedEvent notification, CancellationToken cancellationToken)
         {
-            //throw new NotImplementedException();
             _logger.LogInformation("InvoiceCreatedEvent: {invoice}", notification);
+
+            return;
+        }
+
+        public async Task Handle(InvoiceUpdatedEvent notification, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("InvoiceUpdatedEvent: {invoice}", notification);
 
             return;
         }

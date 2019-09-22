@@ -30,6 +30,10 @@ namespace Expenses.Application.Common
         {
             if (typeof(TEvent).GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICreatedEvent<>)))
                 return HttpStatusCode.Created;
+            else if (typeof(TEvent).GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IUpdatedEvent<>)))
+                return HttpStatusCode.OK;
+            else if (@event is NotFoundEvent)
+                return HttpStatusCode.NotFound;
             else if (@event is DomainValidationEvent)
                 return HttpStatusCode.BadRequest;
 

@@ -13,7 +13,9 @@ namespace Expenses.Application.AutoMapper
         public InvoiceProfile()
         {
             CreateMap<CreateInvoiceRequest, CreateInvoiceCommand>();
+            CreateMap<UpdateInvoiceRequest, UpdateInvoiceCommand>();
             CreateMap<CreateInvoiceCommand, Expenses.Domain.Models.Invoice>();
+            CreateMap<UpdateInvoiceCommand, Expenses.Domain.Models.Invoice>();
             CreateMap<Expenses.Domain.Models.Invoice, InvoiceResponse>();
         }
     }

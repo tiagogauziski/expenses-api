@@ -30,15 +30,37 @@ namespace Expenses.Application.Invoice
 
         public async Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest request)
         {
-            var createCommand = _mapper.Map<CreateInvoiceCommand>(request);
+            var command = _mapper.Map<CreateInvoiceCommand>(request);
 
-            var result = await _mediatorHandler.SendCommand(createCommand);
+            var result = await _mediatorHandler.SendCommand(command);
 
             if (result)
             {
                 var invoiceEvent = _eventStore.GetEvent<InvoiceCreatedEvent>();
 
-                var data = _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>((Domain.Models.Invoice)invoiceEvent.New);
+                var data = _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(invoiceEvent.New);
+
+                return SuccessfulResponse(data, invoiceEvent);
+            }
+            else
+            {
+                var validationEvent = _eventStore.GetEvent<DomainValidationEvent>();
+
+                return FailureResponse<InvoiceResponse>(validationEvent);
+            }
+        }
+
+        public async Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest request)
+        {
+            var command = _mapper.Map<UpdateInvoiceCommand>(request);
+
+            var result = await _mediatorHandler.SendCommand(command);
+
+            if (result)
+            {
+                var invoiceEvent = _eventStore.GetEvent<InvoiceUpdatedEvent>();
+
+                var data = _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(invoiceEvent.New);
 
                 return SuccessfulResponse(data, invoiceEvent);
             }
