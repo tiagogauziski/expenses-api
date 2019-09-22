@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 
 namespace Expenses.Domain.CommandHandlers
 {
-    public class InvoiceCommandHandler : IRequestHandler<CreateInvoiceCommand, bool>
+    public class InvoiceCommandHandler : 
+        IRequestHandler<CreateInvoiceCommand, bool>,
+        IRequestHandler<UpdateInvoiceCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;

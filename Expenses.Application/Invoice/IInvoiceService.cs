@@ -10,5 +10,6 @@ namespace Expenses.Application.Invoice
     public interface IInvoiceService
     {
         Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest viewModel);
+        Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest viewModel);
     }
 }

@@ -40,5 +40,21 @@ namespace Expenses.API.Controllers
             else
                 return FailureResponse(result);
         }
+
+        [HttpPut]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Put([FromRoute] string id, [FromBody]UpdateInvoiceRequest model)
+        {
+            model.Id = new Guid(id);
+            var result = await _invoiceService.Update(model);
+            if (result.Successful)
+                return SuccessResponse(result);
+            else
+                return FailureResponse(result);
+        }
     }
 }

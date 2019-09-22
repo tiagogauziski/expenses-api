@@ -33,7 +33,7 @@ namespace Expenses.Infrastructure.EventStore
         /// <returns>The event or null if it not found</returns>
         public TEvent GetEvent<TEvent>() where TEvent : Event
         {
-            return _events.FirstOrDefault(x => x.GetType() == typeof(TEvent)) as TEvent;
+            return _events.FirstOrDefault(x => x is TEvent) as TEvent;
         }
     }
 }

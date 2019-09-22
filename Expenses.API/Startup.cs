@@ -69,9 +69,11 @@ namespace Expenses.API
 
             // Domain - Commands
             services.AddScoped<IRequestHandler<CreateInvoiceCommand, bool>, InvoiceCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateInvoiceCommand, bool>, InvoiceCommandHandler>();
 
             // Domain - Events
             services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
+            services.AddScoped<INotificationHandler<InvoiceUpdatedEvent>, InvoiceEventHandler>();
 
             // Infrastructure - Repositories
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();

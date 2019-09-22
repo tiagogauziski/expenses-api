@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 
 namespace Expenses.Domain.EventHandlers
 {
-    public class InvoiceEventHandler : INotificationHandler<InvoiceCreatedEvent>
+    public class InvoiceEventHandler : 
+        INotificationHandler<InvoiceCreatedEvent>,
+        INotificationHandler<InvoiceUpdatedEvent>
     {
         private readonly ILogger<InvoiceEventHandler> _logger;
 
