@@ -29,6 +29,11 @@ namespace Expenses.Infra.EntityCore.Repositories
             return _expensesContext.Invoices.FirstOrDefault(i => i.Id == id);
         }
 
+        public Invoice GetByName(string name)
+        {
+            return _expensesContext.Invoices.FirstOrDefault(i => i.Name == name);
+        }
+
         public void Update(Invoice model)
         {
             _expensesContext.Invoices.Update(model);

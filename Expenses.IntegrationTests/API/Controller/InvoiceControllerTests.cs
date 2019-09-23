@@ -87,6 +87,35 @@ namespace Expenses.IntegrationTests.API.Controller
         }
 
         [Fact]
+        public async Task Post_FailureResponse_DuplicateValidation()
+        {
+            //arrange
+            CreateInvoiceRequest model = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+
+            //act
+            //call it once
+            var response = await _client.PostAsync("/invoice",
+                new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            if (!response.IsSuccessStatusCode)
+                Assert.True(response.IsSuccessStatusCode, "First call failed, should succeed. Verify");
+
+            //call it twice
+            response = await _client.PostAsync("/invoice",
+                new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+
+            var content = await response.Content.ReadAsStringAsync();
+            var responseViewModel = JsonConvert.DeserializeObject<FailureResponse>(content);
+
+            //assert
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+            Assert.NotNull(responseViewModel.Message);
+        }
+
+        [Fact]
         public async Task Put_FailureResponse_NotFound()
         {
             //arrange
@@ -131,7 +160,7 @@ namespace Expenses.IntegrationTests.API.Controller
         }
 
         [Fact]
-        public async Task Put_SuccessResponse()
+        public async Task Put_FailureResponse_DuplicateValidation()
         {
             //arrange
             CreateInvoiceRequest createModel = new CreateInvoiceRequest()
@@ -140,7 +169,55 @@ namespace Expenses.IntegrationTests.API.Controller
                 Description = "Description"
             };
 
-            
+            CreateInvoiceRequest createModelSecond = new CreateInvoiceRequest()
+            {
+                Name = "NameSecond",
+                Description = "Description"
+            };
+
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModelSecond), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error. Verify");
+
+            createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error. Verify");
+
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            UpdateInvoiceRequest updateModel = new UpdateInvoiceRequest()
+            {
+                Id = createViewModel.Data.Id,
+                Name = createModelSecond.Name,
+                Description = "Description"
+            };
+
+            var response = await _client.PutAsync($"/invoice/{updateModel.Id.ToString()}",
+                    new StringContent(JsonConvert.SerializeObject(updateModel), Encoding.UTF8, "application/json"));
+
+            var updateContent = await response.Content.ReadAsStringAsync();
+            var updateViewModel = JsonConvert.DeserializeObject<FailureResponse>(updateContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+            Assert.NotNull(updateViewModel.Message);
+        }
+
+        [Fact]
+        public async Task Put_SuccessResponse()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
 
             //act
             var createResponse = await _client.PostAsync($"/invoice/",

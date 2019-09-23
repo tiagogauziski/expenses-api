@@ -45,6 +45,11 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
                 .Setup(m => m.Create(It.IsAny<Invoice>()))
                 .Verifiable("IInvoiceRepository.Create should have been called");
 
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetByName(It.IsAny<string>()))
+                .Returns(value: null)
+                .Verifiable("IInvoiceRepository.GetByName should have been called");
+
             _mocker.GetMock<IMediatorHandler>()
                 .Setup(m => m.RaiseEvent(It.IsAny<InvoiceCreatedEvent>()))
                 .Verifiable("An event InvoiceCreatedEvent should have been raised");
@@ -81,6 +86,29 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
         }
 
         [Fact]
+        public async Task Handle_CreateInvoiceCommand_Failed_DuplicateInvoice()
+        {
+            //arrange
+            var command = new CreateInvoiceCommand()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetByName(It.IsAny<string>()))
+                .Returns(new Invoice())
+                .Verifiable("IInvoiceRepository.GetByName should have been called");
+
+            //act
+            var result = await _invoiceCommandHandler.Handle(command, new CancellationToken());
+
+            //assert
+            _mocker.GetMock<IInvoiceRepository>().Verify();
+            Assert.False(result);
+        }
+
+        [Fact]
         public async Task Handle_UpdateInvoiceCommand_Return_True()
         {
             //arrange
@@ -95,6 +123,11 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
                 .Setup(m => m.GetById(It.IsAny<Guid>()))
                 .Returns(new Invoice())
                 .Verifiable("IInvoiceRepository.GetById should have been called");
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetByName(It.IsAny<string>()))
+                .Returns(new Invoice() { Id = command.Id, Name = command.Name })
+                .Verifiable("IInvoiceRepository.GetByName should have been called");
 
             _mocker.GetMock<IInvoiceRepository>()
                 .Setup(m => m.Update(It.IsAny<Invoice>()))
@@ -137,6 +170,35 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
         }
 
         [Fact]
+        public async Task Handle_UpdateInvoiceCommand_Failed_DuplicateInvoice()
+        {
+            //arrange
+            var command = new UpdateInvoiceCommand()
+            {
+                Id = Guid.NewGuid(), 
+                Name = "Name",
+                Description = "Description"
+            };
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetById(It.IsAny<Guid>()))
+                .Returns(new Invoice())
+                .Verifiable("IInvoiceRepository.GetById should have been called");
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetByName(It.IsAny<string>()))
+                .Returns(new Invoice() { Id = Guid.NewGuid(), Name = command.Name })
+                .Verifiable("IInvoiceRepository.GetByName should have been called");
+
+            //act
+            var result = await _invoiceCommandHandler.Handle(command, new CancellationToken());
+
+            //assert
+            _mocker.GetMock<IInvoiceRepository>().Verify();
+            Assert.False(result);
+        }
+
+        [Fact]
         public async Task Handle_UpdateInvoiceCommand_InvoiceNotFound()
         {
             //arrange
@@ -150,7 +212,7 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
             _mocker.GetMock<IInvoiceRepository>()
                 .Setup(m => m.GetById(It.IsAny<Guid>()))
                 .Returns(value: null)
-                .Verifiable("IInvoiceRepository.GetById should have been called");;
+                .Verifiable("IInvoiceRepository.GetById should have been called");
 
             _mocker.GetMock<IMediatorHandler>()
                 .Setup(m => m.RaiseEvent(It.IsAny<NotFoundEvent>()))
