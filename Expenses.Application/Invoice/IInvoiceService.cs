@@ -11,5 +11,7 @@ namespace Expenses.Application.Invoice
     {
         Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest viewModel);
         Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest viewModel);
+
+        Task<Response<InvoiceResponse>> GetById(string guid);
     }
 }

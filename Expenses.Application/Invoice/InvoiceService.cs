@@ -50,6 +50,11 @@ namespace Expenses.Application.Invoice
             }
         }
 
+        public Task<Response<InvoiceResponse>> GetById(string guid)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest request)
         {
             var command = _mapper.Map<UpdateInvoiceCommand>(request);
