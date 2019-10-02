@@ -1,0 +1,48 @@
+﻿using Expenses.API.ViewModel;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+
+namespace Expenses.API.Middleware
+{
+    public class CustomExceptionMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly ILogger<CustomExceptionMiddleware> _logger;
+
+        public CustomExceptionMiddleware(RequestDelegate next, ILogger<CustomExceptionMiddleware> logger)
+        {
+            _logger = logger;
+            _next = next;
+        }
+
+        public async Task InvokeAsync(HttpContext httpContext)
+        {
+            try
+            {
+                await _next(httpContext);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Unhandled Exception: {ex}");
+                await HandleExceptionAsync(httpContext, ex);
+            }
+        }
+
+        private Task HandleExceptionAsync(HttpContext context, Exception exception)
+        {
+            context.Response.ContentType = "application/json";
+            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            return context.Response.WriteAsync(new FailureResponse()
+            {
+                Code = "",
+                Message = $"Internal Server Error. Please contact the administrator. RequestId: {context.TraceIdentifier}"
+            }.ToString());
+        }
+    }
+}
