@@ -56,5 +56,20 @@ namespace Expenses.API.Controllers
             else
                 return FailureResponse(result);
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetById([FromRoute] string id)
+        {
+            var result = await _invoiceService.GetById(id);
+            if (result.Successful)
+                return SuccessResponse(result);
+            else
+                return FailureResponse(result);
+        }
     }
 }

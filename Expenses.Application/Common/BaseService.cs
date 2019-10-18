@@ -21,9 +21,19 @@ namespace Expenses.Application.Common
             return new Response<TData>(data, GetStatusCode(@event));
         }
 
+        public Response<TData> SuccessfulResponse<TData>(TData data)
+        {
+            return new Response<TData>(data, HttpStatusCode.OK);
+        }
+
         public Response<TData> FailureResponse<TData>(DomainValidationEvent @event)
         {
             return new Response<TData>(new Error(@event), GetStatusCode(@event));
+        }
+
+        public Response<TData> FailureResponse<TData>(Error error, HttpStatusCode statusCode = HttpStatusCode.BadRequest)
+        {
+            return new Response<TData>(error, statusCode);
         }
 
         public HttpStatusCode GetStatusCode<TEvent>(TEvent @event) where TEvent : Event

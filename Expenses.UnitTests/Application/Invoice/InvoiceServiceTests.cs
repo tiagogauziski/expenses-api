@@ -6,6 +6,7 @@ using Expenses.Domain.Commands;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
+using Expenses.Domain.Interfaces.Repositories;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -141,6 +142,70 @@ namespace Expenses.UnitTests.Application.Invoice
             Assert.Equal(ERROR_CODE, result.Error.ErrorCode);
             Assert.False(result.Successful);
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async void GetById_InvalidGuid_Validation()
+        {
+            //arrange
+            const string INVALID_GUID = "123";
+
+            //act
+            var result = await _invoiceService.GetById(INVALID_GUID);
+
+            //assess
+            Assert.Null(result.Data);
+            Assert.NotNull(result.Error);
+            Assert.Equal("Invalid Guid", result.Error.Message);
+            Assert.False(result.Successful);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async void GetById_NotFound_Validation()
+        {
+            //arrange
+            string VALID_ID = Guid.NewGuid().ToString();
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(value: null);
+
+            //act
+            var result = await _invoiceService.GetById(VALID_ID);
+
+            //assess
+            Assert.Null(result.Data);
+            Assert.NotNull(result.Error);
+            Assert.Equal("Invoice not found", result.Error.Message);
+            Assert.False(result.Successful);
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+        }
+
+        [Fact]
+        public async void GetById_Success()
+        {
+            //arrange
+            Guid VALID_ID = Guid.NewGuid();
+            var invoice = new Expenses.Domain.Models.Invoice()
+            {
+                Id = VALID_ID,
+                Name = "Name",
+                Description = "Description"
+            };
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetById(It.IsAny<Guid>()))
+                .ReturnsAsync(value: invoice);
+
+            //act
+            var result = await _invoiceService.GetById(VALID_ID.ToString());
+
+            //assess
+            Assert.NotNull(result.Data);
+            Assert.Equal(invoice.Description, result.Data.Description);
+            Assert.Equal(invoice.Name, result.Data.Name);
+            Assert.Equal(invoice.Id, result.Data.Id);
         }
     }
 }

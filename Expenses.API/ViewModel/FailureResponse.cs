@@ -1,4 +1,5 @@
 ﻿using Expenses.Application.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,5 +23,10 @@ namespace Expenses.API.ViewModel
         public string Message { get; set; }
 
         public string Code { get; set; }
+
+        public override string ToString()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

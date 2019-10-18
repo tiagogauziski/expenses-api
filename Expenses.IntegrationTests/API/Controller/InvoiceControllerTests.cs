@@ -251,5 +251,72 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(updateModel.Name, updateViewModel.Data.Name);
             Assert.Equal(updateModel.Description, updateViewModel.Data.Description);
         }
+
+        [Fact]
+        public async Task GetById_FailureResponse_NotFound()
+        {
+            //arrange
+            Guid randomGuid = Guid.NewGuid();
+
+            //act
+            var response = await _client.GetAsync($"/invoice/{randomGuid.ToString()}");
+            var content = await response.Content.ReadAsStringAsync();
+            var responseViewModel = JsonConvert.DeserializeObject<FailureResponse>(content);
+
+            //assert
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.NotNull(responseViewModel.Message);
+        }
+
+        [Fact]
+        public async Task GetById_FailureResponse_FailedValidation()
+        {
+            //arrange
+            string invalidGuid = "INVALID_GUID";
+
+            //act
+            var response = await _client.GetAsync($"/invoice/{invalidGuid.ToString()}");
+            var content = await response.Content.ReadAsStringAsync();
+            var responseViewModel = JsonConvert.DeserializeObject<FailureResponse>(content);
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotNull(responseViewModel.Message);
+        }
+
+        [Fact]
+        public async Task GetById_SuccessResponse()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error");
+                return;
+            }
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            var response = await _client.GetAsync($"/invoice/{createViewModel.Data.Id.ToString()}");
+
+            var getContent = await response.Content.ReadAsStringAsync();
+            var getViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(getContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(getViewModel.Data);
+            Assert.Equal(createViewModel.Data.Id, getViewModel.Data.Id);
+            Assert.Equal(createViewModel.Data.Name, getViewModel.Data.Name);
+            Assert.Equal(createViewModel.Data.Description, getViewModel.Data.Description);
+        }
     }
 }
