@@ -1,6 +1,7 @@
 ﻿using Expenses.Domain.Interfaces.Models;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +25,9 @@ namespace Expenses.Infra.EntityCore.Repositories
             _expensesContext.SaveChanges();
         }
 
-        public Invoice GetById(Guid id)
+        public async Task<Invoice> GetById(Guid id)
         {
-            return _expensesContext.Invoices.FirstOrDefault(i => i.Id == id);
+            return await _expensesContext.Invoices.Where(i => i.Id == id).FirstOrDefaultAsync();
         }
 
         public void Update(Invoice model)

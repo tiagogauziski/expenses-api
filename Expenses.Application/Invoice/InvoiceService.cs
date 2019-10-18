@@ -10,68 +10,82 @@ using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Interfaces.Models;
+using Expenses.Domain.Interfaces.Repositories;
 
 namespace Expenses.Application.Invoice
 {
     public class InvoiceService : BaseService, IInvoiceService
     {
-        private readonly IMediatorHandler _mediatorHandler;
-        private readonly IMapper _mapper;
-        private readonly IEventStore _eventStore;
+        private readonly IMediatorHandler mediatorHandler;
+        private readonly IMapper mapper;
+        private readonly IEventStore eventStore;
+        private readonly IInvoiceRepository invoiceRepository;
 
         public InvoiceService(IMediatorHandler mediatorHandler,
             IMapper mapper,
-            IEventStore eventStore)
+            IEventStore eventStore,
+            IInvoiceRepository invoiceRepository)
         {
-            _mediatorHandler = mediatorHandler;
-            _mapper = mapper;
-            _eventStore = eventStore;
+            this.mediatorHandler = mediatorHandler;
+            this.mapper = mapper;
+            this.eventStore = eventStore;
+            this.invoiceRepository = invoiceRepository;
         }
 
         public async Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest request)
         {
-            var command = _mapper.Map<CreateInvoiceCommand>(request);
+            var command = mapper.Map<CreateInvoiceCommand>(request);
 
-            var result = await _mediatorHandler.SendCommand(command);
+            var result = await mediatorHandler.SendCommand(command);
 
             if (result)
             {
-                var invoiceEvent = _eventStore.GetEvent<InvoiceCreatedEvent>();
+                var invoiceEvent = eventStore.GetEvent<InvoiceCreatedEvent>();
 
-                var data = _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(invoiceEvent.New);
+                var data = mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(invoiceEvent.New);
 
                 return SuccessfulResponse(data, invoiceEvent);
             }
             else
             {
-                var validationEvent = _eventStore.GetEvent<DomainValidationEvent>();
+                var validationEvent = eventStore.GetEvent<DomainValidationEvent>();
 
                 return FailureResponse<InvoiceResponse>(validationEvent);
             }
         }
 
-        public Task<Response<InvoiceResponse>> GetById(string guid)
+        public async Task<Response<InvoiceResponse>> GetById(string id)
         {
-            throw new NotImplementedException();
+            if (!Guid.TryParse(id, out Guid guid))
+                return FailureResponse<InvoiceResponse>(new Error("Invalid Guid"), System.Net.HttpStatusCode.BadRequest);
+
+            var result = await invoiceRepository.GetById(guid);
+
+            if (result == null)
+                return FailureResponse<InvoiceResponse>(new Error("Invoice not found"), System.Net.HttpStatusCode.NotFound);
+
+            var data = mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(result);
+
+            return SuccessfulResponse(data);
         }
 
         public async Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest request)
         {
-            var command = _mapper.Map<UpdateInvoiceCommand>(request);
+            var command = mapper.Map<UpdateInvoiceCommand>(request);
 
-            var result = await _mediatorHandler.SendCommand(command);
+            var result = await mediatorHandler.SendCommand(command);
 
             if (result)
             {
-                var invoiceEvent = _eventStore.GetEvent<InvoiceUpdatedEvent>();
+                var invoiceEvent = eventStore.GetEvent<InvoiceUpdatedEvent>();
 
-                var data = _mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(invoiceEvent.New);
+                var data = mapper.Map<Expenses.Domain.Models.Invoice, InvoiceResponse>(invoiceEvent.New);
 
                 return SuccessfulResponse(data, invoiceEvent);
             }
             else
             {
-                var validationEvent = _eventStore.GetEvent<DomainValidationEvent>();
+                var validationEvent = eventStore.GetEvent<DomainValidationEvent>();
 
                 return FailureResponse<InvoiceResponse>(validationEvent);
             }

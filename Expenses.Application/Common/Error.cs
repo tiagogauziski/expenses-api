@@ -13,6 +13,12 @@ namespace Expenses.Application.Common
             ErrorCode = validation.ErrorCode;
         }
 
+        public Error(string message, string errorCode = null)
+        {
+            Message = message;
+            ErrorCode = errorCode;
+        }
+
         public string ErrorCode { get; set; }
 
         public string Message { get; set; }
