@@ -44,6 +44,8 @@ namespace Expenses.Application.Common
                 return HttpStatusCode.OK;
             else if (@event is NotFoundEvent)
                 return HttpStatusCode.NotFound;
+            else if (@event is DuplicatedRecordEvent)
+                return HttpStatusCode.Conflict;
             else if (@event is DomainValidationEvent)
                 return HttpStatusCode.BadRequest;
 

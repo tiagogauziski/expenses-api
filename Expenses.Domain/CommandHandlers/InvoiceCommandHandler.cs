@@ -37,6 +37,13 @@ namespace Expenses.Domain.CommandHandlers
                 return false;
             }
 
+            var getByName = _invoiceRepository.GetByName(request.Name);
+            if (getByName != null)
+            {
+                await _mediatorHandler.RaiseEvent(new DuplicatedRecordEvent("Name", "Invoice", "{0} is already present. Please select another Invoice Name"));
+                return false;
+            }
+
             var model = _mapper.Map<Invoice>(request);
 
             _invoiceRepository.Create(model);
@@ -61,6 +68,13 @@ namespace Expenses.Domain.CommandHandlers
             if (oldInvoice == null)
             {
                 await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Invoice", "Invoice not found"));
+                return false;
+            }
+
+            var getByName = _invoiceRepository.GetByName(request.Name);
+            if (getByName != null && getByName.Id != request.Id)
+            {
+                await _mediatorHandler.RaiseEvent(new DuplicatedRecordEvent("Name", "Invoice", "{0} is already present. Please select another Invoice Name"));
                 return false;
             }
 

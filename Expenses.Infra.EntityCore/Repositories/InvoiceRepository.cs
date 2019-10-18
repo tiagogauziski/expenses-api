@@ -30,6 +30,11 @@ namespace Expenses.Infra.EntityCore.Repositories
             return await _expensesContext.Invoices.Where(i => i.Id == id).FirstOrDefaultAsync();
         }
 
+        public Invoice GetByName(string name)
+        {
+            return _expensesContext.Invoices.FirstOrDefault(i => i.Name == name);
+        }
+
         public void Update(Invoice model)
         {
             _expensesContext.Invoices.Update(model);

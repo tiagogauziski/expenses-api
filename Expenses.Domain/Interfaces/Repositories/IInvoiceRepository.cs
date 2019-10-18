@@ -14,5 +14,7 @@ namespace Expenses.Domain.Interfaces.Repositories
         void Update(Invoice model);
 
         Task<Invoice> GetById(Guid id);
+      
+        Invoice GetByName(string name);
     }
 }
