@@ -182,7 +182,7 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
 
             _mocker.GetMock<IInvoiceRepository>()
                 .Setup(m => m.GetById(It.IsAny<Guid>()))
-                .Returns(new Invoice())
+                .ReturnsAsync(new Invoice())
                 .Verifiable("IInvoiceRepository.GetById should have been called");
 
             _mocker.GetMock<IInvoiceRepository>()
@@ -211,7 +211,7 @@ namespace Expenses.UnitTests.Domain.CommandHandlers
 
             _mocker.GetMock<IInvoiceRepository>()
                 .Setup(m => m.GetById(It.IsAny<Guid>()))
-                .Returns(value: null)
+                .ReturnsAsync(value: null)
                 .Verifiable("IInvoiceRepository.GetById should have been called");
 
             _mocker.GetMock<IMediatorHandler>()
