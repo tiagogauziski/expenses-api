@@ -17,7 +17,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infra.EventBus", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{37AE7C9B-58A0-4393-8464-8AAAF2B48075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Infra.EntityCore", "Expenses.Infra.EntityCore\Expenses.Infra.EntityCore.csproj", "{E840C193-C908-4FF4-BE3C-20CE171DE31A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infra.EntityCore", "Expenses.Infra.EntityCore\Expenses.Infra.EntityCore.csproj", "{E840C193-C908-4FF4-BE3C-20CE171DE31A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D57B417-CE7D-461A-A9E7-7558E7F33382}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
