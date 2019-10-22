@@ -6,6 +6,9 @@ namespace Expenses.Application.Invoice.ViewModel
 {
     public class UpdateInvoiceRequest : CreateInvoiceRequest
     {
+        /// <summary>
+        /// Invoice ID
+        /// </summary>
         public Guid Id { get; set; }
     }
 }

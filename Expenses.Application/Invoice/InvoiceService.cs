@@ -69,6 +69,11 @@ namespace Expenses.Application.Invoice
             return SuccessfulResponse(data);
         }
 
+        public Task<Response<InvoiceResponse>> GetList(GetListRequest query)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest request)
         {
             var command = mapper.Map<UpdateInvoiceCommand>(request);

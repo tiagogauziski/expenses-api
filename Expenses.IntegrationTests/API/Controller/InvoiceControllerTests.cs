@@ -318,5 +318,77 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Name, getViewModel.Data.Name);
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data.Description);
         }
+
+        [Fact]
+        public async Task GetList_ReturnList()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error");
+                return;
+            }
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            var response = await _client.GetAsync($"/invoice/");
+
+            var getContent = await response.Content.ReadAsStringAsync();
+            var getViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<List<InvoiceResponse>>>(getContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(getViewModel.Data);
+            Assert.NotEmpty(getViewModel.Data);
+            Assert.Equal(createViewModel.Data.Id, getViewModel.Data[0].Id);
+            Assert.Equal(createViewModel.Data.Name, getViewModel.Data[0].Name);
+            Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
+        }
+
+        [Fact]
+        public async Task GetList_ReturnNone()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error");
+                return;
+            }
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            var response = await _client.GetAsync($"/invoice/");
+
+            var getContent = await response.Content.ReadAsStringAsync();
+            var getViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<List<InvoiceResponse>>>(getContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(getViewModel.Data);
+            Assert.NotEmpty(getViewModel.Data);
+            Assert.Equal(createViewModel.Data.Id, getViewModel.Data[0].Id);
+            Assert.Equal(createViewModel.Data.Name, getViewModel.Data[0].Name);
+            Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
+        }
     }
 }

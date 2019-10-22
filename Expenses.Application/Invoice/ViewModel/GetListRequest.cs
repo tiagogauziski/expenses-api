@@ -1,19 +1,22 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Expenses.Application.Invoice.ViewModel
 {
-    public class CreateInvoiceRequest
+    /// <summary>
+    /// Search Invoice Parameters
+    /// </summary>
+    public class GetListRequest
     {
         /// <summary>
-        /// Invoice Name
+        /// Search by Invoice Name
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Invoice Description
+        /// Search by Invoice Description
         /// </summary>
         public string Description { get; set; }
     }

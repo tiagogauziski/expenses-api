@@ -10,8 +10,12 @@ namespace Expenses.Application.Invoice
     public interface IInvoiceService
     {
         Task<Response<InvoiceResponse>> Create(CreateInvoiceRequest viewModel);
+
         Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest viewModel);
 
-        Task<Response<InvoiceResponse>> GetById(string guid);
+        Task<Response<InvoiceResponse>> GetById(string id);
+
+        Task<Response<InvoiceResponse>> GetList(GetListRequest query);
+
     }
 }
