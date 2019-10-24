@@ -64,7 +64,7 @@ namespace Expenses.Domain.CommandHandlers
                 return false;
             }
 
-            var oldInvoice = await _invoiceRepository.GetById(request.Id);
+            var oldInvoice = _invoiceRepository.GetById(request.Id);
             if (oldInvoice == null)
             {
                 await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Invoice", "Invoice not found"));

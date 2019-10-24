@@ -97,7 +97,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById([FromQuery] GetListRequest query)
+        public async Task<IActionResult> GetById([FromQuery] GetInvoiceListRequest query)
         {
             var result = await _invoiceService.GetList(query);
             if (result.Successful)

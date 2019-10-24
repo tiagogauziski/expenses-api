@@ -7,6 +7,7 @@ using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Interfaces.Repositories;
+using Expenses.Domain.Queries.Invoice;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -169,7 +170,7 @@ namespace Expenses.UnitTests.Application.Invoice
 
             _mocker.GetMock<IInvoiceRepository>()
                 .Setup(m => m.GetById(It.IsAny<Guid>()))
-                .ReturnsAsync(value: null);
+                .Returns(value: null);
 
             //act
             var result = await _invoiceService.GetById(VALID_ID);
@@ -196,7 +197,7 @@ namespace Expenses.UnitTests.Application.Invoice
 
             _mocker.GetMock<IInvoiceRepository>()
                 .Setup(m => m.GetById(It.IsAny<Guid>()))
-                .ReturnsAsync(value: invoice);
+                .Returns(value: invoice);
 
             //act
             var result = await _invoiceService.GetById(VALID_ID.ToString());
@@ -206,6 +207,33 @@ namespace Expenses.UnitTests.Application.Invoice
             Assert.Equal(invoice.Description, result.Data.Description);
             Assert.Equal(invoice.Name, result.Data.Name);
             Assert.Equal(invoice.Id, result.Data.Id);
+        }
+
+        [Fact]
+        public async void GetList_Success()
+        {
+            //arrange
+            Guid VALID_ID = Guid.NewGuid();
+            var invoice = new Expenses.Domain.Models.Invoice()
+            {
+                Id = VALID_ID,
+                Name = "Name",
+                Description = "Description"
+            };
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetList(It.IsAny<GetInvoiceListQuery>()))
+                .Returns(value: new List<Expenses.Domain.Models.Invoice>() { invoice });
+
+            //act
+            var result = await _invoiceService.GetList(new GetInvoiceListRequest());
+
+            //assess
+            Assert.NotNull(result.Data);
+            Assert.NotEmpty(result.Data);
+            Assert.Equal(invoice.Description, result.Data[0].Description);
+            Assert.Equal(invoice.Name, result.Data[0].Name);
+            Assert.Equal(invoice.Id, result.Data[0].Id);
         }
     }
 }

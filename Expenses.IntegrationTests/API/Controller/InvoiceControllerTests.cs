@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -364,6 +365,10 @@ namespace Expenses.IntegrationTests.API.Controller
                 Name = "Name",
                 Description = "Description"
             };
+            NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+            queryString["name"] = "name1";
+            queryString["description"] = "description1";
 
             //act
             var createResponse = await _client.PostAsync($"/invoice/",
@@ -377,7 +382,82 @@ namespace Expenses.IntegrationTests.API.Controller
             var createContent = await createResponse.Content.ReadAsStringAsync();
             var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
 
-            var response = await _client.GetAsync($"/invoice/");
+            var response = await _client.GetAsync($"/invoice?{queryString.ToString()}");
+
+            var getContent = await response.Content.ReadAsStringAsync();
+            var getViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<List<InvoiceResponse>>>(getContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(getViewModel.Data);
+            Assert.Empty(getViewModel.Data);
+        }
+
+        [Fact]
+        public async Task GetList_QueryName()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+            queryString["name"] = "name";
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error");
+                return;
+            }
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            var response = await _client.GetAsync($"/invoice?{queryString.ToString()}");
+
+            var getContent = await response.Content.ReadAsStringAsync();
+            var getViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<List<InvoiceResponse>>>(getContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.NotNull(getViewModel.Data);
+            Assert.NotEmpty(getViewModel.Data);
+            Assert.Equal(createViewModel.Data.Id, getViewModel.Data[0].Id);
+            Assert.Equal(createViewModel.Data.Name, getViewModel.Data[0].Name);
+            Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
+        }
+
+        [Fact]
+        public async Task GetList_QueryDescription()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+            NameValueCollection queryString = System.Web.HttpUtility.ParseQueryString(string.Empty);
+
+            queryString["description"] = "description";
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error");
+                return;
+            }
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            var response = await _client.GetAsync($"/invoice?{queryString.ToString()}");
 
             var getContent = await response.Content.ReadAsStringAsync();
             var getViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<List<InvoiceResponse>>>(getContent);

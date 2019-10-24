@@ -11,6 +11,7 @@ using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Interfaces.Models;
 using Expenses.Domain.Interfaces.Repositories;
+using Expenses.Domain.Queries.Invoice;
 
 namespace Expenses.Application.Invoice
 {
@@ -59,7 +60,7 @@ namespace Expenses.Application.Invoice
             if (!Guid.TryParse(id, out Guid guid))
                 return FailureResponse<InvoiceResponse>(new Error("Invalid Guid"), System.Net.HttpStatusCode.BadRequest);
 
-            var result = await invoiceRepository.GetById(guid);
+            var result = invoiceRepository.GetById(guid);
 
             if (result == null)
                 return FailureResponse<InvoiceResponse>(new Error("Invoice not found"), System.Net.HttpStatusCode.NotFound);
@@ -69,9 +70,15 @@ namespace Expenses.Application.Invoice
             return SuccessfulResponse(data);
         }
 
-        public Task<Response<InvoiceResponse>> GetList(GetListRequest query)
+        public async Task<Response<List<InvoiceResponse>>> GetList(GetInvoiceListRequest request)
         {
-            throw new NotImplementedException();
+            var query = mapper.Map<GetInvoiceListQuery>(request);
+
+            var result = invoiceRepository.GetList(query);
+
+            var data = mapper.Map<List<Expenses.Domain.Models.Invoice>, List<InvoiceResponse>>(result);
+
+            return SuccessfulResponse(data);
         }
 
         public async Task<Response<InvoiceResponse>> Update(UpdateInvoiceRequest request)

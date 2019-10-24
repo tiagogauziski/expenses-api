@@ -1,6 +1,7 @@
 ﻿using Expenses.Domain.Interfaces.Models;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Domain.Queries.Invoice;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,14 +26,27 @@ namespace Expenses.Infra.EntityCore.Repositories
             _expensesContext.SaveChanges();
         }
 
-        public async Task<Invoice> GetById(Guid id)
+        public Invoice GetById(Guid id)
         {
-            return await _expensesContext.Invoices.Where(i => i.Id == id).FirstOrDefaultAsync();
+            return _expensesContext.Invoices.Where(i => i.Id == id).FirstOrDefault();
         }
 
         public Invoice GetByName(string name)
         {
             return _expensesContext.Invoices.FirstOrDefault(i => i.Name == name);
+        }
+
+        public List<Invoice> GetList(GetInvoiceListQuery query)
+        {
+            var invoiceList = _expensesContext.Invoices.AsQueryable();
+
+            if (!string.IsNullOrEmpty(query.Name))
+                invoiceList = invoiceList.Where(i => i.Name.IndexOf(query.Name, StringComparison.OrdinalIgnoreCase) != -1);
+
+            if (!string.IsNullOrEmpty(query.Description))
+                invoiceList = invoiceList.Where(i => i.Description.IndexOf(query.Description, StringComparison.OrdinalIgnoreCase) != -1);
+
+            return invoiceList.ToList();
         }
 
         public void Update(Invoice model)

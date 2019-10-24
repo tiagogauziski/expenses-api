@@ -8,7 +8,7 @@ namespace Expenses.Application.Invoice.ViewModel
     /// <summary>
     /// Search Invoice Parameters
     /// </summary>
-    public class GetListRequest
+    public class GetInvoiceListRequest
     {
         /// <summary>
         /// Search by Invoice Name

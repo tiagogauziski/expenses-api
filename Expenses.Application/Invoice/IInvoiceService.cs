@@ -15,7 +15,7 @@ namespace Expenses.Application.Invoice
 
         Task<Response<InvoiceResponse>> GetById(string id);
 
-        Task<Response<InvoiceResponse>> GetList(GetListRequest query);
+        Task<Response<List<InvoiceResponse>>> GetList(GetInvoiceListRequest query);
 
     }
 }
