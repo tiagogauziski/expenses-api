@@ -3,6 +3,8 @@ Open source project written in .NET Core 2.2.
 
 The goal of this project is to implement a sample API with commonly used technologies and different architecture choices.
 
+[![Build Status](https://travis-ci.com/tiagogauziski/expenses-api.svg?branch=master)](https://travis-ci.com/tiagogauziski/expenses-api)
+
 # How to test
 Execute the following command on the project folder:
 ```
