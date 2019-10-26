@@ -16,7 +16,9 @@ namespace Expenses.Infra.EntityCore
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInMemoryDatabase("Expenses").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            optionsBuilder
+                .UseInMemoryDatabase("Expenses")
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
     }
 }

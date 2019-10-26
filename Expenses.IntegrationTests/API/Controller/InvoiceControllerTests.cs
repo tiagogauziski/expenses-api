@@ -21,27 +21,20 @@ using Xunit;
 namespace Expenses.IntegrationTests.API.Controller
 {
     public class InvoiceControllerTests
-        : IClassFixture<WebApplicationFactory<Startup>>
+        : IClassFixture<CustomWebApplicationFactory<Startup>>, IDisposable
     {
-        private readonly WebApplicationFactory<Startup> _factory;
+        private readonly CustomWebApplicationFactory<Startup> _factory;
         private readonly HttpClient _client;
 
-        public InvoiceControllerTests(WebApplicationFactory<Startup> factory)
+        public InvoiceControllerTests(CustomWebApplicationFactory<Startup> factory)
         {
             _factory = factory;
 
             //https://github.com/AutoMapper/AutoMapper/issues/2607
             //Mapper.Reset();
 
-            _client = _factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    //replace any services for the testing
-                    services.AddDbContext<ExpensesContext>(c =>
-                        c.UseInMemoryDatabase("Expenses").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
-                });
-            }).CreateClient();
+            _client = _factory.CreateClient(new WebApplicationFactoryClientOptions() { AllowAutoRedirect = false });
+            //System.Diagnostics.Debug.WriteLine("Testing...");
         }
 
         [Fact]
@@ -469,6 +462,12 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Id, getViewModel.Data[0].Id);
             Assert.Equal(createViewModel.Data.Name, getViewModel.Data[0].Name);
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
+        }
+
+        public void Dispose()
+        {
+            _factory.Dispose();
+            _client.Dispose();
         }
     }
 }
