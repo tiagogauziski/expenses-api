@@ -41,10 +41,10 @@ namespace Expenses.Infra.EntityCore.Repositories
             var invoiceList = _expensesContext.Invoices.AsQueryable();
 
             if (!string.IsNullOrEmpty(query.Name))
-                invoiceList = invoiceList.Where(i => i.Name.IndexOf(query.Name, StringComparison.OrdinalIgnoreCase) != -1);
+                invoiceList = invoiceList.Where(i => EF.Functions.Like(i.Name, $"%{query.Name}%"));
 
             if (!string.IsNullOrEmpty(query.Description))
-                invoiceList = invoiceList.Where(i => i.Description.IndexOf(query.Description, StringComparison.OrdinalIgnoreCase) != -1);
+                invoiceList = invoiceList.Where(i => EF.Functions.Like(i.Description, $"%{query.Description}%"));
 
             return invoiceList.ToList();
         }
