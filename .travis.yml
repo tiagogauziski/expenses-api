@@ -1,7 +1,6 @@
 language: csharp
-dist: xenial
 mono: none
-dotnet: 3.0.*
+dotnet: 3.0.100
 install:
 - dotnet restore
 script:
