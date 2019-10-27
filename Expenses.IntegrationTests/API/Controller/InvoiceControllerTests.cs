@@ -21,14 +21,15 @@ using Xunit;
 namespace Expenses.IntegrationTests.API.Controller
 {
     public class InvoiceControllerTests
-        : IClassFixture<CustomWebApplicationFactory<Startup>>, IDisposable
+        : IClassFixture<CustomWebApplicationFactorySqlite<Startup>>
     {
-        private readonly CustomWebApplicationFactory<Startup> _factory;
+        private readonly CustomWebApplicationFactorySqlite<Startup> _factory;
         private readonly HttpClient _client;
 
-        public InvoiceControllerTests(CustomWebApplicationFactory<Startup> factory)
+        public InvoiceControllerTests(CustomWebApplicationFactorySqlite<Startup> factory)
         {
-            _factory = factory;
+            _factory = new CustomWebApplicationFactorySqlite<Startup>();
+            //_factory = factory;
 
             //https://github.com/AutoMapper/AutoMapper/issues/2607
             //Mapper.Reset();
@@ -464,10 +465,5 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
         }
 
-        public void Dispose()
-        {
-            _factory.Dispose();
-            _client.Dispose();
-        }
     }
 }

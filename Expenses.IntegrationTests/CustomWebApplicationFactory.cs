@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
@@ -18,10 +20,6 @@ namespace Expenses.IntegrationTests
         {
             builder.ConfigureServices(services =>
             {
-                var serviceProvider = new ServiceCollection()
-                    .AddEntityFrameworkInMemoryDatabase()
-                    .BuildServiceProvider();
-
                 // Remove the app's ApplicationDbContext registration.
                 var descriptor = services.SingleOrDefault(
                     d => d.ServiceType ==
@@ -31,15 +29,16 @@ namespace Expenses.IntegrationTests
                     services.Remove(descriptor);
 
                 // Add ApplicationDbContext using an in-memory database for testing.
+                services.AddEntityFrameworkInMemoryDatabase();
                 services.AddDbContext<ExpensesContext>((context) =>
                 {
-                    context.UseInMemoryDatabase("InMemoryDbForTesting")
-                        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
-                        .UseInternalServiceProvider(serviceProvider)
-                        .UseApplicationServiceProvider(serviceProvider);
+                    context.UseInMemoryDatabase(Guid.NewGuid().ToString(), new InMemoryDatabaseRoot())
+                        .EnableServiceProviderCaching(false)
+                        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
                 });
 
             });
         }
+
     }
 }
