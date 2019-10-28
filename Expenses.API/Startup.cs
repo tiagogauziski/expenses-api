@@ -29,6 +29,7 @@ using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Infra.EntityCore.Repositories;
 using Expenses.Infra.EntityCore;
 using Expenses.API.Middleware;
+using Microsoft.Extensions.Hosting;
 
 namespace Expenses.API
 {
@@ -84,7 +85,7 @@ namespace Expenses.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<CustomExceptionMiddleware>();
             if (env.IsDevelopment())

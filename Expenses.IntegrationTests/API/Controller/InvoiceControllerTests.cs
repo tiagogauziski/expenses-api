@@ -29,13 +29,8 @@ namespace Expenses.IntegrationTests.API.Controller
         public InvoiceControllerTests(CustomWebApplicationFactorySqlite<Startup> factory)
         {
             _factory = new CustomWebApplicationFactorySqlite<Startup>();
-            //_factory = factory;
-
-            //https://github.com/AutoMapper/AutoMapper/issues/2607
-            //Mapper.Reset();
 
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions() { AllowAutoRedirect = false });
-            //System.Diagnostics.Debug.WriteLine("Testing...");
         }
 
         [Fact]
