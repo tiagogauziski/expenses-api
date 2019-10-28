@@ -21,27 +21,16 @@ using Xunit;
 namespace Expenses.IntegrationTests.API.Controller
 {
     public class InvoiceControllerTests
-        : IClassFixture<WebApplicationFactory<Startup>>
+        : IClassFixture<CustomWebApplicationFactorySqlite<Startup>>
     {
-        private readonly WebApplicationFactory<Startup> _factory;
+        private readonly CustomWebApplicationFactorySqlite<Startup> _factory;
         private readonly HttpClient _client;
 
-        public InvoiceControllerTests(WebApplicationFactory<Startup> factory)
+        public InvoiceControllerTests(CustomWebApplicationFactorySqlite<Startup> factory)
         {
-            _factory = factory;
+            _factory = new CustomWebApplicationFactorySqlite<Startup>();
 
-            //https://github.com/AutoMapper/AutoMapper/issues/2607
-            //Mapper.Reset();
-
-            _client = _factory.WithWebHostBuilder(builder =>
-            {
-                builder.ConfigureTestServices(services =>
-                {
-                    //replace any services for the testing
-                    services.AddDbContext<ExpensesContext>(c =>
-                        c.UseInMemoryDatabase("Expenses").UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
-                });
-            }).CreateClient();
+            _client = _factory.CreateClient(new WebApplicationFactoryClientOptions() { AllowAutoRedirect = false });
         }
 
         [Fact]
@@ -470,5 +459,6 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Name, getViewModel.Data[0].Name);
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
         }
+
     }
 }

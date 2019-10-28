@@ -29,6 +29,7 @@ using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Infra.EntityCore.Repositories;
 using Expenses.Infra.EntityCore;
 using Expenses.API.Middleware;
+using Microsoft.Extensions.Hosting;
 
 namespace Expenses.API
 {
@@ -44,12 +45,12 @@ namespace Expenses.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info { Title = "JSONDiffer API", Version = "v1" });
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "JSONDiffer API", Version = "v1" });
 
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -84,7 +85,7 @@ namespace Expenses.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseMiddleware<CustomExceptionMiddleware>();
             if (env.IsDevelopment())
@@ -109,7 +110,12 @@ namespace Expenses.API
             }); 
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+            });
         }
     }
 }
