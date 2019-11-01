@@ -460,5 +460,70 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
         }
 
+        [Fact]
+        public async Task Delete_FailureResponse_InvalidGuid()
+        {
+            //arrange
+            string invalidGuid = "INVALID_GUID";
+
+            //act
+            var deleteResponse = await _client.DeleteAsync($"/invoice/{invalidGuid}");
+
+            var deleteContent = await deleteResponse.Content.ReadAsStringAsync();
+            var deleteViewModel = JsonConvert.DeserializeObject<FailureResponse>(deleteContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, deleteResponse.StatusCode);
+            Assert.NotEmpty(deleteViewModel.Message);
+        }
+
+        [Fact]
+        public async Task Delete_FailureResponse_NotFound()
+        {
+            //arrange
+            string validGuid = Guid.NewGuid().ToString();
+
+            //act
+            var deleteResponse = await _client.DeleteAsync($"/invoice/{validGuid}");
+
+            var deleteContent = await deleteResponse.Content.ReadAsStringAsync();
+            var deleteViewModel = JsonConvert.DeserializeObject<FailureResponse>(deleteContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.NotFound, deleteResponse.StatusCode);
+            Assert.NotEmpty(deleteViewModel.Message);
+        }
+
+        [Fact]
+        public async Task Delete_SuccessResponse()
+        {
+            //arrange
+            CreateInvoiceRequest createModel = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description"
+            };
+
+            //act
+            var createResponse = await _client.PostAsync($"/invoice/",
+                new StringContent(JsonConvert.SerializeObject(createModel), Encoding.UTF8, "application/json"));
+            if (!createResponse.IsSuccessStatusCode)
+            {
+                Assert.True(createResponse.IsSuccessStatusCode, "POST /invoice/ is failing with an error");
+                return;
+            }
+
+            var createContent = await createResponse.Content.ReadAsStringAsync();
+            var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
+
+            var deleteResponse = await _client.GetAsync($"/invoice?{createViewModel.Data.Id}");
+
+            var deleteContent = await deleteResponse.Content.ReadAsStringAsync();
+            var deleteViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<string>>(deleteContent);
+
+            //assert
+            Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
+            Assert.Null(deleteViewModel.Data);
+        }
     }
 }
