@@ -26,6 +26,13 @@ namespace Expenses.Infra.EntityCore.Repositories
             _expensesContext.SaveChanges();
         }
 
+        public void Delete(Guid id)
+        {
+            var invoice = _expensesContext.Invoices.FirstOrDefault(i => i.Id == id);
+            _expensesContext.Invoices.Remove(invoice);
+            _expensesContext.SaveChanges();
+        }
+
         public Invoice GetById(Guid id)
         {
             return _expensesContext.Invoices.Where(i => i.Id == id).FirstOrDefault();

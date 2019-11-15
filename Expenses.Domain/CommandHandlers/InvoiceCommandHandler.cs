@@ -14,7 +14,8 @@ namespace Expenses.Domain.CommandHandlers
 {
     public class InvoiceCommandHandler : 
         IRequestHandler<CreateInvoiceCommand, bool>,
-        IRequestHandler<UpdateInvoiceCommand, bool>
+        IRequestHandler<UpdateInvoiceCommand, bool>,
+        IRequestHandler<DeleteInvoiceCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;
@@ -86,6 +87,31 @@ namespace Expenses.Domain.CommandHandlers
             {
                 Old = oldInvoice,
                 New = model
+            });
+
+            return true;
+        }
+
+        public async Task<bool> Handle(DeleteInvoiceCommand request, CancellationToken cancellationToken)
+        {
+            if (!request.IsValid())
+            {
+                await _mediatorHandler.RaiseEvent(new DomainValidationEvent(request.ValidationResult.ToString()));
+                return false;
+            }
+
+            var oldInvoice = _invoiceRepository.GetById(request.Id);
+            if (oldInvoice == null)
+            {
+                await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Invoice", "Invoice not found"));
+                return false;
+            }
+
+            _invoiceRepository.Delete(request.Id);
+
+            await _mediatorHandler.RaiseEvent(new InvoiceDeletedEvent()
+            {
+                Old = oldInvoice
             });
 
             return true;

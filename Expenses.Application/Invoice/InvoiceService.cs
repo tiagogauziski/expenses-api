@@ -55,6 +55,30 @@ namespace Expenses.Application.Invoice
             }
         }
 
+        public async Task<Response<bool>> Delete(string id)
+        {
+            if (!Guid.TryParse(id, out Guid guid))
+                return FailureResponse<bool>(new Error("Invalid Guid"), System.Net.HttpStatusCode.BadRequest);
+
+            var command = new DeleteInvoiceCommand();
+            command.Id = guid;
+
+            var result = await mediatorHandler.SendCommand(command);
+
+            if (result)
+            {
+                var invoiceEvent = eventStore.GetEvent<InvoiceDeletedEvent>();
+
+                return SuccessfulResponse(true, invoiceEvent);
+            }
+            else
+            {
+                var validationEvent = eventStore.GetEvent<DomainValidationEvent>();
+
+                return FailureResponse<bool>(validationEvent);
+            }
+        }
+
         public async Task<Response<InvoiceResponse>> GetById(string id)
         {
             if (!Guid.TryParse(id, out Guid guid))

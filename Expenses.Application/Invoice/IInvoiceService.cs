@@ -17,5 +17,6 @@ namespace Expenses.Application.Invoice
 
         Task<Response<List<InvoiceResponse>>> GetList(GetInvoiceListRequest query);
 
+        Task<Response<bool>> Delete(string id);
     }
 }

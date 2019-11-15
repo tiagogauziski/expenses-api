@@ -516,14 +516,14 @@ namespace Expenses.IntegrationTests.API.Controller
             var createContent = await createResponse.Content.ReadAsStringAsync();
             var createViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<InvoiceResponse>>(createContent);
 
-            var deleteResponse = await _client.GetAsync($"/invoice?{createViewModel.Data.Id}");
+            var deleteResponse = await _client.DeleteAsync($"/invoice/{createViewModel.Data.Id}");
 
             var deleteContent = await deleteResponse.Content.ReadAsStringAsync();
-            var deleteViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<string>>(deleteContent);
+            var deleteViewModel = JsonConvert.DeserializeObject<SuccessfulResponse<bool>>(deleteContent);
 
             //assert
             Assert.Equal(HttpStatusCode.OK, deleteResponse.StatusCode);
-            Assert.Null(deleteViewModel.Data);
+            Assert.True(deleteViewModel.Data);
         }
     }
 }

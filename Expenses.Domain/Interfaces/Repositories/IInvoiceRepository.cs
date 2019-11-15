@@ -14,6 +14,8 @@ namespace Expenses.Domain.Interfaces.Repositories
 
         void Update(Invoice model);
 
+        void Delete(Guid id);
+
         Invoice GetById(Guid id);
       
         Invoice GetByName(string name);

@@ -105,5 +105,24 @@ namespace Expenses.API.Controllers
             else
                 return FailureResponse(result);
         }
+
+        /// <summary>
+        /// Delete Invoice
+        /// </summary>
+        /// <param name="id">Invoice ID</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("{id}")]
+        [ProducesResponseType(typeof(SuccessfulResponse<string>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> Delete([FromRoute] string id)
+        {
+            var result = await _invoiceService.Delete(id);
+            if (result.Successful)
+                return SuccessResponse(result);
+            else
+                return FailureResponse(result);
+        }
     }
 }

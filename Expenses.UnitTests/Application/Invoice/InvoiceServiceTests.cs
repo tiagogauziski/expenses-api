@@ -235,5 +235,53 @@ namespace Expenses.UnitTests.Application.Invoice
             Assert.Equal(invoice.Name, result.Data[0].Name);
             Assert.Equal(invoice.Id, result.Data[0].Id);
         }
+
+        [Fact]
+        public async void Delete_SuccessfulResult()
+        {
+            //arrange
+            _mocker.GetMock<IEventStore>()
+                .Setup(m => m.GetEvent<InvoiceDeletedEvent>())
+                .Returns(new InvoiceDeletedEvent() { Old = new Expenses.Domain.Models.Invoice() });
+
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.SendCommand(It.IsAny<DeleteInvoiceCommand>()))
+                .ReturnsAsync(true);
+
+            //act
+            var result = await _invoiceService.Delete(Guid.NewGuid().ToString());
+
+            //assess
+            Assert.NotNull(result);
+            Assert.True(result.Successful);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async void Delete_FailureResult()
+        {
+            //arrange
+            const string ERROR_MESSAGE = "ErrorMessage";
+            const string ERROR_CODE = "ErrorCode";
+
+            _mocker.GetMock<IEventStore>()
+                .Setup(m => m.GetEvent<DomainValidationEvent>())
+                .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
+
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.SendCommand(It.IsAny<DeleteInvoiceCommand>()))
+                .ReturnsAsync(false);
+
+            //act
+            var result = await _invoiceService.Delete(Guid.NewGuid().ToString());
+
+            //assess
+            Assert.NotNull(result);
+            Assert.NotNull(result.Error);
+            Assert.Equal(ERROR_MESSAGE, result.Error.Message);
+            Assert.Equal(ERROR_CODE, result.Error.ErrorCode);
+            Assert.False(result.Successful);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
     }
 }
