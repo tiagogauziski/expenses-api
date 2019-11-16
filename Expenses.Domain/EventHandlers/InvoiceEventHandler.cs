@@ -11,7 +11,8 @@ namespace Expenses.Domain.EventHandlers
 {
     public class InvoiceEventHandler : 
         INotificationHandler<InvoiceCreatedEvent>,
-        INotificationHandler<InvoiceUpdatedEvent>
+        INotificationHandler<InvoiceUpdatedEvent>,
+        INotificationHandler<InvoiceDeletedEvent>
     {
         private readonly ILogger<InvoiceEventHandler> _logger;
 
@@ -29,6 +30,13 @@ namespace Expenses.Domain.EventHandlers
         public async Task Handle(InvoiceUpdatedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation("InvoiceUpdatedEvent: {invoice}", notification);
+
+            return;
+        }
+
+        public async Task Handle(InvoiceDeletedEvent notification, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("InvoiceDeletedEvent: {invoice}", notification);
 
             return;
         }

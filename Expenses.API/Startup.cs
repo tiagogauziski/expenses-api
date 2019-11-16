@@ -77,6 +77,7 @@ namespace Expenses.API
             // Domain - Events
             services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
             services.AddScoped<INotificationHandler<InvoiceUpdatedEvent>, InvoiceEventHandler>();
+            services.AddScoped<INotificationHandler<InvoiceDeletedEvent>, InvoiceEventHandler>();
 
             // Infrastructure - Repositories
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
