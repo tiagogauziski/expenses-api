@@ -20,11 +20,11 @@ namespace Expenses.Application.Invoice.ViewModel
         /// <summary>
         /// Start Week/Day/Month/Year
         /// </summary>
-        public DateTime? Start { get; set; }
+        public DateTime Start { get; set; }
 
         /// <summary>
         /// If Custom recurrence, how many times per year.
         /// </summary>
-        public int? Times { get; set; }
+        public int Times { get; set; }
     }
 }

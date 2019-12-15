@@ -40,7 +40,13 @@ namespace Expenses.IntegrationTests.API.Controller
             CreateInvoiceRequest model = new CreateInvoiceRequest()
             {
                 Name = "Name",
-                Description = "Description"
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Custom,
+                    Start = DateTime.UtcNow,
+                    Times = 1
+                }
             };
 
             //act
@@ -53,6 +59,9 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(HttpStatusCode.Created, response.StatusCode);
             Assert.Equal(model.Name, responseViewModel.Data.Name);
             Assert.Equal(model.Description, responseViewModel.Data.Description);
+            Assert.Equal(model.Recurrence.RecurrenceType, responseViewModel.Data.Recurrence.RecurrenceType);
+            Assert.Equal(model.Recurrence.Start, responseViewModel.Data.Recurrence.Start);
+            Assert.Equal(model.Recurrence.Times, responseViewModel.Data.Recurrence.Times);
             Assert.NotEmpty(responseViewModel.Data.Id.ToString());
         }
 
@@ -102,6 +111,57 @@ namespace Expenses.IntegrationTests.API.Controller
 
             //assert
             Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+            Assert.NotNull(responseViewModel.Message);
+        }
+
+        [Fact]
+        public async Task Post_FailureResponse_RecurrenceCustomTimes()
+        {
+            //arrange
+            CreateInvoiceRequest model = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Custom
+                }
+            };
+
+            //act
+            var response = await _client.PostAsync("/invoice",
+                new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            var content = await response.Content.ReadAsStringAsync();
+            var responseViewModel = JsonConvert.DeserializeObject<FailureResponse>(content);
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+            Assert.NotNull(responseViewModel.Message);
+        }
+
+        [Fact]
+        public async Task Post_FailureResponse_RecurrenceCustomStart()
+        {
+            //arrange
+            CreateInvoiceRequest model = new CreateInvoiceRequest()
+            {
+                Name = "Name",
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Custom,
+                    Times = 3
+                }
+            };
+
+            //act
+            var response = await _client.PostAsync("/invoice",
+                new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            var content = await response.Content.ReadAsStringAsync();
+            var responseViewModel = JsonConvert.DeserializeObject<FailureResponse>(content);
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
             Assert.NotNull(responseViewModel.Message);
         }
 
@@ -206,7 +266,11 @@ namespace Expenses.IntegrationTests.API.Controller
             CreateInvoiceRequest createModel = new CreateInvoiceRequest()
             {
                 Name = "Name",
-                Description = "Description"
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Monthly
+                }
             };
 
             //act
@@ -225,7 +289,13 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Id = createViewModel.Data.Id,
                 Name = "Name2",
-                Description = "Description"
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Custom,
+                    Start = DateTime.UtcNow,
+                    Times = 3
+                }
             };
 
             var response = await _client.PutAsync($"/invoice/{updateModel.Id.ToString()}",
@@ -240,6 +310,9 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(updateModel.Id, updateViewModel.Data.Id);
             Assert.Equal(updateModel.Name, updateViewModel.Data.Name);
             Assert.Equal(updateModel.Description, updateViewModel.Data.Description);
+            Assert.Equal(updateModel.Recurrence.RecurrenceType, updateViewModel.Data.Recurrence.RecurrenceType);
+            Assert.Equal(updateModel.Recurrence.Start, updateViewModel.Data.Recurrence.Start);
+            Assert.Equal(updateModel.Recurrence.Times, updateViewModel.Data.Recurrence.Times);
         }
 
         [Fact]
@@ -281,7 +354,13 @@ namespace Expenses.IntegrationTests.API.Controller
             CreateInvoiceRequest createModel = new CreateInvoiceRequest()
             {
                 Name = "Name",
-                Description = "Description"
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Custom,
+                    Start = DateTime.UtcNow,
+                    Times = 3
+                }
             };
 
             //act
@@ -307,6 +386,10 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Id, getViewModel.Data.Id);
             Assert.Equal(createViewModel.Data.Name, getViewModel.Data.Name);
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data.Description);
+            Assert.Equal(createViewModel.Data.Recurrence.RecurrenceType, getViewModel.Data.Recurrence.RecurrenceType);
+            Assert.Equal(createViewModel.Data.Recurrence.Start, getViewModel.Data.Recurrence.Start);
+            Assert.Equal(createViewModel.Data.Recurrence.Times, getViewModel.Data.Recurrence.Times);
+
         }
 
         [Fact]
@@ -316,7 +399,13 @@ namespace Expenses.IntegrationTests.API.Controller
             CreateInvoiceRequest createModel = new CreateInvoiceRequest()
             {
                 Name = "Name",
-                Description = "Description"
+                Description = "Description",
+                Recurrence = new InvoiceRecurrence()
+                {
+                    RecurrenceType = Domain.Models.RecurrenceType.Custom,
+                    Start = DateTime.UtcNow,
+                    Times = 3
+                }
             };
 
             //act
@@ -343,6 +432,9 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(createViewModel.Data.Id, getViewModel.Data[0].Id);
             Assert.Equal(createViewModel.Data.Name, getViewModel.Data[0].Name);
             Assert.Equal(createViewModel.Data.Description, getViewModel.Data[0].Description);
+            Assert.Equal(createViewModel.Data.Recurrence.RecurrenceType, getViewModel.Data[0].Recurrence.RecurrenceType);
+            Assert.Equal(createViewModel.Data.Recurrence.Start, getViewModel.Data[0].Recurrence.Start);
+            Assert.Equal(createViewModel.Data.Recurrence.Times, getViewModel.Data[0].Recurrence.Times);
         }
 
         [Fact]

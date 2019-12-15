@@ -18,5 +18,6 @@ namespace Expenses.Domain.Models
 
         public string Description { get; set; }
 
+        public Recurrence Recurrence { get; set; }
     }
 }

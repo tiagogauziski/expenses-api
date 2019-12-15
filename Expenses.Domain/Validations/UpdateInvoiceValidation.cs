@@ -13,6 +13,7 @@ namespace Expenses.Domain.Validations
             ValidateId();
             ValidateName();
             ValidateDescription();
+            ValidateRecurrence();
         }
 
         protected void ValidateId()
