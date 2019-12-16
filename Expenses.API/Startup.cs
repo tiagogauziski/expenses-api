@@ -30,6 +30,7 @@ using Expenses.Infra.EntityCore.Repositories;
 using Expenses.Infra.EntityCore;
 using Expenses.API.Middleware;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
 
 namespace Expenses.API
 {
@@ -48,9 +49,9 @@ namespace Expenses.API
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
-                .AddNewtonsoftJson(options =>
+                .AddJsonOptions(options =>
                 {
-                    options.SerializerSettings.Converters.Add(new Newtonsoft.Json.Converters.StringEnumConverter());
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
             // Register the Swagger generator, defining one or more Swagger documents
