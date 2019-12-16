@@ -19,6 +19,8 @@ namespace Expenses.Application.AutoMapper
             CreateMap<UpdateInvoiceCommand, Expenses.Domain.Models.Invoice>();
             CreateMap<GetInvoiceListRequest, GetInvoiceListQuery> ();
             CreateMap<Expenses.Domain.Models.Invoice, InvoiceResponse>();
+            CreateMap<Expenses.Domain.Models.Recurrence, InvoiceRecurrence>();
+            CreateMap<InvoiceRecurrence, Expenses.Domain.Models.Recurrence>();
         }
     }
 }

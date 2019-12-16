@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Models;
+using Expenses.Infra.EntityCore.Configurations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,11 @@ namespace Expenses.Infra.EntityCore
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
             base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Commands;
 using FluentValidation;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +22,22 @@ namespace Expenses.Domain.Validations
                 .Length(0, 500).WithMessage("The Name must have between 0 and 500 characters");
         }
 
-        
+        protected void ValidateRecurrence()
+        {
+            RuleFor(i => i.Recurrence)
+                 .Custom((r, cc) =>
+                 {
+                     if (r != null && r.RecurrenceType == Models.RecurrenceType.Custom && r.Times <= 0)
+                     {
+                         cc.AddFailure(new ValidationFailure(nameof(r.RecurrenceType), "If Recurrent Type set to Custom, it should contain number of times."));
+                     }
+
+                     if (r != null && r.RecurrenceType == Models.RecurrenceType.Custom && r.Start == DateTime.MinValue)
+                     {
+                         cc.AddFailure(new ValidationFailure(nameof(r.RecurrenceType), "If Recurrent Type set to Custom, it should have a valid Start Date."));
+                     }
+                 });
+
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace Expenses.Domain.Validations
         {
             ValidateName();
             ValidateDescription();
+            ValidateRecurrence();
         }
     }
 }

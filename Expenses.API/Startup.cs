@@ -30,6 +30,7 @@ using Expenses.Infra.EntityCore.Repositories;
 using Expenses.Infra.EntityCore;
 using Expenses.API.Middleware;
 using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
 
 namespace Expenses.API
 {
@@ -45,7 +46,13 @@ namespace Expenses.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services
+                .AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>

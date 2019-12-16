@@ -16,5 +16,10 @@ namespace Expenses.Application.Invoice.ViewModel
         /// Invoice Description
         /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Invoice Recurrence Details
+        /// </summary>
+        public InvoiceRecurrence? Recurrence { get; set; }
     }
 }
