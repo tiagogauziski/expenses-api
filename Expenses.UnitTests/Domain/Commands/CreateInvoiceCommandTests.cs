@@ -75,5 +75,39 @@ namespace Expenses.UnitTests.Domain.Commands
             //assert
             Assert.False(result);
         }
+
+        [Fact]
+        public void IsValid_Recurrence_Custom()
+        {
+            //arrange
+            _command.Name = "Name";
+            _command.Description = "Description";
+            _command.Recurrence = new Expenses.Domain.Models.Recurrence();
+            _command.Recurrence.RecurrenceType = Expenses.Domain.Models.RecurrenceType.Custom;
+
+            //act
+            var result = _command.IsValid();
+
+            //assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void IsValid_Recurrence_Custom_Success()
+        {
+            //arrange
+            _command.Name = "Name";
+            _command.Description = "Description";
+            _command.Recurrence = new Expenses.Domain.Models.Recurrence();
+            _command.Recurrence.RecurrenceType = Expenses.Domain.Models.RecurrenceType.Custom;
+            _command.Recurrence.Start = DateTime.UtcNow;
+            _command.Recurrence.Times = 3;
+
+            //act
+            var result = _command.IsValid();
+
+            //assert
+            Assert.True(result);
+        }
     }
 }
