@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Expenses.Application.AutoMapper
 {
+    /// <summary>
+    /// AutoMapper configuration for the application.
+    /// </summary>
     public class AutoMapperConfiguration
     {
         public static MapperConfiguration RegisterMappings()
@@ -12,6 +12,7 @@ namespace Expenses.Application.AutoMapper
             return new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile(new InvoiceProfile());
+                cfg.AddProfile(new StatementProfile());
             });
         }
     }

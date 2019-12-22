@@ -9,6 +9,9 @@ using System.Text;
 
 namespace Expenses.Application.AutoMapper
 {
+    /// <summary>
+    /// Invoice AutoMapper Profile configuration
+    /// </summary>
     public class InvoiceProfile : Profile
     {
         public InvoiceProfile()
