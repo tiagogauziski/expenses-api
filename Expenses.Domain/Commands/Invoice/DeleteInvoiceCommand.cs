@@ -1,9 +1,9 @@
-﻿using Expenses.Domain.Validations;
+﻿using Expenses.Domain.Validations.Invoice;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Expenses.Domain.Commands
+namespace Expenses.Domain.Commands.Invoice
 {
     public class DeleteInvoiceCommand : InvoiceCommand
     {

@@ -6,12 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Expenses.Domain.Events
+namespace Expenses.Domain.Events.Invoice
 {
-    public class InvoiceUpdatedEvent : Event, IUpdatedEvent<Invoice>
+    public class InvoiceUpdatedEvent : Event, IUpdatedEvent<Models.Invoice>
     {
-        public Invoice New { get; set; }
-        public Invoice Old { get; set; }
+        public Models.Invoice New { get; set; }
+        public Models.Invoice Old { get; set; }
 
         public override string ToString()
         {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Expenses.Application.Invoice.ViewModel;
-using Expenses.Domain.Commands;
+using Expenses.Domain.Commands.Invoice;
 using Expenses.Domain.Interfaces.Models;
 using Expenses.Domain.Queries.Invoice;
 using System;

@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Commands;
+﻿using Expenses.Domain.Commands.Invoice;
 using Expenses.UnitTests.TestExtensions;
 using System;
 using System.Collections.Generic;

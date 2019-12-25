@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Events;
+﻿using Expenses.Domain.Events.Invoice;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;

@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
-using Expenses.Domain.Commands;
+using Expenses.Domain.Commands.Invoice;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Commands;
 using Expenses.Domain.Events;
+using Expenses.Domain.Events.Invoice;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
 using MediatR;

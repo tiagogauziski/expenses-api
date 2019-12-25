@@ -1,10 +1,10 @@
-﻿using Expenses.Domain.Commands;
+﻿using Expenses.Domain.Commands.Invoice;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Expenses.Domain.Validations
+namespace Expenses.Domain.Validations.Invoice
 {
     public class UpdateInvoiceValidation : InvoiceValidation<UpdateInvoiceCommand>
     {

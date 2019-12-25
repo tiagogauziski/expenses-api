@@ -1,11 +1,11 @@
-﻿using Expenses.Domain.Commands;
+﻿using Expenses.Domain.Commands.Invoice;
 using FluentValidation;
 using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Expenses.Domain.Validations
+namespace Expenses.Domain.Validations.Invoice
 {
     public abstract class InvoiceValidation<T> : AbstractValidator<T> where T : InvoiceCommand
     {
