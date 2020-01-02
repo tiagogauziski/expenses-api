@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xunit;
 
-namespace Expenses.UnitTests.Domain.Commands
+namespace Expenses.UnitTests.Domain.Commands.Invoice
 {
 
     public class UpdateInvoiceCommandTests

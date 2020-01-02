@@ -10,6 +10,7 @@ namespace Expenses.Infra.EntityCore
     public class ExpensesContext : DbContext
     {
         public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<Statement> Statements { get; set; }
 
         public ExpensesContext(DbContextOptions<ExpensesContext> options)
         : base(options)
@@ -29,6 +30,7 @@ namespace Expenses.Infra.EntityCore
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
+            modelBuilder.ApplyConfiguration(new StatementConfiguration());
         }
     }
 }
