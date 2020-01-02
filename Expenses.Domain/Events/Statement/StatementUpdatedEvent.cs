@@ -2,12 +2,12 @@
 using Expenses.Domain.Interfaces.Events;
 using System.Text.Json;
 
-namespace Expenses.Domain.Events.Invoice
+namespace Expenses.Domain.Events.Statement
 {
-    public class InvoiceUpdatedEvent : Event, IUpdatedEvent<Models.Invoice>
+    public class StatementUpdatedEvent : Event, IUpdatedEvent<Models.Statement>
     {
-        public Models.Invoice New { get; set; }
-        public Models.Invoice Old { get; set; }
+        public Models.Statement New { get; set; }
+        public Models.Statement Old { get; set; }
 
         public override string ToString()
         {

@@ -29,6 +29,14 @@ namespace Expenses.Infra.EntityCore.Repositories
             _expensesContext.SaveChanges();
         }
 
+        public Statement GetByDate(Guid statementId, DateTime date)
+        {
+            return
+                _expensesContext.Statements
+                .Where(s => s.InvoiceId == statementId && s.Date == date)
+                .FirstOrDefault();
+        }
+
         public Statement GetById(Guid id)
         {
             return _expensesContext.Statements.Where(i => i.Id == id).FirstOrDefault();

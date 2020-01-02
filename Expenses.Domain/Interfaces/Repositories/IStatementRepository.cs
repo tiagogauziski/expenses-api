@@ -13,6 +13,8 @@ namespace Expenses.Domain.Interfaces.Repositories
 
         Statement GetById(Guid id);
 
+        Statement GetByDate(Guid statementId, DateTime date);
+
         void Update(Statement model);
     }
 }

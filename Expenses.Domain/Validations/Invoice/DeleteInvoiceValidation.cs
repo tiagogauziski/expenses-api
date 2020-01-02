@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Expenses.Domain.Validations.Invoice
 {
-    public class DeleteInvoiceValidation : InvoiceValidation<DeleteInvoiceCommand>
+    public class DeleteInvoiceValidation : AbstractValidator<DeleteInvoiceCommand>
     {
         public DeleteInvoiceValidation()
         {

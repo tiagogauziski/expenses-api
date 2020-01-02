@@ -31,6 +31,8 @@ using Expenses.Infra.EntityCore;
 using Expenses.API.Middleware;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
+using Expenses.Domain.Events.Statement;
+using Expenses.Domain.Commands.Statement;
 
 namespace Expenses.API
 {
@@ -77,17 +79,28 @@ namespace Expenses.API
             services.AddScoped<IEventStore, InMemoryEventStore>();
 
             // Domain - Commands
+            // Invoice
             services.AddScoped<IRequestHandler<CreateInvoiceCommand, bool>, InvoiceCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateInvoiceCommand, bool>, InvoiceCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteInvoiceCommand, bool>, InvoiceCommandHandler>();
+            // Statement
+            services.AddScoped<IRequestHandler<CreateStatementCommand, bool>, StatementCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateStatementCommand, bool>, StatementCommandHandler>();
+            services.AddScoped<IRequestHandler<DeleteStatementCommand, bool>, StatementCommandHandler>();
 
             // Domain - Events
+            // Invoice
             services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
             services.AddScoped<INotificationHandler<InvoiceUpdatedEvent>, InvoiceEventHandler>();
             services.AddScoped<INotificationHandler<InvoiceDeletedEvent>, InvoiceEventHandler>();
+            // Statement
+            services.AddScoped<INotificationHandler<StatementCreatedEvent>, StatementEventHandler>();
+            services.AddScoped<INotificationHandler<StatementUpdatedEvent>, StatementEventHandler>();
+            services.AddScoped<INotificationHandler<StatementDeletedEvent>, StatementEventHandler>();
 
             // Infrastructure - Repositories
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IStatementRepository, StatementRepository>();
 
             // Infrastructre - DbContext Configuration
             services.AddDbContext<ExpensesContext>();

@@ -1,11 +1,12 @@
-﻿using Expenses.Domain.Validations.Invoice;
+﻿using Expenses.Domain.Core.Commands;
+using Expenses.Domain.Validations.Invoice;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Expenses.Domain.Commands.Invoice
 {
-    public class DeleteInvoiceCommand : InvoiceCommand
+    public class DeleteInvoiceCommand : Command
     {
         public Guid Id { get; set; }
 
