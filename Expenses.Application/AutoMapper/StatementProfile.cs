@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Expenses.Application.Statement.ViewModel;
+using Expenses.Domain.Commands.Statement;
 
 namespace Expenses.Application.AutoMapper
 {
@@ -12,7 +14,12 @@ namespace Expenses.Application.AutoMapper
         /// </summary>
         public StatementProfile()
         {
-
+            CreateMap<CreateStatementRequest, CreateStatementCommand>();
+            CreateMap<UpdateStatementRequest, UpdateStatementCommand>();
+            CreateMap<CreateStatementCommand, Expenses.Domain.Models.Statement>();
+            CreateMap<UpdateStatementCommand, Expenses.Domain.Models.Statement>();
+            //CreateMap<GetStatementListRequest, GetStatementListQuery>();
+            CreateMap<Expenses.Domain.Models.Statement, StatementResponse>();
         }
     }
 }

@@ -33,6 +33,7 @@ using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Commands.Statement;
+using Expenses.Application.Statement;
 
 namespace Expenses.API
 {
@@ -72,6 +73,7 @@ namespace Expenses.API
 
             //Application Services
             services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IStatementService, StatementService>();
 
             // Domain Bus (Mediator)
             services.AddMediatR(typeof(Startup));

@@ -22,14 +22,18 @@ namespace Expenses.Domain.CommandHandlers
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;
         private readonly IStatementRepository _statementRepository;
+        private readonly IInvoiceRepository _invoiceRepository;
 
-        public StatementCommandHandler(IMediatorHandler mediatorHandler,
+        public StatementCommandHandler(
+            IMediatorHandler mediatorHandler,
             IMapper mapper,
-            IStatementRepository statementRepository)
+            IStatementRepository statementRepository,
+            IInvoiceRepository invoiceRepository)
         {
             _mediatorHandler = mediatorHandler;
             _mapper = mapper;
             _statementRepository = statementRepository;
+            _invoiceRepository = invoiceRepository;
         }
 
         public async Task<bool> Handle(CreateStatementCommand request, CancellationToken cancellationToken)
@@ -38,6 +42,15 @@ namespace Expenses.Domain.CommandHandlers
             {
                 await _mediatorHandler.RaiseEvent(
                     new DomainValidationEvent(request.ValidationResult.ToString()));
+                return false;
+            }
+
+            var invoice = _invoiceRepository.GetById(request.InvoiceId);
+            if (invoice == null)
+            {
+                await _mediatorHandler.RaiseEvent(
+                    new DomainValidationEvent(
+                        "Statement Invoice ID does not exist. Please select a valid value."));
                 return false;
             }
 
@@ -78,6 +91,15 @@ namespace Expenses.Domain.CommandHandlers
             {
                 await _mediatorHandler.RaiseEvent(
                     new NotFoundEvent(request.Id, "Statement", "Statement not found"));
+                return false;
+            }
+
+            var invoice = _invoiceRepository.GetById(request.InvoiceId);
+            if (invoice == null)
+            {
+                await _mediatorHandler.RaiseEvent(
+                    new DomainValidationEvent(
+                        "Statement Invoice ID does not exist. Please select a valid value."));
                 return false;
             }
 

@@ -8,8 +8,6 @@ namespace Expenses.Domain.Models
 {
     public class Expense
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         public double Amount { get; set; }
@@ -18,7 +16,6 @@ namespace Expenses.Domain.Models
 
         public Guid InvoiceId { get; set; }
 
-        [ForeignKey("InvoiceId")]
         public Invoice Invoice { get; set; }
 
     }
