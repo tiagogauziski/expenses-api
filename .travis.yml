@@ -1,3 +1,8 @@
+addons:
+  sonarcloud:
+    organization: "expenses-api"
+#    token:
+#      secure: "**************************" # encrypted value of your token
 language: csharp
 mono: none
 dotnet: 3.1.100
@@ -6,5 +11,6 @@ install:
 script:
 - dotnet build
 - dotnet test
+- sonar-scanner
 #- dotnet test Expenses.UnitTests/Expenses.UnitTests.csproj
 #- dotnet test Expenses.IntegrationTests/Expenses.IntegrationTests.csproj
