@@ -21,7 +21,8 @@ namespace Expenses.API.Controllers
     {
         private readonly IInvoiceService _invoiceService;
 
-        public InvoiceController(IEventStore eventStore,
+        public InvoiceController(
+            IEventStore eventStore,
             IInvoiceService invoiceService)
         {
             _invoiceService = invoiceService;
@@ -49,18 +50,18 @@ namespace Expenses.API.Controllers
         /// <summary>
         /// Update an invoice
         /// </summary>
-        /// <param name="id">Invoice ID</param>
+        /// <param name="invoiceId">Invoice ID</param>
         /// <param name="model">Invoice Model</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("{id}")]
+        [Route("{invoiceId}")]
         [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put([FromRoute] string id, [FromBody]UpdateInvoiceRequest model)
+        public async Task<IActionResult> Put([FromRoute] string invoiceId, [FromBody]UpdateInvoiceRequest model)
         {
-            model.Id = new Guid(id);
+            model.Id = new Guid(invoiceId);
             var result = await _invoiceService.Update(model);
             if (result.Successful)
                 return SuccessResponse(result);
@@ -71,16 +72,16 @@ namespace Expenses.API.Controllers
         /// <summary>
         /// Get Invoice by ID
         /// </summary>
-        /// <param name="id">Invoice ID</param>
+        /// <param name="invoiceId">Invoice ID</param>
         /// <returns>Invoice Model</returns>
         [HttpGet]
-        [Route("{id}")]
+        [Route("{invoiceId}")]
         [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById([FromRoute] string id)
+        public async Task<IActionResult> GetById([FromRoute] string invoiceId)
         {
-            var result = await _invoiceService.GetById(id);
+            var result = await _invoiceService.GetById(invoiceId);
             if (result.Successful)
                 return SuccessResponse(result);
             else
@@ -97,7 +98,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> GetById([FromQuery] GetInvoiceListRequest query)
+        public async Task<IActionResult> GetList([FromQuery] GetInvoiceListRequest query)
         {
             var result = await _invoiceService.GetList(query);
             if (result.Successful)
@@ -109,16 +110,16 @@ namespace Expenses.API.Controllers
         /// <summary>
         /// Delete Invoice
         /// </summary>
-        /// <param name="id">Invoice ID</param>
+        /// <param name="invoiceId">Invoice ID</param>
         /// <returns></returns>
         [HttpDelete]
-        [Route("{id}")]
+        [Route("{invoiceId}")]
         [ProducesResponseType(typeof(SuccessfulResponse<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Delete([FromRoute] string id)
+        public async Task<IActionResult> Delete([FromRoute] string invoiceId)
         {
-            var result = await _invoiceService.Delete(id);
+            var result = await _invoiceService.Delete(invoiceId);
             if (result.Successful)
                 return SuccessResponse(result);
             else

@@ -6,5 +6,6 @@ namespace Expenses.Application.Statement.ViewModel
 {
     public class UpdateStatementRequest : CreateStatementRequest
     {
+        public Guid Id { get; set; }
     }
 }
