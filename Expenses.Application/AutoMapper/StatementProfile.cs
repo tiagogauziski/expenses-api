@@ -16,8 +16,10 @@ namespace Expenses.Application.AutoMapper
         {
             CreateMap<CreateStatementRequest, CreateStatementCommand>();
             CreateMap<UpdateStatementRequest, UpdateStatementCommand>();
-            CreateMap<CreateStatementCommand, Expenses.Domain.Models.Statement>();
-            CreateMap<UpdateStatementCommand, Expenses.Domain.Models.Statement>();
+            CreateMap<CreateStatementCommand, Expenses.Domain.Models.Statement>()
+                .ForMember(m => m.Date, o => o.AddTransform(t => t.Date.Date));
+            CreateMap<UpdateStatementCommand, Expenses.Domain.Models.Statement>()
+                .ForMember(m => m.Date, o => o.AddTransform(t => t.Date.Date));
             //CreateMap<GetStatementListRequest, GetStatementListQuery>();
             CreateMap<Expenses.Domain.Models.Statement, StatementResponse>();
         }
