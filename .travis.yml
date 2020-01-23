@@ -6,6 +6,8 @@ addons:
 language: csharp
 mono: none
 dotnet: 3.1.100
+before_install: 
+- cd src
 install:
 - dotnet tool install --global dotnet-sonarscanner
 - export PATH="$PATH:/home/travis/.dotnet/tools"
