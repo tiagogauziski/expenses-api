@@ -7,8 +7,10 @@ using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
+using Expenses.Domain.Queries.Statement;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -100,9 +102,15 @@ namespace Expenses.Application.Statement
             return SuccessfulResponse(data);
         }
 
-        public async Task<Response<List<StatementResponse>>> GetList(GetStatementListRequest query)
+        public async Task<Response<IReadOnlyList<StatementResponse>>> GetList(GetStatementListRequest request)
         {
-            throw new NotImplementedException();
+            var query = _mapper.Map<GetStatementListQuery>(request);
+
+            var result = await _statementRepository.GetListAsync(query);
+
+            var data = _mapper.Map<IReadOnlyList<Expenses.Domain.Models.Statement>, IReadOnlyList<StatementResponse>>(result.ToList());
+
+            return SuccessfulResponse(data);
         }
 
         public async Task<Response<StatementResponse>> Update(UpdateStatementRequest viewModel)

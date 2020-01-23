@@ -95,7 +95,7 @@ namespace Expenses.API.Controllers
         /// <returns>Invoice Model</returns>
         [HttpGet]
         [Route("")]
-        [ProducesResponseType(typeof(SuccessfulResponse<InvoiceResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SuccessfulResponse<IEnumerable<InvoiceResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetList([FromQuery] GetInvoiceListRequest query)

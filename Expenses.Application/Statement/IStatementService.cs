@@ -18,7 +18,7 @@ namespace Expenses.Application.Statement
 
         Task<Response<StatementResponse>> GetById(string id);
 
-        Task<Response<List<StatementResponse>>> GetList(GetStatementListRequest query);
+        Task<Response<IReadOnlyList<StatementResponse>>> GetList(GetStatementListRequest query);
 
         Task<Response<bool>> Delete(string id);
     }

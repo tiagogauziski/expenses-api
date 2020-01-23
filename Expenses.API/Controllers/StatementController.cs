@@ -89,6 +89,25 @@ namespace Expenses.API.Controllers
         }
 
         /// <summary>
+        /// Get Statement List
+        /// </summary>
+        /// <param name="query">Get Invoice List Query Parameters</param>
+        /// <returns>Invoice Model</returns>
+        [HttpGet]
+        [Route("")]
+        [ProducesResponseType(typeof(SuccessfulResponse<IEnumerable<StatementResponse>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetList([FromQuery] GetStatementListRequest query)
+        {
+            var result = await _statementService.GetList(query);
+            if (result.Successful)
+                return SuccessResponse(result);
+            else
+                return FailureResponse(result);
+        }
+
+        /// <summary>
         /// Delete Statement
         /// </summary>
         /// <param name="statementId">Statement ID</param>

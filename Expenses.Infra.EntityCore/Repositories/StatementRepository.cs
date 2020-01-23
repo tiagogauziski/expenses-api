@@ -1,9 +1,12 @@
 ﻿using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Domain.Queries.Statement;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Expenses.Infra.EntityCore.Repositories
 {
@@ -40,6 +43,22 @@ namespace Expenses.Infra.EntityCore.Repositories
         public Statement GetById(Guid id)
         {
             return _expensesContext.Statements.Where(i => i.Id == id).FirstOrDefault();
+        }
+
+        public async Task<IReadOnlyList<Statement>> GetListAsync(GetStatementListQuery query)
+        {
+            var statementList = _expensesContext.Statements.AsQueryable();
+
+            if (query.InvoiceIdList.Any())
+                statementList = statementList.Where(s => query.InvoiceIdList.Contains(s.InvoiceId));
+
+            if (query.DateFrom != DateTime.MinValue)
+                statementList = statementList.Where(s => s.Date >= query.DateFrom.Date);
+
+            if (query.DateTo != DateTime.MinValue)
+                statementList = statementList.Where(s => s.Date <= query.DateTo.Date);
+
+            return await statementList.ToListAsync();
         }
 
         public void Update(Statement model)

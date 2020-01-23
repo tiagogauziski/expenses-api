@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Expenses.Application.Statement.ViewModel;
 using Expenses.Domain.Commands.Statement;
+using Expenses.Domain.Queries.Statement;
 
 namespace Expenses.Application.AutoMapper
 {
@@ -20,7 +21,7 @@ namespace Expenses.Application.AutoMapper
                 .ForMember(m => m.Date, o => o.AddTransform(t => t.Date.Date));
             CreateMap<UpdateStatementCommand, Expenses.Domain.Models.Statement>()
                 .ForMember(m => m.Date, o => o.AddTransform(t => t.Date.Date));
-            //CreateMap<GetStatementListRequest, GetStatementListQuery>();
+            CreateMap<GetStatementListRequest, GetStatementListQuery>();
             CreateMap<Expenses.Domain.Models.Statement, StatementResponse>();
         }
     }
