@@ -14,6 +14,7 @@ namespace Expenses.Infra.EntityCore.Configurations
         {
             builder
                 .HasKey(k => k.Id);
+
             builder
                 .Property(p => p.Id)
                 .ValueGeneratedOnAdd();
