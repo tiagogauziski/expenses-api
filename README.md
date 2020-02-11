@@ -25,3 +25,23 @@ dotnet test
 * CQRS (Basic implementation)
 * Repository Pattern	
 
+# Few commands handy commands
+## Docker MSSQL Linux
+```
+docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=Network@123' -p 1433:1433 -v mssql_volume:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+```
+
+## Execute Migrations (make sure to have database created and update appsettings connection string)
+```
+dotnet ef migrations script --startup-project ..\Expenses.API\
+```
+
+## Preview SQL Server Migrations from dotnet ef tool
+```
+dotnet ef migrations script --startup-project ..\Expenses.API\
+```
+
+## Generate Migration
+```
+dotnet ef migrations add <MIGRATION_NAME> --startup-project ..\Expenses.API\
+```

@@ -1,27 +1,35 @@
 ﻿using Expenses.Domain.Models;
 using Expenses.Infra.EntityCore.Configurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Configuration;
+
 
 namespace Expenses.Infra.EntityCore
 {
     public class ExpensesContext : DbContext
     {
+        private readonly IConfiguration _configuration;
+
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Statement> Statements { get; set; }
 
-        public ExpensesContext(DbContextOptions<ExpensesContext> options)
+        public ExpensesContext(DbContextOptions<ExpensesContext> options, IConfiguration configuation)
         : base(options)
-        { }
+        {
+            _configuration = configuation;
+        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+                string connectionString =
+                    _configuration.GetConnectionString("ExpensesDatabase") ?? throw new ArgumentNullException("ConnectionString");
+
                 optionsBuilder
-                    .UseInMemoryDatabase("Expenses")
+                    .UseSqlServer(connectionString)
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
             base.OnConfiguring(optionsBuilder);
