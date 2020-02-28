@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace Expenses.Infra.EntityCore.Configurations
+namespace Expenses.Infrastructure.SqlServer.Configurations
 {
     internal class InvoiceConfiguration : IEntityTypeConfiguration<Invoice>
     {

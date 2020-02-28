@@ -2,7 +2,7 @@
 using Expenses.API;
 using Expenses.API.ViewModel;
 using Expenses.Application.Services.Invoice.ViewModel;
-using Expenses.Infra.EntityCore;
+using Expenses.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;

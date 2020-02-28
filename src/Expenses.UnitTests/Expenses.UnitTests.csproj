@@ -20,7 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-    <ProjectReference Include="..\Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj" />
   </ItemGroup>
 
 </Project>

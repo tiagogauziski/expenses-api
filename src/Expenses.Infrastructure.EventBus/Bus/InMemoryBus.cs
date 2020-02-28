@@ -2,12 +2,9 @@
 using Expenses.Domain.Core.Commands;
 using Expenses.Domain.Core.Events;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Expenses.Infrastructure.Bus
+namespace Expenses.Infrastructure.EventBus
 {
     /// <summary>
     /// In Memory implementation of IMediatorHandler.

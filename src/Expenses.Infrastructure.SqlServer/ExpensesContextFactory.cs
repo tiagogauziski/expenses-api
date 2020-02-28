@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Configuration;
 
-namespace Expenses.Infra.EntityCore
+namespace Expenses.Infrastructure.SqlServer
 {
     public class ExpensesContextFactory : IDesignTimeDbContextFactory<ExpensesContext>
     {

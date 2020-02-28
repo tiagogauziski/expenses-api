@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Expenses.Infra.EntityCore.Configurations
+namespace Expenses.Infrastructure.SqlServer.Configurations
 {
     internal class StatementConfiguration : IEntityTypeConfiguration<Statement>
     {

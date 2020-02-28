@@ -1,12 +1,9 @@
 ﻿using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
-using Expenses.Infrastructure.Bus;
+using Expenses.Infrastructure.EventBus;
 using MediatR;
 using Moq;
 using Moq.AutoMock;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using Xunit;
 

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Expenses.Infra.EntityCore.Repositories
+namespace Expenses.Infrastructure.SqlServer.Repositories
 {
     public class StatementRepository : IStatementRepository
     {

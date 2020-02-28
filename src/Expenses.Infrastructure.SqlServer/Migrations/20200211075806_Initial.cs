@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Expenses.Infra.EntityCore.Migrations
+namespace Expenses.Infrastructure.SqlServer.Migrations
 {
     public partial class Initial : Migration
     {

@@ -1,12 +1,12 @@
 ﻿using Expenses.Domain.Models;
-using Expenses.Infra.EntityCore.Configurations;
+using Expenses.Infrastructure.SqlServer.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Configuration;
 
 
-namespace Expenses.Infra.EntityCore
+namespace Expenses.Infrastructure.SqlServer
 {
     public class ExpensesContext : DbContext
     {
