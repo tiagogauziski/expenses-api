@@ -6,5 +6,15 @@ namespace Expenses.Application.Engines
 {
     public class StatementCreatorEngine
     {
+        public StatementCreatorEngine(
+            )
+        {
+
+        }
+
+        public void Run()
+        {
+
+        }
     }
 }
