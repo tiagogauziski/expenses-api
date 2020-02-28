@@ -1,7 +1,7 @@
 ﻿using Expenses.API;
 using Expenses.API.ViewModel;
-using Expenses.Application.Invoice.ViewModel;
-using Expenses.Application.Statement.ViewModel;
+using Expenses.Application.Services.Invoice.ViewModel;
+using Expenses.Application.Services.Statement.ViewModel;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Newtonsoft.Json;
 using System;

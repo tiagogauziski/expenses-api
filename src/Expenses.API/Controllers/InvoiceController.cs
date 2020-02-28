@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Expenses.API.ViewModel;
-using Expenses.Application.Invoice;
-using Expenses.Application.Invoice.ViewModel;
+using Expenses.Application.Services.Invoice;
+using Expenses.Application.Services.Invoice.ViewModel;
 using Expenses.Domain.Core.Events;
-using Expenses.Domain.Events;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
