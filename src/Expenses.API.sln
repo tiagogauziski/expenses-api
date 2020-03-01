@@ -13,17 +13,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Domain", "Expenses
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Domain.Core", "Expenses.Domain.Core\Expenses.Domain.Core.csproj", "{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infra.EventBus", "Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj", "{DFA2244C-F5F8-476A-8852-A40D1D872241}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus", "Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj", "{DFA2244C-F5F8-476A-8852-A40D1D872241}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{37AE7C9B-58A0-4393-8464-8AAAF2B48075}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infra.EntityCore", "Expenses.Infra.EntityCore\Expenses.Infra.EntityCore.csproj", "{E840C193-C908-4FF4-BE3C-20CE171DE31A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.SqlServer", "Expenses.Infrastructure.SqlServer\Expenses.Infrastructure.SqlServer.csproj", "{E840C193-C908-4FF4-BE3C-20CE171DE31A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D57B417-CE7D-461A-A9E7-7558E7F33382}"
 	ProjectSection(SolutionItems) = preProject
 		..\.travis.yml = ..\.travis.yml
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Worker.StatementCreator", "Expenses.Worker.StatementCreator\Expenses.Worker.StatementCreator.csproj", "{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -63,6 +65,10 @@ Global
 		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E840C193-C908-4FF4-BE3C-20CE171DE31A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

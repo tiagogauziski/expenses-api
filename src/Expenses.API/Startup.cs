@@ -1,15 +1,13 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
-using Expenses.Application.Invoice;
-using Expenses.Domain.CommandHandlers;
+using Expenses.Application.Services.Invoice;
+using Expenses.Application.CommandHandlers;
 using Expenses.Domain.Commands.Invoice;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
-using Expenses.Domain.EventHandlers;
+using Expenses.Application.EventHandlers;
 using Expenses.Domain.Events.Invoice;
-using Expenses.Infrastructure.Bus;
-using Expenses.Infrastructure.EventStore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,14 +16,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Expenses.API.Extensions;
 using Expenses.Domain.Interfaces.Repositories;
-using Expenses.Infra.EntityCore.Repositories;
-using Expenses.Infra.EntityCore;
+using Expenses.Infrastructure.SqlServer.Repositories;
+using Expenses.Infrastructure.SqlServer;
 using Expenses.API.Middleware;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Application.Statement;
+using Expenses.Application.Services.Statement;
+using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.EventStore;
 
 namespace Expenses.API
 {

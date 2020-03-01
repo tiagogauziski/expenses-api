@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Expenses.Application.Statement.ViewModel;
+using Expenses.Application.Services.Statement.ViewModel;
 using Expenses.Domain.Commands.Statement;
 using Expenses.Domain.Queries.Statement;
 

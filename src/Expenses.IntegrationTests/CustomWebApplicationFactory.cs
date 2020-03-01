@@ -1,4 +1,4 @@
-﻿using Expenses.Infra.EntityCore;
+﻿using Expenses.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

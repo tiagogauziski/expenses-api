@@ -33,8 +33,8 @@
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
     <ProjectReference Include="..\Expenses.Domain.Core\Expenses.Domain.Core.csproj" />
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-    <ProjectReference Include="..\Expenses.Infra.EntityCore\Expenses.Infra.EntityCore.csproj" />
-    <ProjectReference Include="..\Expenses.Infra.EventBus\Expenses.Infra.EventBus.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.SqlServer\Expenses.Infrastructure.SqlServer.csproj" />
   </ItemGroup>
 
 </Project>
