@@ -1,4 +1,6 @@
-﻿using Expenses.Domain.Events.Invoice;
+﻿using Expenses.Application.Engines;
+using Expenses.Domain.Core.Bus;
+using Expenses.Domain.Events.Invoice;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -15,14 +17,30 @@ namespace Expenses.Application.EventHandlers
         INotificationHandler<InvoiceDeletedEvent>
     {
         private readonly ILogger<InvoiceEventHandler> _logger;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IMediatorHandler _mediatorHandler;
 
-        public InvoiceEventHandler(ILogger<InvoiceEventHandler> logger)
+        public InvoiceEventHandler(
+            ILogger<InvoiceEventHandler> logger,
+            ILoggerFactory loggerFactory,
+            IMediatorHandler mediatorHandler)
         {
             _logger = logger;
+            _loggerFactory = loggerFactory;
+            _mediatorHandler = mediatorHandler;
         }
         public async Task Handle(InvoiceCreatedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation("InvoiceCreatedEvent: {invoice}", notification);
+
+            var statementCreatorEngine = new StatementCreatorEngine(_loggerFactory.CreateLogger<StatementCreatorEngine>());
+
+            var statementList = statementCreatorEngine.Run(notification.New, DateTime.Now);
+
+            foreach (var statement in statementList)
+            {
+                await _mediatorHandler.SendCommand(statement);
+            }
 
             return;
         }

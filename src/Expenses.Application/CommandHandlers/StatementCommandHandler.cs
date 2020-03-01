@@ -61,7 +61,7 @@ namespace Expenses.Application.CommandHandlers
                     new DuplicatedRecordEvent(
                         "Multiple", 
                         "Statement", 
-                        "A Stement with {0} and {1} is already present. Please select another value."));
+                        "A Statement with {0} and {1} is already present. Please select another value."));
                 return false;
             }
 

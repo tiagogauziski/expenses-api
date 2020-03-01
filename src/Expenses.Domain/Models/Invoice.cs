@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Text.Json;
 
 namespace Expenses.Domain.Models
 {
@@ -16,5 +17,10 @@ namespace Expenses.Domain.Models
         public string Description { get; set; }
 
         public Recurrence Recurrence { get; set; }
+
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this);
+        }
     }
 }
