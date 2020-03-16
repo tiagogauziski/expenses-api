@@ -1,20 +1,22 @@
-FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
-FROM microsoft/dotnet:2.2-sdk AS build
+# https://hub.docker.com/_/microsoft-dotnet-core
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
+
+# copy csproj and restore as distinct layers
 COPY ["Expenses.API/Expenses.API.csproj", "Expenses.API/"]
+COPY ["Expenses.Domain/Expenses.Domain.csproj", "Expenses.Domain/"]
+COPY ["Expenses.Domain.Core/Expenses.Domain.Core.csproj", "Expenses.Domain.Core/"]
+COPY ["Expenses.Infrastructure.SqlServer/Expenses.Infrastructure.SqlServer.csproj", "Expenses.Infrastructure.SqlServer/"]
+COPY ["Expenses.Application/Expenses.Application.csproj", "Expenses.Application/"]
+COPY ["Expenses.Infrastructure.EventBus/Expenses.Infrastructure.EventBus.csproj", "Expenses.Infrastructure.EventBus/"]
 RUN dotnet restore "Expenses.API/Expenses.API.csproj"
+
+# copy everything else and build app
 COPY . .
-WORKDIR "/src/Expenses.API"
-RUN dotnet build "Expenses.API.csproj" -c Release -o /app
+RUN dotnet publish -c release -o /app --no-restore /p:DebugType=None "/src/Expenses.API"
 
-FROM build AS publish
-RUN dotnet publish "Expenses.API.csproj" -c Release -o /app
-
-FROM base AS final
+# final stage/image
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
-COPY --from=publish /app .
+COPY --from=build /app ./W
 ENTRYPOINT ["dotnet", "Expenses.API.dll"]

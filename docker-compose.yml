@@ -1,0 +1,7 @@
+version: "3"
+services:
+ expenses.api:
+  image: expenses.api:
+  build: 
+   context: src/.
+   dockerfile: Expenses.API/Dockerfile
