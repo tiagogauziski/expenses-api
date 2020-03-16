@@ -12,7 +12,8 @@ script:
     - dotnet build
     - dotnet test
 deploy:
-    provider: script
-    script: ./deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
-    on:
-        tag: true
+deploy:
+  provider: script
+  script: bash deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
+  on:
+    tag: true

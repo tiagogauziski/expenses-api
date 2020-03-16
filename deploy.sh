@@ -1,10 +1,12 @@
 #!/bin/bash
 set -ev
+set -x
 
 TAG=$1
 DOCKER_USERNAME=$2
 DOCKER_PASSWORD=$3
 REPOSITORY_PROJECT=tiagogauziski/expenses-api
+echo "$REPOSITORY_PROJECT" 
 
 # Remove a leading v from the major version number (e.g. if the tag was v1.0.0)
 IFS='.' read -r -a tag_array <<< "$TAG"
