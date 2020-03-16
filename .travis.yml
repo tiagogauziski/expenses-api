@@ -11,8 +11,6 @@ install:
 script:
     - dotnet build
     - dotnet test
-before_deploy: 
-    - cd ..
 deploy:
   provider: script
   script: bash ../deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
