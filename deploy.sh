@@ -13,14 +13,11 @@ MINOR=${tag_array[1]}
 BUILD=${tag_array[2]}
 SEMVER="$MAJOR.$MINOR.$BUILD"
 
-# Create publish artifact
-dotnet publish -c Release src
-
 # Build the Docker images
 docker build -f src/Expenses.API/Dockerfile src/. -t $REPOSITORY_PROJECT:$TAG
 docker tag $REPOSITORY_PROJECT:$TAG $REPOSITORY_PROJECT:latest
 
 # Login to Docker Hub and upload images
-# docker login tiago.azurecr.io -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
 docker push $REPOSITORY_PROJECT:SEMVER
 docker push $REPOSITORY_PROJECT:latest
