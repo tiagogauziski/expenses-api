@@ -2,18 +2,17 @@ language: csharp
 mono: none
 dotnet: 3.1.100
 services:
-	- docker
+    - docker
 before_install: 
-	- cd src
+    - cd src
 install:
-	- export PATH="$PATH:/home/travis/.dotnet/tools"
-	- dotnet restore
+    - export PATH="$PATH:/home/travis/.dotnet/tools"
+    - dotnet restore
 script:
-	- dotnet build
-	- dotnet test
-
+    - dotnet build
+    - dotnet test
 deploy:
-  provider: script
-  script: ./deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
-  on:
-    tag: true
+    provider: script
+    script: ./deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
+    on:
+        tag: true
