@@ -13,6 +13,6 @@ script:
     - dotnet test
 deploy:
   provider: script
-  script: bash deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
+  script: bash ./deploy.sh $TRAVIS_TAG $DOCKER_USERNAME $DOCKER_PASSWORD
   on:
     tag: true
