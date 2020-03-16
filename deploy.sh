@@ -17,6 +17,6 @@ docker build -f src/Expenses.API/Dockerfile src/. -t $REPOSITORY_PROJECT:$SEMVER
 docker tag $REPOSITORY_PROJECT:$SEMVER $REPOSITORY_PROJECT:latest
 
 # Login to Docker Hub and upload images
-docker login --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+docker login --username $DOCKER_LOGIN --password $DOCKER_PASSWORD
 docker push $REPOSITORY_PROJECT:$SEMVER
 docker push $REPOSITORY_PROJECT:latest
