@@ -17,4 +17,4 @@ deploy:
   provider: script
   script: bash ./deploy.sh
   on:
-    tag: true
+    tags: true
