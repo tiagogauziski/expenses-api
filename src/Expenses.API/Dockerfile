@@ -19,5 +19,5 @@ RUN dotnet publish -c release -o /app --no-restore /p:DebugType=None "/src/Expen
 # final stage/image
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
-COPY --from=build /app ./W
+COPY --from=build /app ./
 ENTRYPOINT ["dotnet", "Expenses.API.dll"]
