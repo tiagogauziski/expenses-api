@@ -8,6 +8,7 @@ COPY ["Expenses.Domain/Expenses.Domain.csproj", "Expenses.Domain/"]
 COPY ["Expenses.Domain.Core/Expenses.Domain.Core.csproj", "Expenses.Domain.Core/"]
 COPY ["Expenses.Infrastructure.SqlServer/Expenses.Infrastructure.SqlServer.csproj", "Expenses.Infrastructure.SqlServer/"]
 COPY ["Expenses.Application/Expenses.Application.csproj", "Expenses.Application/"]
+COPY ["Expenses.Application.IoC/Expenses.Application.IoC.csproj", "Expenses.Application.IoC/"]
 COPY ["Expenses.Infrastructure.EventBus/Expenses.Infrastructure.EventBus.csproj", "Expenses.Infrastructure.EventBus/"]
 RUN dotnet restore "Expenses.API/Expenses.API.csproj"
 
