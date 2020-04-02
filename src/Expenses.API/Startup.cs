@@ -26,7 +26,7 @@ namespace Expenses.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddControllersWithViews()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddJsonOptions(options =>
                 {
