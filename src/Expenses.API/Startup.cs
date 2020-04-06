@@ -15,6 +15,7 @@ namespace Expenses.API
 {
     public class Startup
     {
+        private const string CORS_POLICY = "EXPENSES_CORS_POLICY"; 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -26,12 +27,24 @@ namespace Expenses.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddControllersWithViews()
+                .AddControllers()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(CORS_POLICY,
+                builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -85,6 +98,8 @@ namespace Expenses.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(CORS_POLICY);
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
