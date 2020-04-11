@@ -6,6 +6,7 @@ using AutoMapper;
 using Expenses.Application.Common;
 using Expenses.Application.Services.Invoice.ViewModel;
 using Expenses.Domain.Commands.Invoice;
+using Expenses.Domain.Commands.Statement;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
@@ -62,12 +63,17 @@ namespace Expenses.Application.Services.Invoice
             if (!Guid.TryParse(id, out Guid guid))
                 return FailureResponse<bool>(new Error("Invalid Guid"), System.Net.HttpStatusCode.BadRequest);
 
-            var command = new DeleteInvoiceCommand();
-            command.Id = guid;
+            var invoiceCommand = new DeleteInvoiceCommand() { Id = guid };
+            var statementCommand = new DeleteStatementByInvoiceIdCommand() { InvoiceId = guid };
 
-            var result = await _mediatorHandler.SendCommand(command);
+            if (!await _mediatorHandler.SendCommand(statementCommand))
+            {
+                var validationEvent = _eventStore.GetEvent<DomainValidationEvent>();
 
-            if (result)
+                return FailureResponse<bool>(validationEvent);
+            }
+
+            if (await _mediatorHandler.SendCommand(invoiceCommand))
             {
                 var invoiceEvent = _eventStore.GetEvent<InvoiceDeletedEvent>();
 

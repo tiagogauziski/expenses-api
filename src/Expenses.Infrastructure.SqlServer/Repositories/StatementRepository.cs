@@ -32,6 +32,15 @@ namespace Expenses.Infrastructure.SqlServer.Repositories
             _expensesContext.SaveChanges();
         }
 
+        public async Task<IReadOnlyList<Statement>> DeleteByInvoiceIdAsync(Guid invoiceId)
+        {
+            var statements = _expensesContext.Statements.Where(i => i.InvoiceId == invoiceId).ToList();
+            _expensesContext.Statements.RemoveRange(statements);
+            await _expensesContext.SaveChangesAsync();
+
+            return statements;
+        }
+
         public Statement GetByDate(Guid statementId, DateTime date)
         {
             return

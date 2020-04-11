@@ -10,7 +10,6 @@ using Moq;
 using Moq.AutoMock;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -327,7 +326,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
         }
 
         [Fact]
-        public async Task Handle_DeletetatementCommand_InvalidId()
+        public async Task Handle_DeleteStatementCommand_InvalidId()
         {
             //arrange
             var command = new DeleteStatementCommand()
@@ -382,6 +381,68 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             _mocker.GetMock<IStatementRepository>().Verify();
             _mocker.GetMock<IMediatorHandler>().Verify();
             Assert.True(result);
+        }
+
+        [Fact]
+        public async Task Handle_DeleteStatementByInvoiceIdCommand_Return_True()
+        {
+            //arrange
+            Guid invoiceId = Guid.NewGuid();
+            var command = new DeleteStatementByInvoiceIdCommand()
+            {
+                InvoiceId = invoiceId
+            };
+
+            _mocker.GetMock<IInvoiceRepository>()
+               .Setup(m => m.GetById(It.Is<Guid>(id => id == invoiceId)))
+               .Returns(value: new Invoice())
+               .Verifiable("IInvoiceRepository.GetById should have been called");
+
+            _mocker.GetMock<IStatementRepository>()
+                .Setup(m => m.DeleteByInvoiceIdAsync(It.IsAny<Guid>()))
+                .ReturnsAsync(new List<Statement>())
+                .Verifiable("IStatementRepository.DeleteByInvoiceId should have been called");
+
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.RaiseEvent(It.IsAny<StatementBulkDeletedEvent>()))
+                .Verifiable("An event StatementBulkDeletedEvent should have been raised");
+
+            //act
+            var result = await _statementCommandHandler.Handle(command, CancellationToken.None);
+
+            //assert
+            _mocker.GetMock<IInvoiceRepository>().Verify();
+            _mocker.GetMock<IStatementRepository>().Verify();
+            _mocker.GetMock<IMediatorHandler>().Verify();
+            Assert.True(result);
+        }
+
+        [Fact]
+        public async Task Handle_DeleteStatementByInvoiceIdCommand_NotFound()
+        {
+            //arrange
+            Guid invoiceId = Guid.NewGuid();
+            var command = new DeleteStatementByInvoiceIdCommand()
+            {
+                InvoiceId = invoiceId
+            };
+
+            _mocker.GetMock<IInvoiceRepository>()
+                .Setup(m => m.GetById(It.Is<Guid>(id => id == invoiceId)))
+                .Returns(value: null)
+                .Verifiable("IInvoiceRepository.GetById should have been called");
+
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.RaiseEvent(It.IsAny<NotFoundEvent>()))
+                .Verifiable("An event NotFoundEvent should have been raised");
+
+            //act
+            var result = await _statementCommandHandler.Handle(command, CancellationToken.None);
+
+            //assert
+            _mocker.GetMock<IInvoiceRepository>().Verify();
+            _mocker.GetMock<IMediatorHandler>().Verify();
+            Assert.False(result);
         }
     }
 }

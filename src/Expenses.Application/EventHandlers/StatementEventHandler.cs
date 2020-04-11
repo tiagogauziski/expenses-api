@@ -12,7 +12,8 @@ namespace Expenses.Application.EventHandlers
     public class StatementEventHandler :
         INotificationHandler<StatementCreatedEvent>,
         INotificationHandler<StatementUpdatedEvent>,
-        INotificationHandler<StatementDeletedEvent>
+        INotificationHandler<StatementDeletedEvent>,
+        INotificationHandler<StatementBulkDeletedEvent>
     {
         private readonly ILogger<StatementEventHandler> _logger;
 
@@ -37,6 +38,13 @@ namespace Expenses.Application.EventHandlers
         public async Task Handle(StatementDeletedEvent notification, CancellationToken cancellationToken)
         {
             _logger.LogInformation("StatementDeletedEvent: {statement}", notification);
+
+            return;
+        }
+
+        public async Task Handle(StatementBulkDeletedEvent notification, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("StatementBulkDeletedEvent: {statementCount} statements have been deleted", notification.Old.Count);
 
             return;
         }

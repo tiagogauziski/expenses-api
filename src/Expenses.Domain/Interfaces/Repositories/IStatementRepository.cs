@@ -13,6 +13,8 @@ namespace Expenses.Domain.Interfaces.Repositories
 
         void Delete(Guid id);
 
+        Task<IReadOnlyList<Statement>> DeleteByInvoiceIdAsync(Guid invoiceId);
+
         Statement GetById(Guid id);
 
         Statement GetByDate(Guid statementId, DateTime date);
