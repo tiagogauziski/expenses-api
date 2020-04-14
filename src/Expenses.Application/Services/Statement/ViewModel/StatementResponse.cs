@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Expenses.Application.Services.Invoice.ViewModel;
+using System;
 
 namespace Expenses.Application.Services.Statement.ViewModel
 {
@@ -15,5 +14,7 @@ namespace Expenses.Application.Services.Statement.ViewModel
         public string Notes { get; set; }
 
         public Guid InvoiceId { get; set; }
+
+        public InvoiceResponse Invoice { get; set; }
     }
 }

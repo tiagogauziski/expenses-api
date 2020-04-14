@@ -51,12 +51,17 @@ namespace Expenses.Infrastructure.SqlServer.Repositories
 
         public Statement GetById(Guid id)
         {
-            return _expensesContext.Statements.Where(i => i.Id == id).FirstOrDefault();
+            return _expensesContext.Statements
+                .Include(s => s.Invoice)
+                .Where(i => i.Id == id)
+                .FirstOrDefault();
         }
 
         public async Task<IReadOnlyList<Statement>> GetListAsync(GetStatementListQuery query)
         {
             var statementList = _expensesContext.Statements.AsQueryable();
+
+            statementList = statementList.Include(s => s.Invoice);
 
             if (query.InvoiceIdList.Any())
                 statementList = statementList.Where(s => query.InvoiceIdList.Contains(s.InvoiceId));

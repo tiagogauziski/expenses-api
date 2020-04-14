@@ -7,6 +7,7 @@ namespace Expenses.Domain.Models
 {
     public enum RecurrenceType
     {
+        None,
         Weekly,
         Monthly,
         Yearly,
