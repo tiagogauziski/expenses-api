@@ -25,6 +25,6 @@ namespace Expenses.Application.Services.Invoice.ViewModel
         /// <summary>
         /// If Custom recurrence, how many times per year.
         /// </summary>
-        public int Times { get; set; }
+        public int? Times { get; set; }
     }
 }

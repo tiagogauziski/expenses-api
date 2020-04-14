@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Expenses.Application.Engines
 {
@@ -15,14 +14,27 @@ namespace Expenses.Application.Engines
     {
         private readonly ILogger<StatementCreatorEngine> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatementCreatorEngine"/> class.
+        /// </summary>
+        /// <param name="logger">Logger.</param>
         public StatementCreatorEngine(
             ILogger<StatementCreatorEngine> logger)
         {
             _logger = logger;
         }
 
+        /// <summary>
+        /// Run the Statement Creator Engine with custom parameters.
+        /// </summary>
+        /// <param name="invoice">Invoice.</param>
+        /// <param name="referenceDate">Reference Date.</param>
+        /// <returns>List of Statements.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public IReadOnlyList<StatementCommand> Run(Invoice invoice, DateTime referenceDate)
         {
+            if (invoice == null) throw new ArgumentNullException(nameof(invoice));
+            
             IReadOnlyList<StatementCommand> generatedStatements = new List<StatementCommand>();
 
             if (invoice.Recurrence == null)

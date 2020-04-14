@@ -1,36 +1,21 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using Expenses.Application.Services.Invoice;
-using Expenses.Application.CommandHandlers;
-using Expenses.Domain.Commands.Invoice;
-using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Core.Events;
-using Expenses.Application.EventHandlers;
-using Expenses.Domain.Events.Invoice;
-using MediatR;
+﻿using Expenses.API.Middleware;
+using Expenses.Application.IoC;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Expenses.API.Extensions;
-using Expenses.Domain.Interfaces.Repositories;
-using Expenses.Infrastructure.SqlServer.Repositories;
-using Expenses.Infrastructure.SqlServer;
-using Expenses.API.Middleware;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
-using Expenses.Domain.Events.Statement;
-using Expenses.Domain.Commands.Statement;
-using Expenses.Application.Services.Statement;
-using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.EventStore;
 
 namespace Expenses.API
 {
     public class Startup
     {
+        private const string CORS_POLICY = "EXPENSES_CORS_POLICY"; 
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -42,12 +27,24 @@ namespace Expenses.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
+                .AddControllers()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(CORS_POLICY,
+                builder =>
+                {
+                    builder
+                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             // Register the Swagger generator, defining one or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -60,44 +57,17 @@ namespace Expenses.API
                 c.IncludeXmlComments(xmlPath);
             });
 
-            //AutoMapper extension
-            services.AddAutoMapperExtension();
+            // Application AutoMapper extension
+            services.AddApplicationAutoMapper();
 
-            //Application Services
-            services.AddScoped<IInvoiceService, InvoiceService>();
-            services.AddScoped<IStatementService, StatementService>();
+            // Application Dependencies
+            services.AddApplicationDependencies();
 
-            // Domain Bus (Mediator)
-            services.AddMediatR(typeof(Startup));
-            services.AddScoped<IMediatorHandler, InMemoryBus>();
-            services.AddScoped<IEventStore, InMemoryEventStore>();
+            // Infrastructure Dependencies - Database
+            services.AddInfrastructureDatabase();
 
-            // Domain - Commands
-            // Invoice
-            services.AddScoped<IRequestHandler<CreateInvoiceCommand, bool>, InvoiceCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateInvoiceCommand, bool>, InvoiceCommandHandler>();
-            services.AddScoped<IRequestHandler<DeleteInvoiceCommand, bool>, InvoiceCommandHandler>();
-            // Statement
-            services.AddScoped<IRequestHandler<CreateStatementCommand, bool>, StatementCommandHandler>();
-            services.AddScoped<IRequestHandler<UpdateStatementCommand, bool>, StatementCommandHandler>();
-            services.AddScoped<IRequestHandler<DeleteStatementCommand, bool>, StatementCommandHandler>();
-
-            // Domain - Events
-            // Invoice
-            services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
-            services.AddScoped<INotificationHandler<InvoiceUpdatedEvent>, InvoiceEventHandler>();
-            services.AddScoped<INotificationHandler<InvoiceDeletedEvent>, InvoiceEventHandler>();
-            // Statement
-            services.AddScoped<INotificationHandler<StatementCreatedEvent>, StatementEventHandler>();
-            services.AddScoped<INotificationHandler<StatementUpdatedEvent>, StatementEventHandler>();
-            services.AddScoped<INotificationHandler<StatementDeletedEvent>, StatementEventHandler>();
-
-            // Infrastructure - Repositories
-            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
-            services.AddScoped<IStatementRepository, StatementRepository>();
-
-            // Infrastructre - DbContext Configuration
-            services.AddDbContext<ExpensesContext>();
+            // Infrastructure Dependencies - Message Bus
+            services.AddInfrastructureMessageBus();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -128,6 +98,8 @@ namespace Expenses.API
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(CORS_POLICY);
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();

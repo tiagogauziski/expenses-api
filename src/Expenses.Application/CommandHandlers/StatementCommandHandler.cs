@@ -7,8 +7,6 @@ using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
 using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +15,8 @@ namespace Expenses.Application.CommandHandlers
     public class StatementCommandHandler : 
         IRequestHandler<CreateStatementCommand, bool>,
         IRequestHandler<UpdateStatementCommand, bool>,
-        IRequestHandler<DeleteStatementCommand, bool>
+        IRequestHandler<DeleteStatementCommand, bool>,
+        IRequestHandler<DeleteStatementByInvoiceIdCommand, bool>
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;
@@ -38,6 +37,8 @@ namespace Expenses.Application.CommandHandlers
 
         public async Task<bool> Handle(CreateStatementCommand request, CancellationToken cancellationToken)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
             if (!request.IsValid())
             {
                 await _mediatorHandler.RaiseEvent(
@@ -79,6 +80,8 @@ namespace Expenses.Application.CommandHandlers
 
         public async Task<bool> Handle(UpdateStatementCommand request, CancellationToken cancellationToken)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
             if (!request.IsValid())
             {
                 await _mediatorHandler.RaiseEvent(
@@ -90,7 +93,7 @@ namespace Expenses.Application.CommandHandlers
             if (oldStatement == null)
             {
                 await _mediatorHandler.RaiseEvent(
-                    new NotFoundEvent(request.Id, "Statement", "Statement not found"));
+                    new NotFoundEvent(request.Id, "Statement", "Statement not found."));
                 return false;
             }
 
@@ -129,6 +132,8 @@ namespace Expenses.Application.CommandHandlers
 
         public async Task<bool> Handle(DeleteStatementCommand request, CancellationToken cancellationToken)
         {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
             if (!request.IsValid())
             {
                 await _mediatorHandler.RaiseEvent(
@@ -139,7 +144,7 @@ namespace Expenses.Application.CommandHandlers
             var oldStatement = _statementRepository.GetById(request.Id);
             if (oldStatement == null)
             {
-                await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Statement", "Statement not found"));
+                await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Statement", "Statement not found."));
                 return false;
             }
 
@@ -148,6 +153,35 @@ namespace Expenses.Application.CommandHandlers
             await _mediatorHandler.RaiseEvent(new StatementDeletedEvent()
             {
                 Old = oldStatement
+            });
+
+            return true;
+        }
+
+        public async Task<bool> Handle(DeleteStatementByInvoiceIdCommand request, CancellationToken cancellationToken)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            if (!request.IsValid())
+            {
+                await _mediatorHandler.RaiseEvent(
+                    new DomainValidationEvent(request.ValidationResult.ToString()));
+                return false;
+            }
+
+            var invoice = _invoiceRepository.GetById(request.InvoiceId);
+
+            if (invoice == null)
+            {
+                await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.InvoiceId, "Statement", "Invoice not found."));
+                return false;
+            }
+
+            var deletedStatements = await _statementRepository.DeleteByInvoiceIdAsync(invoice.Id);
+
+            await _mediatorHandler.RaiseEvent(new StatementBulkDeletedEvent()
+            {
+                Old = deletedStatements
             });
 
             return true;

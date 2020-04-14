@@ -32,6 +32,15 @@ namespace Expenses.Infrastructure.SqlServer.Repositories
             _expensesContext.SaveChanges();
         }
 
+        public async Task<IReadOnlyList<Statement>> DeleteByInvoiceIdAsync(Guid invoiceId)
+        {
+            var statements = _expensesContext.Statements.Where(i => i.InvoiceId == invoiceId).ToList();
+            _expensesContext.Statements.RemoveRange(statements);
+            await _expensesContext.SaveChangesAsync();
+
+            return statements;
+        }
+
         public Statement GetByDate(Guid statementId, DateTime date)
         {
             return
@@ -42,12 +51,17 @@ namespace Expenses.Infrastructure.SqlServer.Repositories
 
         public Statement GetById(Guid id)
         {
-            return _expensesContext.Statements.Where(i => i.Id == id).FirstOrDefault();
+            return _expensesContext.Statements
+                .Include(s => s.Invoice)
+                .Where(i => i.Id == id)
+                .FirstOrDefault();
         }
 
         public async Task<IReadOnlyList<Statement>> GetListAsync(GetStatementListQuery query)
         {
             var statementList = _expensesContext.Statements.AsQueryable();
+
+            statementList = statementList.Include(s => s.Invoice);
 
             if (query.InvoiceIdList.Any())
                 statementList = statementList.Where(s => query.InvoiceIdList.Contains(s.InvoiceId));

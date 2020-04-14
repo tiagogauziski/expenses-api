@@ -3,6 +3,7 @@ using Expenses.Application.AutoMapper;
 using Expenses.Application.Services.Invoice;
 using Expenses.Application.Services.Invoice.ViewModel;
 using Expenses.Domain.Commands.Invoice;
+using Expenses.Domain.Commands.Statement;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
@@ -246,13 +247,20 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
                 .Returns(new InvoiceDeletedEvent() { Old = new Expenses.Domain.Models.Invoice() });
 
             _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.SendCommand(It.IsAny<DeleteStatementByInvoiceIdCommand>()))
+                .ReturnsAsync(true)
+                .Verifiable("IMediatorHandler.SendCommand with an DeleteStatementByInvoiceIdCommand command should have been called");
+
+            _mocker.GetMock<IMediatorHandler>()
                 .Setup(m => m.SendCommand(It.IsAny<DeleteInvoiceCommand>()))
-                .ReturnsAsync(true);
+                .ReturnsAsync(true)
+                .Verifiable("IMediatorHandler.SendCommand with an DeleteInvoiceCommand command should have been called");
 
             //act
             var result = await _invoiceService.Delete(Guid.NewGuid().ToString());
 
             //assess
+            _mocker.GetMock<IMediatorHandler>().Verify();
             Assert.NotNull(result);
             Assert.True(result.Successful);
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
