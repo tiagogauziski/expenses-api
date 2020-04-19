@@ -187,7 +187,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
                 Date = DateTime.UtcNow,
                 InvoiceId = Guid.NewGuid(),
                 Notes = "NOTES",
-                Value = 123
+                Amount = 123
             };
 
             _mocker.GetMock<IStatementRepository>()
@@ -200,7 +200,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
             //assess
             Assert.NotNull(result.Data);
             Assert.Equal(statement.Date, result.Data.Date);
-            Assert.Equal(statement.Value, result.Data.Value);
+            Assert.Equal(statement.Amount, result.Data.Amount);
             Assert.Equal(statement.InvoiceId, result.Data.InvoiceId);
             Assert.Equal(statement.Notes, result.Data.Notes);
         }
@@ -246,6 +246,61 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
 
             //assess
             Assert.NotNull(result);
+            Assert.NotNull(result.Error);
+            Assert.Equal(ERROR_MESSAGE, result.Error.Message);
+            Assert.Equal(ERROR_CODE, result.Error.ErrorCode);
+            Assert.False(result.Successful);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async void UpdateAmount_SuccessfulResult()
+        {
+            //arrange
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.SendCommand(It.IsAny<UpdateStatementAmountCommand>()))
+                .ReturnsAsync(true);
+
+            _mocker.GetMock<IEventStore>()
+                .Setup(m => m.GetEvent<StatementAmountUpdatedEvent>())
+                .Returns(new StatementAmountUpdatedEvent()
+                {
+                    New = new Expenses.Domain.Models.Statement() { },
+                    Old = new Expenses.Domain.Models.Statement() { }
+                });
+
+            //act
+            var result = await _statementService.UpdateAmount(new UpdateStatementAmountRequest());
+
+            //assess
+            Assert.NotNull(result);
+            Assert.NotNull(result.Data);
+            Assert.Null(result.Error);
+            Assert.True(result.Successful);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
+        public async void UpdateAmount_FailureResult()
+        {
+            //arrange
+            const string ERROR_MESSAGE = "ErrorMessage";
+            const string ERROR_CODE = "ErrorCode";
+
+            _mocker.GetMock<IEventStore>()
+                .Setup(m => m.GetEvent<DomainValidationEvent>())
+                .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
+
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.SendCommand(It.IsAny<UpdateStatementAmountCommand>()))
+                .ReturnsAsync(false);
+
+            //act
+            var result = await _statementService.UpdateAmount(new UpdateStatementAmountRequest());
+
+            //assess
+            Assert.NotNull(result);
+            Assert.Null(result.Data);
             Assert.NotNull(result.Error);
             Assert.Equal(ERROR_MESSAGE, result.Error.Message);
             Assert.Equal(ERROR_CODE, result.Error.ErrorCode);

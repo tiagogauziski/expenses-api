@@ -14,11 +14,11 @@ namespace Expenses.Domain.Validations.Statement
                 .GreaterThan(DateTime.MinValue).WithMessage("The Statement Date must be a valid date.");
         }
 
-        protected void ValidateValue()
+        protected void ValidateAmount()
         {
-            RuleFor(p => p.Value)
+            RuleFor(p => p.Amount)
                 .GreaterThanOrEqualTo(0)
-                .WithMessage("The Statement Value must be a positive number.");
+                .WithMessage("The Statement Amount must be a positive number.");
         }
 
         protected void ValidateInvoiceId()

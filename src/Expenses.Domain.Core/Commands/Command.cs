@@ -4,6 +4,9 @@ using FluentValidation.Results;
 
 namespace Expenses.Domain.Core.Commands
 {
+    /// <summary>
+    /// Abstract class designed to send commands from UI to application
+    /// </summary>
     public abstract class Command : Message
     {
         protected Command()

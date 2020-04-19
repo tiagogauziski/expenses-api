@@ -15,6 +15,7 @@ namespace Expenses.Application.CommandHandlers
     public class StatementCommandHandler : 
         IRequestHandler<CreateStatementCommand, bool>,
         IRequestHandler<UpdateStatementCommand, bool>,
+        IRequestHandler<UpdateStatementAmountCommand, bool>,
         IRequestHandler<DeleteStatementCommand, bool>,
         IRequestHandler<DeleteStatementByInvoiceIdCommand, bool>
     {
@@ -119,7 +120,7 @@ namespace Expenses.Application.CommandHandlers
 
             var model = _mapper.Map<Statement>(request);
 
-            _statementRepository.Update(model);
+            await _statementRepository.UpdateAsync(model);
 
             await _mediatorHandler.RaiseEvent(new StatementUpdatedEvent()
             {
@@ -182,6 +183,40 @@ namespace Expenses.Application.CommandHandlers
             await _mediatorHandler.RaiseEvent(new StatementBulkDeletedEvent()
             {
                 Old = deletedStatements
+            });
+
+            return true;
+        }
+
+        public async Task<bool> Handle(UpdateStatementAmountCommand request, CancellationToken cancellationToken)
+        {
+            if (request == null) throw new ArgumentNullException(nameof(request));
+
+            if (!request.IsValid())
+            {
+                await _mediatorHandler.RaiseEvent(
+                    new DomainValidationEvent(request.ValidationResult.ToString()));
+                return false;
+            }
+
+            var oldStatement = _statementRepository.GetById(request.Id);
+            if (oldStatement == null)
+            {
+                await _mediatorHandler.RaiseEvent(new NotFoundEvent(request.Id, "Statement", "Statement not found."));
+                return false;
+            }
+
+            var newStatement = (Statement)oldStatement.Clone();
+
+            newStatement.Amount = request.Amount;
+            newStatement.IsPaid = request.IsPaid;
+
+            await _statementRepository.UpdateAsync(newStatement);
+
+            await _mediatorHandler.RaiseEvent(new StatementAmountUpdatedEvent()
+            {
+                Old = oldStatement,
+                New = newStatement
             });
 
             return true;

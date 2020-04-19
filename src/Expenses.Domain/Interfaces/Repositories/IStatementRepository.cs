@@ -21,6 +21,6 @@ namespace Expenses.Domain.Interfaces.Repositories
 
         Task<IReadOnlyList<Statement>> GetListAsync(GetStatementListQuery query);
 
-        void Update(Statement model);
+        Task UpdateAsync(Statement model);
     }
 }

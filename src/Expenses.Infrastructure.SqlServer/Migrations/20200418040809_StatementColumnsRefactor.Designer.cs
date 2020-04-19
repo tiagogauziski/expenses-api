@@ -4,14 +4,16 @@ using Expenses.Infrastructure.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Expenses.Infrastructure.SqlServer.Migrations
 {
     [DbContext(typeof(ExpensesContext))]
-    partial class ExpensesContextModelSnapshot : ModelSnapshot
+    [Migration("20200418040809_StatementColumnsRefactor")]
+    partial class StatementColumnsRefactor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

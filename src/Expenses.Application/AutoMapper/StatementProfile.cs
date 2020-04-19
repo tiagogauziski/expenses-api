@@ -22,6 +22,7 @@ namespace Expenses.Application.AutoMapper
             CreateMap<UpdateStatementCommand, Expenses.Domain.Models.Statement>()
                 .ForMember(m => m.Date, o => o.AddTransform(t => t.Date.Date));
             CreateMap<GetStatementListRequest, GetStatementListQuery>();
+            CreateMap<UpdateStatementAmountRequest, UpdateStatementAmountCommand>();
             CreateMap<Expenses.Domain.Models.Statement, StatementResponse>();
         }
     }

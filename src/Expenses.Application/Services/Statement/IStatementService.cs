@@ -16,6 +16,8 @@ namespace Expenses.Application.Services.Statement
 
         Task<Response<StatementResponse>> Update(UpdateStatementRequest viewModel);
 
+        Task<Response<StatementResponse>> UpdateAmount(UpdateStatementAmountRequest viewModel);
+
         Task<Response<StatementResponse>> GetById(string id);
 
         Task<Response<IReadOnlyList<StatementResponse>>> GetList(GetStatementListRequest query);

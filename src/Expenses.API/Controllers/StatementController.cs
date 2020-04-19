@@ -27,14 +27,14 @@ namespace Expenses.API.Controllers
         /// <summary>
         /// Creates a statement
         /// </summary>
-        /// <param name="model">Invoice Model</param>
+        /// <param name="model">Statement Model</param>
         /// <returns></returns>
         [HttpPost]
         [Route("")]
         [ProducesResponseType(typeof(SuccessfulResponse<StatementResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> Post(
+        public async Task<IActionResult> Create(
             [FromBody]CreateStatementRequest model)
         {
             var result = await _statementService.Create(model);
@@ -48,7 +48,7 @@ namespace Expenses.API.Controllers
         /// Update an statement
         /// </summary>
         /// <param name="statementId">Statement ID</param>
-        /// <param name="model">Invoice Model</param>
+        /// <param name="model">Statement Model</param>
         /// <returns></returns>
         [HttpPut]
         [Route("{statementId}")]
@@ -56,12 +56,36 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Put(
+        public async Task<IActionResult> Update(
             [FromRoute] Guid statementId,
             [FromBody]UpdateStatementRequest model)
         {
             model.Id = statementId;
             var result = await _statementService.Update(model);
+            if (result.Successful)
+                return SuccessResponse(result);
+            else
+                return FailureResponse(result);
+        }
+
+        /// <summary>
+        /// Update an statement mount
+        /// </summary>
+        /// <param name="statementId">Statement ID</param>
+        /// <param name="model">Statement Model</param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("{statementId}/amount")]
+        [ProducesResponseType(typeof(SuccessfulResponse<StatementResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
+        [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateAmount(
+            [FromRoute] Guid statementId,
+            [FromBody]UpdateStatementAmountRequest model)
+        {
+            model.Id = statementId;
+            var result = await _statementService.UpdateAmount(model);
             if (result.Successful)
                 return SuccessResponse(result);
             else
@@ -91,8 +115,8 @@ namespace Expenses.API.Controllers
         /// <summary>
         /// Get Statement List
         /// </summary>
-        /// <param name="query">Get Invoice List Query Parameters</param>
-        /// <returns>Invoice Model</returns>
+        /// <param name="query">Get Statement List Query Parameters</param>
+        /// <returns>Statement Model</returns>
         [HttpGet]
         [Route("")]
         [ProducesResponseType(typeof(SuccessfulResponse<IEnumerable<StatementResponse>>), StatusCodes.Status200OK)]
