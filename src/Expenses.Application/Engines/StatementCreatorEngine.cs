@@ -70,9 +70,9 @@ namespace Expenses.Application.Engines
             var dayOfWeek = invoice.Recurrence.Start.DayOfWeek;
             var date = new DateTime(referenceDate.Year, referenceDate.Month, referenceDate.Day);
 
-            if (dayOfWeek < date.DayOfWeek)
+            while(dayOfWeek != date.DayOfWeek)
             {
-                date.AddDays(7);
+                date = date.AddDays(1);
             }
 
             while(date.Year == referenceDate.Year)
