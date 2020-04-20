@@ -5,6 +5,10 @@ using System.Text;
 
 namespace Expenses.Application.Common
 {
+    /// <summary>
+    /// Reseponse payload
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
     public class Response<TData>
     {
         public Response(TData data, HttpStatusCode statusCode)
