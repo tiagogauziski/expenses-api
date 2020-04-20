@@ -38,7 +38,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             Guid INVOICE_ID = Guid.NewGuid(); 
             var command = new CreateStatementCommand()
             {
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVOICE_ID
@@ -79,7 +79,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             Guid INVALID_INVOICE_ID = Guid.NewGuid();
             var command = new CreateStatementCommand()
             {
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVALID_INVOICE_ID
@@ -119,7 +119,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             Guid INVALID_INVOICE_ID = Guid.NewGuid();
             var command = new CreateStatementCommand()
             {
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVALID_INVOICE_ID
@@ -160,7 +160,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             var command = new UpdateStatementCommand()
             {
                 Id = Guid.NewGuid(),
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVOICE_ID
@@ -182,7 +182,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
                 .Verifiable("IStatementRepository.GetByName should have been called");
 
             _mocker.GetMock<IStatementRepository>()
-                .Setup(m => m.Update(It.IsAny<Statement>()))
+                .Setup(m => m.UpdateAsync(It.IsAny<Statement>()))
                 .Verifiable("IStatementRepository.Update should have been called");
 
             _mocker.GetMock<IMediatorHandler>()
@@ -207,7 +207,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             var command = new UpdateStatementCommand()
             {
                 Id = Guid.NewGuid(),
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVALID_INVOICE_ID
@@ -249,7 +249,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             var command = new UpdateStatementCommand()
             {
                 Id = Guid.NewGuid(),
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVALID_INVOICE_ID
@@ -291,7 +291,7 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             var command = new UpdateStatementCommand()
             {
                 Id = Guid.NewGuid(),
-                Value = 123.45,
+                Amount = 123.45,
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
                 InvoiceId = INVALID_INVOICE_ID
@@ -440,6 +440,87 @@ namespace Expenses.UnitTests.Application.CommandHandlers
             var result = await _statementCommandHandler.Handle(command, CancellationToken.None);
 
             //assert
+            _mocker.GetMock<IInvoiceRepository>().Verify();
+            _mocker.GetMock<IMediatorHandler>().Verify();
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task Handle_UpdateStatementAmountCommand_Return_True()
+        {
+            //arrange
+            Guid STATEMENT_ID = Guid.NewGuid();
+            double oldAmount = 123;
+            var oldIsPaid = false;
+            var command = new UpdateStatementAmountCommand()
+            {
+                Id = STATEMENT_ID,
+                Amount = 123.45,
+                IsPaid = true
+            };
+
+            _mocker.GetMock<IStatementRepository>()
+                .Setup(m => m.GetById(It.Is<Guid>(id => id == STATEMENT_ID)))
+                .Returns(value: new Statement()
+                {
+                    Amount = oldAmount,
+                    IsPaid = oldIsPaid
+                })
+                .Verifiable("IStatementRepository.GetById should have been called");
+
+            _mocker.GetMock<IStatementRepository>()
+                .Setup(m => m.UpdateAsync(It.IsAny<Statement>()))
+                .Verifiable("IStatementRepository.Update should have been called");
+
+            StatementAmountUpdatedEvent statementEvent = null;
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.RaiseEvent(It.IsAny<StatementAmountUpdatedEvent>()))
+                .Callback<StatementAmountUpdatedEvent>(e => statementEvent = e);
+
+            //act
+            var result = await _statementCommandHandler.Handle(command, CancellationToken.None);
+
+            //assert
+            _mocker.GetMock<IStatementRepository>().Verify();
+            _mocker.GetMock<IInvoiceRepository>().Verify();
+            _mocker.GetMock<IMediatorHandler>().Verify();
+            Assert.True(result);
+            Assert.NotNull(statementEvent);
+            Assert.Equal(command.IsPaid, statementEvent.New.IsPaid);
+            Assert.Equal(oldIsPaid, statementEvent.Old.IsPaid);
+            Assert.Equal(command.Amount, statementEvent.New.Amount);
+            Assert.Equal(oldAmount, statementEvent.Old.Amount);
+        }
+
+        [Fact]
+        public async Task Handle_UpdateStatementAmountCommand_Invalid_Id()
+        {
+            //arrange
+            Guid STATEMENT_ID = Guid.NewGuid();
+            var command = new UpdateStatementAmountCommand()
+            {
+                Id = Guid.NewGuid(),
+                Amount = 123.45,
+                IsPaid = true
+            };
+
+            _mocker.GetMock<IStatementRepository>()
+                .Setup(m => m.GetById(It.Is<Guid>(id => id == STATEMENT_ID)))
+                .Returns(value: new Statement());
+            _mocker.GetMock<IStatementRepository>()
+                .Setup(m => m.GetById(It.Is<Guid>(id => id != STATEMENT_ID)))
+                .Returns(value: null)
+                .Verifiable("IStatementRepository.GetById should have been called");
+
+            _mocker.GetMock<IMediatorHandler>()
+                .Setup(m => m.RaiseEvent(It.IsAny<NotFoundEvent>()))
+                .Verifiable("An event NotFoundEvent should have been raised");
+
+            //act
+            var result = await _statementCommandHandler.Handle(command, CancellationToken.None);
+
+            //assert
+            _mocker.GetMock<IStatementRepository>().Verify();
             _mocker.GetMock<IInvoiceRepository>().Verify();
             _mocker.GetMock<IMediatorHandler>().Verify();
             Assert.False(result);

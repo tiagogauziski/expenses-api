@@ -1,4 +1,5 @@
-﻿using Expenses.Domain.Interfaces.Repositories;
+﻿
+using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
 using Expenses.Domain.Queries.Statement;
 using Microsoft.EntityFrameworkCore;
@@ -72,13 +73,15 @@ namespace Expenses.Infrastructure.SqlServer.Repositories
             if (query.DateTo != DateTime.MinValue)
                 statementList = statementList.Where(s => s.Date <= query.DateTo.Date);
 
+            statementList = statementList.OrderBy(s => s.Date);
+
             return await statementList.ToListAsync();
         }
 
-        public void Update(Statement model)
+        public async Task UpdateAsync(Statement model)
         {
             _expensesContext.Statements.Update(model);
-            _expensesContext.SaveChanges();
+            await _expensesContext.SaveChangesAsync();
         }
     }
 }

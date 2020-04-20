@@ -21,7 +21,7 @@ namespace Expenses.UnitTests.Domain.Commands.Statement
             var command = new CreateStatementCommand();
             command.Date = DateTime.UtcNow;
             command.Notes.RandomString(500);
-            command.Value = 123;
+            command.Amount = 123;
             command.InvoiceId = Guid.NewGuid();
 
             return command;
@@ -70,11 +70,11 @@ namespace Expenses.UnitTests.Domain.Commands.Statement
         }
 
         [Fact]
-        public void IsValid_Value_MinValue()
+        public void IsValid_Amount_MinValue()
         {
             // Arrange
             _command = GetValidCommand();
-            _command.Value = -1;
+            _command.Amount = -1;
 
             // Act
             var result = _command.IsValid();

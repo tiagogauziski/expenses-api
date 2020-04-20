@@ -9,9 +9,11 @@ namespace Expenses.Domain.Commands.Statement
     {
         public DateTime Date { get; set; }
 
-        public double Value { get; set; }
+        public double Amount { get; set; }
 
         public string Notes { get; set; }
+
+        public bool IsPaid { get; set; }
 
         public Guid InvoiceId { get; set; }
     }

@@ -11,7 +11,7 @@ namespace Expenses.Domain.Validations.Statement
         {
             ValidateDate();
             ValidateNotes();
-            ValidateValue();
+            ValidateAmount();
             ValidateInvoiceId();
         }
     }

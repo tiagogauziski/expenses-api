@@ -38,7 +38,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 123,
+                Amount = 123,
                 InvoiceId = invoice.Id
             };
 
@@ -57,7 +57,7 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(0, responseViewModel.Data.Date.Minute);
             Assert.Equal(0, responseViewModel.Data.Date.Second);
             Assert.Equal(model.Notes, responseViewModel.Data.Notes);
-            Assert.Equal(model.Value, responseViewModel.Data.Value);
+            Assert.Equal(model.Amount, responseViewModel.Data.Amount);
             Assert.Equal(model.InvoiceId, responseViewModel.Data.InvoiceId);
             Assert.NotEmpty(responseViewModel.Data.Id.ToString());
         }
@@ -72,7 +72,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.MinValue,
                 Notes = "NOTES",
-                Value = 123,
+                Amount = 123,
                 InvoiceId = invoice.Id
             };
 
@@ -88,7 +88,7 @@ namespace Expenses.IntegrationTests.API.Controller
         }
 
         [Fact]
-        public async Task Post_FailureResponse_InvalidValue()
+        public async Task Post_FailureResponse_InvalidAmount()
         {
             //arrange
             var invoice = await CreateInvoiceAsync();
@@ -97,7 +97,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = -1,
+                Amount = -1,
                 InvoiceId = invoice.Id
             };
 
@@ -109,7 +109,7 @@ namespace Expenses.IntegrationTests.API.Controller
 
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-            Assert.Equal("The Statement Value must be a positive number.", responseViewModel.Message);
+            Assert.Equal("The Statement Amount must be a positive number.", responseViewModel.Message);
         }
 
         [Fact]
@@ -120,7 +120,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 123,
+                Amount = 123,
                 InvoiceId = Guid.Empty
             };
 
@@ -143,7 +143,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 123,
+                Amount = 123,
                 InvoiceId = Guid.NewGuid()
             };
 
@@ -168,7 +168,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 1,
+                Amount = 1,
                 InvoiceId = invoice.Id
             };
 
@@ -179,7 +179,7 @@ namespace Expenses.IntegrationTests.API.Controller
                 Id = createViewModel.Id,
                 Date = DateTime.UtcNow.AddDays(1).AddMonths(1).AddYears(1),
                 Notes = "NOTES2",
-                Value = 2,
+                Amount = 2,
                 InvoiceId = invoice.Id
             };
 
@@ -198,7 +198,7 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(0, responseViewModel.Data.Date.Minute);
             Assert.Equal(0, responseViewModel.Data.Date.Second);
             Assert.Equal(updateModel.Notes, responseViewModel.Data.Notes);
-            Assert.Equal(updateModel.Value, responseViewModel.Data.Value);
+            Assert.Equal(updateModel.Amount, responseViewModel.Data.Amount);
             Assert.Equal(updateModel.InvoiceId, responseViewModel.Data.InvoiceId);
             Assert.NotEmpty(responseViewModel.Data.Id.ToString());
         }
@@ -213,7 +213,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 1,
+                Amount = 1,
                 InvoiceId = invoice.Id
             };
 
@@ -223,7 +223,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow.AddDays(1),
                 Notes = "NOTES",
-                Value = 1,
+                Amount = 1,
                 InvoiceId = invoice.Id
             };
 
@@ -234,7 +234,7 @@ namespace Expenses.IntegrationTests.API.Controller
                 Id = createViewModelSecond.Id,
                 Date = createViewModelFirst.Date,
                 Notes = createViewModelSecond.Notes,
-                Value = createViewModelSecond.Value,
+                Amount = createViewModelSecond.Amount,
                 InvoiceId = createViewModelSecond.InvoiceId
             };
 
@@ -259,7 +259,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 1,
+                Amount = 1,
                 InvoiceId = invoice.Id
             };
 
@@ -270,7 +270,7 @@ namespace Expenses.IntegrationTests.API.Controller
                 Id = Guid.NewGuid(),
                 Date = createViewModel.Date,
                 Notes = createViewModel.Notes,
-                Value = createViewModel.Value,
+                Amount = createViewModel.Amount,
                 InvoiceId = createViewModel.InvoiceId
             };
 
@@ -295,7 +295,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 1,
+                Amount = 1,
                 InvoiceId = invoice.Id
             };
 
@@ -315,7 +315,7 @@ namespace Expenses.IntegrationTests.API.Controller
             Assert.Equal(0, responseViewModel.Data.Date.Minute);
             Assert.Equal(0, responseViewModel.Data.Date.Second);
             Assert.Equal(createViewModel.Notes, responseViewModel.Data.Notes);
-            Assert.Equal(createViewModel.Value, responseViewModel.Data.Value);
+            Assert.Equal(createViewModel.Amount, responseViewModel.Data.Amount);
             Assert.Equal(createViewModel.InvoiceId, responseViewModel.Data.InvoiceId);
             Assert.NotEmpty(responseViewModel.Data.Id.ToString());
         }
@@ -345,7 +345,7 @@ namespace Expenses.IntegrationTests.API.Controller
             {
                 Date = DateTime.UtcNow,
                 Notes = "NOTES",
-                Value = 1,
+                Amount = 1,
                 InvoiceId = invoice.Id
             };
 

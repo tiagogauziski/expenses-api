@@ -134,5 +134,27 @@ namespace Expenses.Application.Services.Statement
                 return FailureResponse<StatementResponse>(validationEvent);
             }
         }
+
+        public async Task<Response<StatementResponse>> UpdateAmount(UpdateStatementAmountRequest viewModel)
+        {
+            var command = _mapper.Map<UpdateStatementAmountCommand>(viewModel);
+
+            var result = await _mediatorHandler.SendCommand(command);
+
+            if (result)
+            {
+                var updateEvent = _eventStore.GetEvent<StatementAmountUpdatedEvent>();
+
+                var data = _mapper.Map<Expenses.Domain.Models.Statement, StatementResponse>(updateEvent.New);
+
+                return SuccessfulResponse(data, updateEvent);
+            }
+            else
+            {
+                var validationEvent = _eventStore.GetEvent<DomainValidationEvent>();
+
+                return FailureResponse<StatementResponse>(validationEvent);
+            }
+        }
     }
 }

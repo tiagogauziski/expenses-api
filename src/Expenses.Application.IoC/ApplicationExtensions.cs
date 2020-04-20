@@ -36,6 +36,7 @@ namespace Expenses.Application.IoC
             // Statement
             services.AddScoped<IRequestHandler<CreateStatementCommand, bool>, StatementCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateStatementCommand, bool>, StatementCommandHandler>();
+            services.AddScoped<IRequestHandler<UpdateStatementAmountCommand, bool>, StatementCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteStatementCommand, bool>, StatementCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteStatementByInvoiceIdCommand, bool>, StatementCommandHandler>();
 
@@ -47,6 +48,7 @@ namespace Expenses.Application.IoC
             // Statement
             services.AddScoped<INotificationHandler<StatementCreatedEvent>, StatementEventHandler>();
             services.AddScoped<INotificationHandler<StatementUpdatedEvent>, StatementEventHandler>();
+            services.AddScoped<INotificationHandler<StatementAmountUpdatedEvent>, StatementEventHandler>();
             services.AddScoped<INotificationHandler<StatementDeletedEvent>, StatementEventHandler>();
             services.AddScoped<INotificationHandler<StatementBulkDeletedEvent>, StatementEventHandler>();
         }
