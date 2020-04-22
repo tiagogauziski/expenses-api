@@ -35,7 +35,7 @@ namespace Expenses.Infrastructure.SqlServer
 
                 if (_configuration.GetValue<string>("Environment") == "Production")
                 {
-                    sqlConnection.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("AZURE_DATABASE_RESOURCE").Result;
+                    sqlConnection.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync(AZURE_DATABASE_RESOURCE).Result;
                 }
 
                 optionsBuilder
