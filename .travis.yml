@@ -14,8 +14,16 @@ script:
 before_deploy: 
     - cd ../
 deploy:
-  provider: script
-  script: bash ./deploy.sh
-  on:
-    tags: true
-    branch: master
+  - provider: script
+    script: bash ./deploy.sh
+    on:
+      branch: master
+  - provider: script
+    script: bash ./deploy.sh
+    on:
+      branch: develop
+  - provider: script
+    script: bash ./deploy.sh
+    on: 
+      tags: true
+      branch: master
