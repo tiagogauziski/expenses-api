@@ -6,12 +6,14 @@ using Expenses.API.ViewModel;
 using Expenses.Application.Services.Statement;
 using Expenses.Application.Services.Statement.ViewModel;
 using Expenses.Domain.Core.Events;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Expenses.API.Controllers
 {
     [Route("statement")]
+    [Authorize]
     [ApiController]
     public class StatementController : ApiController
     {
@@ -34,6 +36,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(SuccessfulResponse<StatementResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
+        [Authorize("create:statements")]
         public async Task<IActionResult> Create(
             [FromBody]CreateStatementRequest model)
         {
@@ -56,6 +59,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        [Authorize("update:statements")]
         public async Task<IActionResult> Update(
             [FromRoute] Guid statementId,
             [FromBody]UpdateStatementRequest model)
@@ -80,6 +84,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status409Conflict)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        [Authorize("update:statements")]
         public async Task<IActionResult> UpdateAmount(
             [FromRoute] Guid statementId,
             [FromBody]UpdateStatementAmountRequest model)
@@ -102,6 +107,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(SuccessfulResponse<StatementResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        [Authorize("read:statements")]
         public async Task<IActionResult> GetById(
             [FromRoute] string statementId)
         {
@@ -122,6 +128,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(SuccessfulResponse<IEnumerable<StatementResponse>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        [Authorize("read:statements")]
         public async Task<IActionResult> GetList([FromQuery] GetStatementListRequest query)
         {
             var result = await _statementService.GetList(query);
@@ -141,6 +148,7 @@ namespace Expenses.API.Controllers
         [ProducesResponseType(typeof(SuccessfulResponse<string>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(FailureResponse), StatusCodes.Status404NotFound)]
+        [Authorize("delete:statements")]
         public async Task<IActionResult> Delete([FromRoute] string statementId)
         {
             var result = await _statementService.Delete(statementId);

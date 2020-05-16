@@ -1,14 +1,21 @@
-﻿using Expenses.API.Middleware;
+﻿using Expenses.API.Authorization;
+using Expenses.API.Middleware;
 using Expenses.Application.IoC;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.IO;
 using System.Reflection;
+using System.Security.Claims;
 using System.Text.Json.Serialization;
 
 namespace Expenses.API
@@ -55,6 +62,21 @@ namespace Expenses.API
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
+
+                // Define the OAuth2.0 scheme that's in use (i.e. Implicit Flow)
+                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.OAuth2,
+                    Flows = new OpenApiOAuthFlows
+                    {
+                        Implicit = new OpenApiOAuthFlow 
+                        {
+                            AuthorizationUrl = new Uri($"{Configuration["Auth0:Domain"]}authorize?audience={Configuration["Auth0:Audience"]}", UriKind.Absolute),
+                            TokenUrl = new Uri($"{Configuration["Auth0:Domain"]}/oauth/token", UriKind.Absolute)
+                        }
+                    }
+                });
+               c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             // Application AutoMapper extension
@@ -67,7 +89,38 @@ namespace Expenses.API
             services.AddInfrastructureDatabase();
 
             // Infrastructure Dependencies - Message Bus
-            services.AddInfrastructureMessageBus();            
+            services.AddInfrastructureMessageBus();
+
+            // Add Authentication Services
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = Configuration.GetValue<string>("Auth0:Domain");
+                options.Audience = Configuration.GetValue<string>("Auth0:Audience");
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    NameClaimType = ClaimTypes.NameIdentifier
+                };
+            });
+
+            string domain = Configuration.GetValue<string>("Auth0:Domain");
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("read:invoices", domain)));
+                options.AddPolicy("create:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("create:invoices", domain)));
+                options.AddPolicy("update:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("update:invoices", domain)));
+                options.AddPolicy("delete:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("delete:invoices", domain)));
+                options.AddPolicy("update:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("update:statements", domain)));
+                options.AddPolicy("create:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("create:statements", domain)));
+                options.AddPolicy("read:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("read:statements", domain)));
+                options.AddPolicy("delete:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("delete:statements", domain)));
+            });
+
+            // register the scope authorization handler
+            services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -93,6 +146,8 @@ namespace Expenses.API
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.OAuthClientId(Configuration.GetValue<string>("Auth0:ClientId"));
+                c.OAuthScopeSeparator(" ");
             }); 
 
             app.UseHttpsRedirection();
@@ -100,6 +155,10 @@ namespace Expenses.API
             app.UseRouting();
 
             app.UseCors(CORS_POLICY);
+
+            // Enable authentication middleware
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
