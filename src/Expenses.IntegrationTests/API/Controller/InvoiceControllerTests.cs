@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -25,6 +26,7 @@ namespace Expenses.IntegrationTests.API.Controller
             _factory = new CustomWebApplicationFactorySqlite<Startup>();
 
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions() { AllowAutoRedirect = false });
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test", "true");
         }
 
         [Fact]
