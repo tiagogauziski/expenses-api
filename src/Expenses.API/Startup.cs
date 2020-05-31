@@ -142,7 +142,7 @@ namespace Expenses.API
                         builder
                             .UseApplicationInsights(options =>
                             {
-                                options.InstrumentationKey = Configuration.GetValue<string>("Telemetry:ApplicationInsights:InstrumenetationKey");
+                                options.InstrumentationKey = Configuration.GetValue<string>("Telemetry:ApplicationInsights:InstrumentationKey");
                             });
                     }
                     builder
