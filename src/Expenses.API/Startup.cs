@@ -17,6 +17,9 @@ using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
+using OpenTelemetry.Trace.Configuration;
+using OpenTelemetry.Trace;
+using OpenTelemetry.Trace.Samplers;
 
 namespace Expenses.API
 {
@@ -121,6 +124,36 @@ namespace Expenses.API
 
             // register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
+
+            if (Configuration.GetValue<bool>("Telemetry:Enabled"))
+            {
+                services.AddOpenTelemetry((sp, builder) =>
+                {
+                    if (Configuration.GetValue<bool>("Telemetry:Jaeger:Enabled"))
+                    {
+                        builder
+                            .UseJaeger(options =>
+                            {
+                                options.ServiceName = Configuration.GetValue<string>("Telemetry:Jaeger:ServiceName");
+                            });
+                    }
+                    else if (Configuration.GetValue<bool>("Telemetry:ApplicationInsights:Enabled"))
+                    {
+                        builder
+                            .UseApplicationInsights(options =>
+                            {
+                                options.InstrumentationKey = Configuration.GetValue<string>("Telemetry:ApplicationInsights:InstrumenetationKey");
+                            });
+                    }
+                    builder
+                        .SetSampler(new AlwaysOnSampler())
+                        .AddRequestAdapter()
+                        .AddDependencyAdapter(config =>
+                        {
+                            config.SetHttpFlavor = true;
+                        });
+                });
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
