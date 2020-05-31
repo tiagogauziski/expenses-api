@@ -13,7 +13,7 @@ BUILD=${tag_array[2]}
 SEMVER="$MAJOR.$MINOR.$BUILD"
 
 # Build the Docker images
-docker build -f src/Expenses.API/Dockerfile src/. -t $DOCKER_REPOSITORY
+docker build -f src/Expenses.API/Dockerfile . -t $DOCKER_REPOSITORY
 
 # Login to Docker Hub and upload images
 docker login $DOCKER_REGISTRY --username $DOCKER_LOGIN --password $DOCKER_PASSWORD
