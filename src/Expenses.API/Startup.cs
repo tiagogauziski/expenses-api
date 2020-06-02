@@ -17,9 +17,8 @@ using System.IO;
 using System.Reflection;
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using OpenTelemetry.Trace.Configuration;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Trace.Samplers;
+
+using Expenses.API.Telemetry;
 
 namespace Expenses.API
 {
@@ -94,66 +93,20 @@ namespace Expenses.API
             // Infrastructure Dependencies - Message Bus
             services.AddInfrastructureMessageBus();
 
+            // Serialize options into object
+            var auth0Options = new AuthOptions();
+            Configuration.GetSection("Auth0").Bind(auth0Options);
+
             // Add Authentication Services
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.Authority = Configuration.GetValue<string>("Auth0:Domain");
-                options.Audience = Configuration.GetValue<string>("Auth0:Audience");
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = ClaimTypes.NameIdentifier
-                };
-            });
+            services.AddCustomAuthentication(auth0Options);
 
-            string domain = Configuration.GetValue<string>("Auth0:Domain");
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy("read:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("read:invoices", domain)));
-                options.AddPolicy("create:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("create:invoices", domain)));
-                options.AddPolicy("update:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("update:invoices", domain)));
-                options.AddPolicy("delete:invoices", policy => policy.Requirements.Add(new HasPermissionRequirement("delete:invoices", domain)));
-                options.AddPolicy("update:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("update:statements", domain)));
-                options.AddPolicy("create:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("create:statements", domain)));
-                options.AddPolicy("read:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("read:statements", domain)));
-                options.AddPolicy("delete:statements", policy => policy.Requirements.Add(new HasPermissionRequirement("delete:statements", domain)));
-            });
+            // Configure authorization.
+            services.AddCustomAuthorization(auth0Options);
 
-            // register the scope authorization handler
-            services.AddSingleton<IAuthorizationHandler, HasPermissionHandler>();
+            var telemetryOptions = new TelemetryOptions();
+            Configuration.GetSection("Telemetry").Bind(auth0Options);
 
-            if (Configuration.GetValue<bool>("Telemetry:Enabled"))
-            {
-                services.AddOpenTelemetry((sp, builder) =>
-                {
-                    if (Configuration.GetValue<bool>("Telemetry:Jaeger:Enabled"))
-                    {
-                        builder
-                            .UseJaeger(options =>
-                            {
-                                options.ServiceName = Configuration.GetValue<string>("Telemetry:Jaeger:ServiceName");
-                            });
-                    }
-                    else if (Configuration.GetValue<bool>("Telemetry:ApplicationInsights:Enabled"))
-                    {
-                        builder
-                            .UseApplicationInsights(options =>
-                            {
-                                options.InstrumentationKey = Configuration.GetValue<string>("Telemetry:ApplicationInsights:InstrumentationKey");
-                            });
-                    }
-                    builder
-                        .SetSampler(new AlwaysOnSampler())
-                        .AddRequestAdapter()
-                        .AddDependencyAdapter(config =>
-                        {
-                            config.SetHttpFlavor = true;
-                        });
-                });
-            }
+            services.AddTelemetry(telemetryOptions);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
