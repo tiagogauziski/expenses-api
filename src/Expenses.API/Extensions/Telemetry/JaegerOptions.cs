@@ -1,4 +1,4 @@
-﻿namespace Expenses.API.Telemetry
+﻿namespace Expenses.API.Extensions.Telemetry
 {
     internal class JaegerOptions
     {

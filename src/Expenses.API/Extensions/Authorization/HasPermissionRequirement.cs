@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using System;
 
-namespace Expenses.API.Authorization
+namespace Expenses.API.Extensions.Authorization
 {
     public class HasPermissionRequirement : IAuthorizationRequirement
     {

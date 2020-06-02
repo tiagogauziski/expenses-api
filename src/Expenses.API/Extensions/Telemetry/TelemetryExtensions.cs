@@ -2,7 +2,7 @@
 using OpenTelemetry.Trace.Configuration;
 using OpenTelemetry.Trace.Samplers;
 
-namespace Expenses.API.Telemetry
+namespace Expenses.API.Extensions.Telemetry
 {
     public static class TelemetryExtensions
     {

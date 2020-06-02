@@ -1,4 +1,4 @@
-﻿namespace Expenses.API.Authorization
+﻿namespace Expenses.API.Extensions.Authorization
 {
     internal class AuthOptions
     {

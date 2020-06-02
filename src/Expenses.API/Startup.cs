@@ -1,24 +1,20 @@
-﻿using Expenses.API.Authorization;
+﻿using Expenses.API.Extensions.Authorization;
+using Expenses.API.Extensions.Swagger;
+using Expenses.API.Extensions.Telemetry;
 using Expenses.API.Middleware;
 using Expenses.Application.IoC;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.IO;
 using System.Reflection;
-using System.Security.Claims;
 using System.Text.Json.Serialization;
-
-using Expenses.API.Telemetry;
 
 namespace Expenses.API
 {
@@ -37,7 +33,7 @@ namespace Expenses.API
         {
             services
                 .AddControllers()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -54,32 +50,16 @@ namespace Expenses.API
                         .AllowAnyMethod();
                 });
             });
+            // Deserialize auth options into object
+            var authOptions = new AuthOptions();
+            Configuration.GetSection("Auth0").Bind(authOptions);
+
+            // Deserialize telemetry options into object
+            var telemetryOptions = new TelemetryOptions();
+            Configuration.GetSection("Telemetry").Bind(telemetryOptions);
 
             // Register the Swagger generator, defining one or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "JSONDiffer API", Version = "v1" });
-
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-
-                // Define the OAuth2.0 scheme that's in use (i.e. Implicit Flow)
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        Implicit = new OpenApiOAuthFlow 
-                        {
-                            AuthorizationUrl = new Uri($"{Configuration["Auth0:Domain"]}authorize?audience={Configuration["Auth0:Audience"]}", UriKind.Absolute),
-                            TokenUrl = new Uri($"{Configuration["Auth0:Domain"]}/oauth/token", UriKind.Absolute)
-                        }
-                    }
-                });
-               c.OperationFilter<SecurityRequirementsOperationFilter>();
-            });
+            services.AddSwagger(authOptions);
 
             // Application AutoMapper extension
             services.AddApplicationAutoMapper();
@@ -93,19 +73,13 @@ namespace Expenses.API
             // Infrastructure Dependencies - Message Bus
             services.AddInfrastructureMessageBus();
 
-            // Serialize options into object
-            var auth0Options = new AuthOptions();
-            Configuration.GetSection("Auth0").Bind(auth0Options);
-
             // Add Authentication Services
-            services.AddCustomAuthentication(auth0Options);
+            services.AddCustomAuthentication(authOptions);
 
             // Configure authorization.
-            services.AddCustomAuthorization(auth0Options);
+            services.AddCustomAuthorization(authOptions);
 
-            var telemetryOptions = new TelemetryOptions();
-            Configuration.GetSection("Telemetry").Bind(auth0Options);
-
+            // Configure telemetry.
             services.AddTelemetry(telemetryOptions);
         }
 

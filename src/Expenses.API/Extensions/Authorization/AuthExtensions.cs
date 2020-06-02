@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 
-namespace Expenses.API.Authorization
+namespace Expenses.API.Extensions.Authorization
 {
     internal static class AuthExtensions
     {

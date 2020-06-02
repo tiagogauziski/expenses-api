@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Expenses.API.Telemetry
+﻿namespace Expenses.API.Extensions.Telemetry
 {
     internal class ApplicationInsightsOptions
     {

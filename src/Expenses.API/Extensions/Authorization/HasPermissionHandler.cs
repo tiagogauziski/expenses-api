@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Expenses.API.Authorization
+namespace Expenses.API.Extensions.Authorization
 {
     public class HasPermissionHandler : AuthorizationHandler<HasPermissionRequirement>
     {
