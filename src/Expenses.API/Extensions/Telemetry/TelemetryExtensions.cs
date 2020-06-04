@@ -25,7 +25,7 @@ namespace Expenses.API.Extensions.Telemetry
                         builder
                             .UseApplicationInsights(options =>
                             {
-                                options.InstrumentationKey = telemetryOptions.ApplicationInsights.ApplicationKey;
+                                options.InstrumentationKey = telemetryOptions.ApplicationInsights.InstrumentationKey;
                             });
                     }
                     builder
