@@ -10,6 +10,6 @@
         /// <summary>
         /// Gets or sets application insights application key.
         /// </summary>
-        public string ApplicationKey { get; set; }
+        public string InstrumentationKey { get; set; }
     }
 }
