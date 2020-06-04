@@ -33,7 +33,7 @@ namespace Expenses.Infrastructure.SqlServer
 
                 var sqlConnection = new SqlConnection(connectionString);
 
-                if (_configuration.GetValue<string>("Environment") == "Production")
+                if (IsAzure())
                 {
                     sqlConnection.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync(AZURE_DATABASE_RESOURCE).Result;
                 }
@@ -43,14 +43,17 @@ namespace Expenses.Infrastructure.SqlServer
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
             base.OnConfiguring(optionsBuilder);
-
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new InvoiceConfiguration());
             modelBuilder.ApplyConfiguration(new StatementConfiguration());
+        }
+
+        private bool IsAzure()
+        {
+            return !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
         }
     }
 }
