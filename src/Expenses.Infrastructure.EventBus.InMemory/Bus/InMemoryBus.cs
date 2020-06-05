@@ -4,7 +4,7 @@ using Expenses.Domain.Core.Events;
 using MediatR;
 using System.Threading.Tasks;
 
-namespace Expenses.Infrastructure.EventBus
+namespace Expenses.Infrastructure.EventBus.InMemory.Bus
 {
     /// <summary>
     /// In Memory implementation of IMediatorHandler.

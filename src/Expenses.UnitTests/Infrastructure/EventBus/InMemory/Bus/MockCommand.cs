@@ -1,9 +1,7 @@
 ﻿using Expenses.Domain.Core.Commands;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Expenses.UnitTests.Infrastructure.Bus
+namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
 {
     public class MockCommand : Command
     {

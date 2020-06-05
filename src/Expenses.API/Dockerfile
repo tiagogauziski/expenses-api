@@ -9,8 +9,7 @@ COPY ["src/Expenses.Domain.Core/Expenses.Domain.Core.csproj", "Expenses.Domain.C
 COPY ["src/Expenses.Infrastructure.SqlServer/Expenses.Infrastructure.SqlServer.csproj", "Expenses.Infrastructure.SqlServer/"]
 COPY ["src/Expenses.Application/Expenses.Application.csproj", "Expenses.Application/"]
 COPY ["src/Expenses.Application.IoC/Expenses.Application.IoC.csproj", "Expenses.Application.IoC/"]
-COPY ["src/Expenses.Infrastructure.EventBus/Expenses.Infrastructure.EventBus.csproj", "Expenses.Infrastructure.EventBus/"]
-COPY ["src/Expenses.API/Expenses.API.csproj", "Expenses.API/"]
+COPY ["src/Expenses.Infrastructure.EventBus.InMemory/Expenses.Infrastructure.EventBus.InMemory.csproj", "Expenses.Infrastructure.EventBus.InMemory/"]
 COPY ["nuget.config", "Expenses.API/"]
 RUN dotnet restore "Expenses.API/Expenses.API.csproj"
 

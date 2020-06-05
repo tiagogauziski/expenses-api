@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Expenses.Infrastructure.EventBus.EventStore
+namespace Expenses.Infrastructure.EventBus.InMemory.EventStore
 {
     /// <summary>
     /// In Memory implementation of IEventStore

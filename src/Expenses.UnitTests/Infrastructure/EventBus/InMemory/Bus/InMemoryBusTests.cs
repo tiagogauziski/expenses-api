@@ -1,13 +1,13 @@
 ﻿using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
-using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.InMemory.Bus;
 using MediatR;
 using Moq;
 using Moq.AutoMock;
 using System.Threading;
 using Xunit;
 
-namespace Expenses.UnitTests.Infrastructure.Bus
+namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
 {
     public class InMemoryBusTests
     {

@@ -13,7 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
-    <ProjectReference Include="..\Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus.InMemory\Expenses.Infrastructure.EventBus.InMemory.csproj" />
     <ProjectReference Include="..\Expenses.Infrastructure.SqlServer\Expenses.Infrastructure.SqlServer.csproj" />
   </ItemGroup>
 

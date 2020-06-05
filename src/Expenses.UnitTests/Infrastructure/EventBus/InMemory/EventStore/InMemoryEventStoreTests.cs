@@ -1,10 +1,10 @@
 ﻿using Expenses.Domain.Core.Events;
-using Expenses.Infrastructure.EventBus.EventStore;
-using Expenses.UnitTests.Infrastructure.Bus;
+using Expenses.Infrastructure.EventBus.InMemory.EventStore;
+using Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus;
 using Moq.AutoMock;
 using Xunit;
 
-namespace Expenses.UnitTests.Infrastructure.EventStore
+namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.EventStore
 {
     public class InMemoryEventStoreTests
     {
