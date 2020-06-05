@@ -27,8 +27,13 @@ dotnet test
 
 # Few handy commands
 ## Docker MSSQL Linux
-```
-docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=Network@123' -p 1433:1433 -v mssql_volume:/var/opt/mssql -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04
+```powershell
+docker run `
+	 -e 'ACCEPT_EULA=Y' ` 
+	 -e 'MSSQL_SA_PASSWORD=Network@123' ` 
+	 -p 1433:1433 `
+	 -v mssql_volume:/var/opt/mssql `
+	 -d mcr.microsoft.com/mssql/server:2019-GA-ubuntu-16.04 `
 ```
 
 ## Execute Migrations (make sure to have database created and update appsettings connection string)
@@ -46,16 +51,25 @@ dotnet ef migrations script --startup-project ..\Expenses.API\
 dotnet ef migrations add <MIGRATION_NAME> --startup-project ..\Expenses.API\
 ```
 
-## Run localhost Jaeger to collect telemetry
+## Run Jaeger docker image to collect telemetry
 ```powershell
 docker run -d --name jaeger `
-        -e COLLECTOR_ZIPKIN_HTTP_PORT=9411 `
-        -p 5775:5775/udp `
-        -p 6831:6831/udp `
-        -p 6832:6832/udp `
-        -p 5778:5778 `
-        -p 16686:16686 `
-        -p 14268:14268 `
-        -p 9411:9411 `
-        jaegertracing/all-in-one
+	-e COLLECTOR_ZIPKIN_HTTP_PORT=9411 `
+	-p 5775:5775/udp `
+	-p 6831:6831/udp `
+	-p 6832:6832/udp `
+	-p 5778:5778 `
+	-p 16686:16686 `
+	-p 14268:14268 `
+	-p 9411:9411 `
+	jaegertracing/all-in-one
+``
+
+## Run RabbitMQ docker image
+```poweshell
+docker run --name rabbitmq `
+	--hostname rabbitmq `
+	-d `
+	-p 15672:15672 `
+	rabbitmq:3-management 
 ```
