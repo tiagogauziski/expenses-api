@@ -1,7 +1,25 @@
 version: "3"
 services:
- expenses-api:
-  image: expenses-api
-  build: 
-   context: src/.
-   dockerfile: Expenses.API/Dockerfile
+    expensesapi:
+        image: expenses-api
+        build: 
+            context: .
+            dockerfile: src/Expenses.API/Dockerfile
+        environment:
+            ASPNETCORE_ENVIRONMENT: "Production"
+            ConnectionStrings__ExpensesDatabase: "Server=mssql;Database=expenses;User Id=sa;Password=Network@123;"
+        ports:
+            - "8080:80"
+        depends_on:
+            - mssql
+            - rabbitmq
+    mssql:
+        image: "mcr.microsoft.com/mssql/server"
+        environment:
+            SA_PASSWORD: "Network@123"
+            ACCEPT_EULA: "Y"
+    rabbitmq:
+        image: rabbitmq:3-management
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
