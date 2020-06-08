@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Expenses.Application.IoC;
+using Expenses.Worker.StatementCreator.Extensions.Telemetry;
+using Expenses.Worker.StatementCreator.HostedServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -26,6 +29,28 @@ namespace Expenses.Worker.StatementCreator
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            // Deserialize telemetry options into object
+            var telemetryOptions = new TelemetryOptions();
+            Configuration.GetSection("Telemetry").Bind(telemetryOptions);
+
+            // Application AutoMapper extension
+            services.AddApplicationAutoMapper();
+
+            // Application Dependencies
+            services.AddApplicationDependencies();
+
+            // Infrastructure Dependencies - Database
+            services.AddInfrastructureDatabase();
+
+            // Infrastructure Dependencies - Message Bus
+            services.AddInfrastructureMessageBus();
+
+            // Configure telemetry.
+            services.AddTelemetry(telemetryOptions);
+
+            services.AddHostedService<StatementCreatorHostedService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

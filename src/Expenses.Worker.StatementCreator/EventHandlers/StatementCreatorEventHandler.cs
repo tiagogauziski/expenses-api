@@ -1,26 +1,25 @@
 ﻿using Expenses.Application.Engines;
+using Expenses.Application.EventHandlers;
 using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Events.Invoice;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Expenses.Application.EventHandlers
+namespace Expenses.Worker.StatementCreator.EventHandlers
 {
-    public class InvoiceEventHandler : 
-        INotificationHandler<InvoiceCreatedEvent>,
-        INotificationHandler<InvoiceUpdatedEvent>,
-        INotificationHandler<InvoiceDeletedEvent>
+    public class StatementCreatorEventHandler :
+        INotificationHandler<InvoiceCreatedEvent>
     {
         private readonly ILogger<InvoiceEventHandler> _logger;
         private readonly ILoggerFactory _loggerFactory;
         private readonly IMediatorHandler _mediatorHandler;
 
-        public InvoiceEventHandler(
+        public StatementCreatorEventHandler(
             ILogger<InvoiceEventHandler> logger,
             ILoggerFactory loggerFactory,
             IMediatorHandler mediatorHandler)
@@ -33,19 +32,14 @@ namespace Expenses.Application.EventHandlers
         {
             _logger.LogInformation("InvoiceCreatedEvent: {invoice}", notification);
 
-            return;
-        }
+            var statementCreatorEngine = new StatementCreatorEngine(_loggerFactory.CreateLogger<StatementCreatorEngine>());
 
-        public async Task Handle(InvoiceUpdatedEvent notification, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("InvoiceUpdatedEvent: {invoice}", notification);
+            var statementList = statementCreatorEngine.Run(notification.New, DateTime.Now);
 
-            return;
-        }
-
-        public async Task Handle(InvoiceDeletedEvent notification, CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("InvoiceDeletedEvent: {invoice}", notification);
+            foreach (var statement in statementList)
+            {
+                await _mediatorHandler.SendCommand(statement);
+            }
 
             return;
         }

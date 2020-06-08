@@ -3,6 +3,9 @@ using Expenses.Domain.Core.Events;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Infrastructure.EventBus.InMemory.Bus;
 using Expenses.Infrastructure.EventBus.InMemory.EventStore;
+using Expenses.Infrastructure.EventBus.RabbitMQ;
+using Expenses.Infrastructure.EventBus.RabbitMQ.Bus;
+using Expenses.Infrastructure.EventBus.RabbitMQ.EventStore;
 using Expenses.Infrastructure.SqlServer;
 using Expenses.Infrastructure.SqlServer.Repositories;
 using MediatR;
@@ -44,6 +47,19 @@ namespace Expenses.Application.IoC
             services.AddMediatR(typeof(InfrastructureExtensions));
 
             // Infrastructure - Mediator and EventStore
+            services.AddRabbitMQBus();
+        }
+
+        public static void AddRabbitMQBus(this IServiceCollection services)
+        {
+            services.AddScoped<IMediatorHandler, RabbitMQBus>();
+            services.AddScoped<IEventStore, RabbitMQEventStore>();
+            services.AddSingleton<IRabbitMQClient, RabbitMQClient>();
+            services.AddSingleton<IRabbitMQConsumer, RabbitMQClient>();
+        }
+
+        public static void AddInMemoryBus(this IServiceCollection services)
+        {
             services.AddScoped<IMediatorHandler, InMemoryBus>();
             services.AddScoped<IEventStore, InMemoryEventStore>();
         }
