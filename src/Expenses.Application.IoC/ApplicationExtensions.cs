@@ -25,10 +25,33 @@ namespace Expenses.Application.IoC
             if (services == null) throw new ArgumentNullException(nameof(services));
 
             //Application Services
-            services.AddScoped<IInvoiceService, InvoiceService>();
-            services.AddScoped<IStatementService, StatementService>();
+            services.AddApplicationServices();
 
             // Application - Commands
+            services.AddApplicationCommandHandlers();
+
+            // Application - Events
+            services.AddApplicationEventHandlers();
+        }
+
+        public static void AddApplicationServices(this IServiceCollection services)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IStatementService, StatementService>();
+        }
+
+        public static void AddApplicationCommandHandlers(this IServiceCollection services)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
             // Invoice
             services.AddScoped<IRequestHandler<CreateInvoiceCommand, bool>, InvoiceCommandHandler>();
             services.AddScoped<IRequestHandler<UpdateInvoiceCommand, bool>, InvoiceCommandHandler>();
@@ -40,7 +63,15 @@ namespace Expenses.Application.IoC
             services.AddScoped<IRequestHandler<DeleteStatementCommand, bool>, StatementCommandHandler>();
             services.AddScoped<IRequestHandler<DeleteStatementByInvoiceIdCommand, bool>, StatementCommandHandler>();
 
-            // Application - Events
+        }
+
+        public static void AddApplicationEventHandlers(this IServiceCollection services)
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
             // Invoice
             services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, InvoiceEventHandler>();
             services.AddScoped<INotificationHandler<InvoiceUpdatedEvent>, InvoiceEventHandler>();

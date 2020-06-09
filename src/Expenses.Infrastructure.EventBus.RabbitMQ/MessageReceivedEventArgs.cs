@@ -5,12 +5,14 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 {
     public class MessageReceivedEventArgs : EventArgs
     {
-        public MessageReceivedEventArgs(Message message) 
+        public MessageReceivedEventArgs(string message, string routingKey) 
             : base()
         {
             Message = message;
+            RoutingKey = routingKey;
         }
 
-        public Message Message { get; private set; }
+        public string Message { get; }
+        public string RoutingKey { get; }
     }
 }

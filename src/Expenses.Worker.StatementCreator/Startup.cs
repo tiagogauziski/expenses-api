@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Expenses.Application.IoC;
+using Expenses.Domain.Events.Invoice;
+using Expenses.Worker.StatementCreator.EventHandlers;
 using Expenses.Worker.StatementCreator.Extensions.Telemetry;
 using Expenses.Worker.StatementCreator.HostedServices;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -37,8 +40,9 @@ namespace Expenses.Worker.StatementCreator
             // Application AutoMapper extension
             services.AddApplicationAutoMapper();
 
-            // Application Dependencies
-            services.AddApplicationDependencies();
+            // Application Dependencies - Command Handlers only
+            services.AddApplicationCommandHandlers();
+            services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, StatementCreatorEventHandler>();
 
             // Infrastructure Dependencies - Database
             services.AddInfrastructureDatabase();

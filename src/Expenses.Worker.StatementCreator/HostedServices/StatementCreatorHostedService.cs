@@ -1,11 +1,11 @@
-﻿using Expenses.Infrastructure.EventBus.RabbitMQ;
+﻿using Expenses.Domain.Core.Events;
+using Expenses.Infrastructure.EventBus.RabbitMQ;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,6 +30,7 @@ namespace Expenses.Worker.StatementCreator.HostedServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("Starting consuming messages...");
             _rabbitMqConsumer.MessagedReceived += RabbitMqConsumer_MessagedReceived;
             _rabbitMqConsumer.Start(nameof(StatementCreatorHostedService));
 
@@ -39,7 +40,9 @@ namespace Expenses.Worker.StatementCreator.HostedServices
 
         private async void RabbitMqConsumer_MessagedReceived(object sender, MessageReceivedEventArgs e)
         {
-            _logger.LogInformation($"Consuming message: {e.Message}");
+            _logger.LogInformation($"Consuming message: {e.RoutingKey}");
+
+            Event message = JsonSerializer.Deserialize(e.Message, Type.GetType(e.RoutingKey)) as Event;
 
             using (var scope = _serviceProvider.CreateScope())
             {
@@ -47,7 +50,7 @@ namespace Expenses.Worker.StatementCreator.HostedServices
                     scope.ServiceProvider
                         .GetRequiredService<IMediator>();
 
-                await mediator.Publish(e.Message);
+                await mediator.Publish(message);
             }
         }
     }

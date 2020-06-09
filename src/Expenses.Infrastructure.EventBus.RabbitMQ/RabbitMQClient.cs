@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Core.Events;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System;
@@ -8,20 +9,22 @@ using System.Text.Json;
 
 namespace Expenses.Infrastructure.EventBus.RabbitMQ
 {
-    public class RabbitMQClient : IRabbitMQClient, IRabbitMQConsumer
+    public class RabbitMQClient : IRabbitMQConsumer
     {
-        private const string EXCHANGE_NAME = "expenses";
+        private const string EXCHANGE_NAME = "expenses.events";
 
         private IConnection _connection;
         private IModel _consumerChannel;
         private EventingBasicConsumer _rabbitMqConsumer;
-        private IConfiguration _configuration;
+        private readonly IConfiguration configuration;
+        private readonly ILogger<RabbitMQClient> logger;
 
         public event EventHandler<MessageReceivedEventArgs> MessagedReceived;
 
-        public RabbitMQClient(IConfiguration configuration)
+        public RabbitMQClient(IConfiguration configuration, ILogger<RabbitMQClient> logger)
         {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public void Send<TEvent>(TEvent message) where TEvent : Event
@@ -29,7 +32,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             IModel channel = GetChannel();
 
             channel.BasicPublish(exchange: EXCHANGE_NAME,
-                     routingKey: typeof(TEvent).Name,
+                     routingKey: typeof(TEvent).AssemblyQualifiedName,
                      basicProperties: null,
                      body: SerializeMessage(message));
         }
@@ -41,10 +44,15 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
                 _consumerChannel = GetChannel();
             }
 
-            _consumerChannel.QueueDeclare(queue: queueName, durable: true, exclusive: false);
-            _consumerChannel.QueueBind(queue: queueName,
-                              exchange: EXCHANGE_NAME,
-                              routingKey: "*");
+            _consumerChannel.QueueDeclare(
+                queue: queueName, 
+                durable: true, 
+                exclusive: false,
+                autoDelete: false);
+            _consumerChannel.QueueBind(
+                queue: queueName,
+                exchange: EXCHANGE_NAME,
+                routingKey: "#");
 
             _rabbitMqConsumer = new EventingBasicConsumer(_consumerChannel);
 
@@ -59,6 +67,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
         protected void OnMessagedReceived(MessageReceivedEventArgs e)
         {
+            logger.LogDebug($"Message received");
             MessagedReceived?.Invoke(this, e);
         }
 
@@ -69,11 +78,11 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             return Encoding.UTF8.GetBytes(serializedMessage);
         }
 
-        private object DeserializeMessage(ReadOnlyMemory<byte> body, string routingKey)
+        private string DeserializeMessage(ReadOnlyMemory<byte> body, string routingKey)
         {
             var message = Encoding.UTF8.GetString(body.ToArray());
 
-            return JsonSerializer.Deserialize(message, Type.GetType(routingKey));
+            return message;
         }
 
         /// <summary>
@@ -88,12 +97,12 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
                 return _connection;
             }
 
-            ConnectionFactory _factory;
+            ConnectionFactory factory;
 
-            _factory = new ConnectionFactory();
-            _factory.Uri = new Uri(_configuration.GetConnectionString("RabbitMQ"));
+            factory = new ConnectionFactory();
+            factory.Uri = new Uri(configuration.GetConnectionString("RabbitMQ"));
 
-            return _factory.CreateConnection();
+            return factory.CreateConnection();
         }
 
         private IModel GetChannel()
@@ -111,9 +120,9 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
         private void RabbitMqConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
-            object message = DeserializeMessage(e.Body, e.RoutingKey);
+            string message = DeserializeMessage(e.Body, e.RoutingKey);
 
-            OnMessagedReceived(new MessageReceivedEventArgs((Message)message));
+            OnMessagedReceived(new MessageReceivedEventArgs(message, e.RoutingKey));
         }
     }
 }
