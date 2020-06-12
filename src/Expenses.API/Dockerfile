@@ -10,6 +10,7 @@ COPY ["src/Expenses.Infrastructure.SqlServer/Expenses.Infrastructure.SqlServer.c
 COPY ["src/Expenses.Application/Expenses.Application.csproj", "Expenses.Application/"]
 COPY ["src/Expenses.Application.IoC/Expenses.Application.IoC.csproj", "Expenses.Application.IoC/"]
 COPY ["src/Expenses.Infrastructure.EventBus.InMemory/Expenses.Infrastructure.EventBus.InMemory.csproj", "Expenses.Infrastructure.EventBus.InMemory/"]
+COPY ["src/Expenses.Infrastructure.EventBus.RabbitMQ/Expenses.Infrastructure.EventBus.RabbitMQ.csproj", "Expenses.Infrastructure.EventBus.RabbitMQ/"]
 COPY ["nuget.config", "Expenses.API/"]
 RUN dotnet restore "Expenses.API/Expenses.API.csproj"
 

@@ -1,6 +1,6 @@
 version: "3"
 services:
-    expensesapi:
+    expenses.api:
         image: expenses-api
         build: 
             context: .
@@ -8,11 +8,25 @@ services:
         environment:
             ASPNETCORE_ENVIRONMENT: "Production"
             ConnectionStrings__ExpensesDatabase: "Server=mssql;Database=expenses;User Id=sa;Password=Network@123;"
+            ConnectionStrings__RabbitMQ: "amqp://guest:guest@rabbitmq:5672/"
         ports:
             - "8080:80"
         depends_on:
             - mssql
             - rabbitmq
+    expenses.worker.statementcreator:
+        image: expenses-worker-statementcreator
+        build: 
+            context: .
+            dockerfile: src/Expenses.Worker.StatementCreator/Dockerfile
+        environment:
+            ASPNETCORE_ENVIRONMENT: "Production"
+            ConnectionStrings__ExpensesDatabase: "Server=mssql;Database=expenses;User Id=sa;Password=Network@123;"
+            ConnectionStrings__RabbitMQ: "amqp://guest:guest@rabbitmq:5672/"
+        depends_on:
+            - mssql
+            - rabbitmq
+            - expenses.api
     mssql:
         image: "mcr.microsoft.com/mssql/server"
         environment:
