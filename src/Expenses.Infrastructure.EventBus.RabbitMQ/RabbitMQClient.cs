@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Core.Events;
+using Expenses.Infrastructure.EventBus.RabbitMQ.Telemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Polly;
@@ -130,7 +131,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
             var connection = CreateConnection();
 
-            _channel = connection.CreateModel();
+            _channel = connection.CreateModel().AsActivityEnabled(_connection.Endpoint.HostName);
             _channel.ExchangeDeclare(
                 exchange: EXCHANGE_NAME,
                 type: ExchangeType.Topic,

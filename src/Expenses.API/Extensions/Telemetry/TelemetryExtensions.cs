@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using OpenTelemetry.Trace.Configuration;
 using OpenTelemetry.Trace.Samplers;
+using System;
+using System.Diagnostics;
 
 namespace Expenses.API.Extensions.Telemetry
 {
@@ -34,7 +36,8 @@ namespace Expenses.API.Extensions.Telemetry
                         .AddDependencyAdapter(config =>
                         {
                             config.SetHttpFlavor = true;
-                        });
+                        })
+                        .AddAdapter((tracer) => new RabbitMQInstrumentation(tracer));
                 });
             }
         }
