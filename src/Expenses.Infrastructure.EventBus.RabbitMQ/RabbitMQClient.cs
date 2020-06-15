@@ -1,8 +1,10 @@
 ﻿using Expenses.Domain.Core.Events;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
 using System;
 using System.Text;
 using System.Text.Json;
@@ -12,9 +14,10 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
     public class RabbitMQClient : IRabbitMQConsumer
     {
         private const string EXCHANGE_NAME = "expenses.events";
+        private const int CONNECTION_RETRIES = 6;
 
         private IConnection _connection;
-        private IModel _consumerChannel;
+        private IModel _channel;
         private EventingBasicConsumer _rabbitMqConsumer;
         private readonly IConfiguration configuration;
         private readonly ILogger<RabbitMQClient> logger;
@@ -39,25 +42,23 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
         public void Start(string queueName)
         {
-            if (_consumerChannel is null)
-            {
-                _consumerChannel = GetChannel();
-            }
+            var channel = GetChannel();
 
-            _consumerChannel.QueueDeclare(
+            channel.QueueDeclare(
                 queue: queueName, 
                 durable: true, 
                 exclusive: false,
                 autoDelete: false);
-            _consumerChannel.QueueBind(
+            channel.QueueBind(
                 queue: queueName,
                 exchange: EXCHANGE_NAME,
                 routingKey: "#");
 
-            _rabbitMqConsumer = new EventingBasicConsumer(_consumerChannel);
+            _rabbitMqConsumer = new EventingBasicConsumer(channel);
 
             _rabbitMqConsumer.Received += RabbitMqConsumer_Received;
-            _consumerChannel.BasicConsume(queueName, true, _rabbitMqConsumer);
+            channel.BasicConsume(queueName, true, _rabbitMqConsumer);
+            logger.LogInformation("RabbitMQ consumer initialized successfully.");
         }
 
         public void Stop()
@@ -102,20 +103,40 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             factory = new ConnectionFactory();
             factory.Uri = new Uri(configuration.GetConnectionString("RabbitMQ"));
 
-            return factory.CreateConnection();
+            //
+            Policy
+                .Handle<BrokerUnreachableException>()
+                .WaitAndRetry(CONNECTION_RETRIES, (retry) =>
+                {
+                    return TimeSpan.FromSeconds(Math.Pow(2, retry));
+                }, (exception, timeSpan) => {
+                    logger.LogWarning("Failure to create RabbitMQ connection...retrying in {timeSpan}", timeSpan);
+                })
+                .Execute(() =>
+                {
+                    _connection = factory.CreateConnection();
+                    logger.LogDebug("RabbitMQ created successfully.");
+                });
+
+            return _connection;
         }
 
         private IModel GetChannel()
         {
+            if (_channel != null)
+            {
+                return _channel;
+            }
+
             var connection = CreateConnection();
 
-            var channel = connection.CreateModel();
-            channel.ExchangeDeclare(
+            _channel = connection.CreateModel();
+            _channel.ExchangeDeclare(
                 exchange: EXCHANGE_NAME,
                 type: ExchangeType.Topic,
                 durable: true);
 
-            return channel;
+            return _channel;
         }
 
         private void RabbitMqConsumer_Received(object sender, BasicDeliverEventArgs e)

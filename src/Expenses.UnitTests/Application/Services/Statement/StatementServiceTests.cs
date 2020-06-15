@@ -262,8 +262,8 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
                 .ReturnsAsync(true);
 
             _mocker.GetMock<IEventStore>()
-                .Setup(m => m.GetEvent<StatementAmountUpdatedEvent>())
-                .Returns(new StatementAmountUpdatedEvent()
+                .Setup(m => m.GetEvent<StatementUpdatedEvent>())
+                .Returns(new StatementUpdatedEvent()
                 {
                     New = new Expenses.Domain.Models.Statement() { },
                     Old = new Expenses.Domain.Models.Statement() { }

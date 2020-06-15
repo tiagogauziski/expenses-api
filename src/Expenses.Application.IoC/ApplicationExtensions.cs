@@ -79,9 +79,7 @@ namespace Expenses.Application.IoC
             // Statement
             services.AddScoped<INotificationHandler<StatementCreatedEvent>, StatementEventHandler>();
             services.AddScoped<INotificationHandler<StatementUpdatedEvent>, StatementEventHandler>();
-            services.AddScoped<INotificationHandler<StatementAmountUpdatedEvent>, StatementEventHandler>();
             services.AddScoped<INotificationHandler<StatementDeletedEvent>, StatementEventHandler>();
-            services.AddScoped<INotificationHandler<StatementBulkDeletedEvent>, StatementEventHandler>();
         }
 
         /// <summary>

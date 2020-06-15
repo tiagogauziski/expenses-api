@@ -39,7 +39,13 @@ namespace Expenses.Infrastructure.SqlServer
                 }
 
                 optionsBuilder
-                    .UseSqlServer(sqlConnection)
+                    .UseSqlServer(sqlConnection, sqlServerOptionsAction: sqlOptions =>
+                    {
+                        sqlOptions.EnableRetryOnFailure(
+                            maxRetryCount: 10,
+                            maxRetryDelay: TimeSpan.FromSeconds(60),
+                            errorNumbersToAdd: null);
+                    })
                     .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
             }
             base.OnConfiguring(optionsBuilder);

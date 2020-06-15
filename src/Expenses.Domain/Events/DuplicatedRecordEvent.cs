@@ -6,6 +6,12 @@ namespace Expenses.Domain.Events
 {
     public class DuplicatedRecordEvent : DomainValidationEvent
     {
+        public DuplicatedRecordEvent()
+            : base(string.Empty, string.Empty)
+        {
+
+        }
+
         public DuplicatedRecordEvent(string field, string module, string validationMessage, string errorCode = null) 
             : base(validationMessage, errorCode)
         {

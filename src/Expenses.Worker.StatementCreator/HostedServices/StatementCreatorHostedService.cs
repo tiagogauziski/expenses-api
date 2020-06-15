@@ -34,7 +34,6 @@ namespace Expenses.Worker.StatementCreator.HostedServices
             _rabbitMqConsumer.MessagedReceived += RabbitMqConsumer_MessagedReceived;
             _rabbitMqConsumer.Start(nameof(StatementCreatorHostedService));
 
-
             return Task.CompletedTask;
         }
 
@@ -42,13 +41,20 @@ namespace Expenses.Worker.StatementCreator.HostedServices
         {
             _logger.LogInformation($"Consuming message: {e.RoutingKey}");
 
-            Event message = JsonSerializer.Deserialize(e.Message, Type.GetType(e.RoutingKey)) as Event;
+            Event message = null;
+            try
+            {
+                message = JsonSerializer.Deserialize(e.Message, Type.GetType(e.RoutingKey)) as Event;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failure to deserialize Event message.");
+                return;
+            }
 
             using (var scope = _serviceProvider.CreateScope())
             {
-                var mediator =
-                    scope.ServiceProvider
-                        .GetRequiredService<IMediator>();
+                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 
                 await mediator.Publish(message);
             }

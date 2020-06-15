@@ -143,7 +143,7 @@ namespace Expenses.Application.Services.Statement
 
             if (result)
             {
-                var updateEvent = _eventStore.GetEvent<StatementAmountUpdatedEvent>();
+                var updateEvent = _eventStore.GetEvent<StatementUpdatedEvent>();
 
                 var data = _mapper.Map<Expenses.Domain.Models.Statement, StatementResponse>(updateEvent.New);
 

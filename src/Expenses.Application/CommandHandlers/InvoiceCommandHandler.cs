@@ -108,8 +108,6 @@ namespace Expenses.Application.CommandHandlers
                 return false;
             }
 
-
-
             _invoiceRepository.Delete(request.Id);
 
             await _mediatorHandler.RaiseEvent(new InvoiceDeletedEvent()
