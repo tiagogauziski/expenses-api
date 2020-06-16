@@ -1,11 +1,8 @@
 ﻿using Expenses.Domain.Core.Commands;
 using Expenses.Domain.Core.Events;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace Expenses.Domain.Core.Bus
+namespace Expenses.Infrastructure.EventBus
 {
     public interface IMediatorHandler
     {

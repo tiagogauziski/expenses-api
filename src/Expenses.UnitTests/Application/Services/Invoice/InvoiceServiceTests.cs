@@ -1,22 +1,19 @@
-﻿using AutoMapper;
-using Expenses.Application.AutoMapper;
+﻿using Expenses.Application.AutoMapper;
 using Expenses.Application.Services.Invoice;
 using Expenses.Application.Services.Invoice.ViewModel;
 using Expenses.Domain.Commands.Invoice;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Invoice;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Invoice;
+using Expenses.Infrastructure.EventBus;
 using Moq;
 using Moq.AutoMock;
 using System;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Expenses.UnitTests.Application.Sevices.Invoice

@@ -1,11 +1,11 @@
 ﻿using Expenses.Application.AutoMapper;
 using Expenses.Application.CommandHandlers;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Infrastructure.EventBus;
 using Moq;
 using Moq.AutoMock;
 using System;

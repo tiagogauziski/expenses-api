@@ -1,6 +1,6 @@
-﻿using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Core.Events;
 using Expenses.Domain.Interfaces.Repositories;
+using Expenses.Infrastructure.EventBus;
 using Expenses.Infrastructure.EventBus.InMemory.Bus;
 using Expenses.Infrastructure.EventBus.InMemory.EventStore;
 using Expenses.Infrastructure.EventBus.RabbitMQ;

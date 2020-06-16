@@ -1,11 +1,8 @@
-﻿using Expenses.Application.Engines;
-using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Events.Invoice;
+﻿using Expenses.Domain.Events.Invoice;
+using Expenses.Infrastructure.EventBus;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 

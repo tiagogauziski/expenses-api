@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Infrastructure.EventBus;
 using MediatR;
 using System;
 using System.Threading;
