@@ -1,21 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Expenses.Application.IoC;
 using Expenses.Domain.Events.Invoice;
+using Expenses.OpenTelemetry.Extensions;
+using Expenses.OpenTelemetry.Options;
 using Expenses.Worker.StatementCreator.EventHandlers;
-using Expenses.Worker.StatementCreator.Extensions.Telemetry;
 using Expenses.Worker.StatementCreator.HostedServices;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Expenses.Worker.StatementCreator
 {

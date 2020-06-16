@@ -1,6 +1,6 @@
-﻿namespace Expenses.Worker.StatementCreator.Extensions.Telemetry
+﻿namespace Expenses.OpenTelemetry.Options
 {
-    internal class JaegerOptions
+    public class JaegerOptions
     {
         /// <summary>
         /// Gets or sets whether jaeger telemetry gathering is enabled.

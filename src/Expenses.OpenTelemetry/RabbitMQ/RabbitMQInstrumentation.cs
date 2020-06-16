@@ -1,11 +1,8 @@
 ﻿using OpenTelemetry.Adapter;
 using OpenTelemetry.Trace;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace Expenses.API.Extensions.Telemetry
+namespace Expenses.OpenTelemetry.RabbitMQ
 {
     /// <summary>
     /// SqlClient instrumentation.

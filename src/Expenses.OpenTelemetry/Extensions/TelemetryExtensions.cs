@@ -1,14 +1,30 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Expenses.OpenTelemetry.Options;
+using Expenses.OpenTelemetry.RabbitMQ;
+using Microsoft.Extensions.DependencyInjection;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using OpenTelemetry.Trace.Configuration;
 using OpenTelemetry.Trace.Samplers;
-using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Reflection;
 
-namespace Expenses.API.Extensions.Telemetry
+namespace Expenses.OpenTelemetry.Extensions
 {
     public static class TelemetryExtensions
     {
-        internal static void AddTelemetry(this IServiceCollection services, TelemetryOptions telemetryOptions)
+        public static string TracerServiceName { get; }
+
+        static TelemetryExtensions()
+        {
+            TracerServiceName = Assembly.GetEntryAssembly().GetName().Name.ToString();
+        }
+
+        public static Tracer GetApplicationTracer(this TracerFactoryBase tracerFactory)
+        {
+            return tracerFactory.GetTracer(TracerServiceName);
+        }
+
+        public static void AddTelemetry(this IServiceCollection services, TelemetryOptions telemetryOptions)
         {
             if (telemetryOptions.Enabled)
             {
@@ -19,7 +35,7 @@ namespace Expenses.API.Extensions.Telemetry
                         builder
                             .UseJaeger(options =>
                             {
-                                options.ServiceName = telemetryOptions.Jaeger.ServiceName;
+                                options.ServiceName = TracerServiceName;
                             });
                     }
                     else if (telemetryOptions.ApplicationInsights.Enabled)
@@ -37,7 +53,11 @@ namespace Expenses.API.Extensions.Telemetry
                         {
                             config.SetHttpFlavor = true;
                         })
-                        .AddAdapter((tracer) => new RabbitMQInstrumentation(tracer));
+                        .AddAdapter((tracer) => new RabbitMQInstrumentation(tracer))
+                        .SetResource(new Resource(new Dictionary<string, object>
+                        {
+                            { "service.name", TracerServiceName }
+                        }));
                 });
             }
         }

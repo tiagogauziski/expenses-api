@@ -1,6 +1,6 @@
-﻿namespace Expenses.API.Extensions.Telemetry
+﻿namespace Expenses.OpenTelemetry.Options
 {
-    internal class TelemetryOptions
+    public class TelemetryOptions
     {
         /// <summary>
         /// Gets or sets whether telemetry is enabled.

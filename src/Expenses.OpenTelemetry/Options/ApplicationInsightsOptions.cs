@@ -1,6 +1,6 @@
-﻿namespace Expenses.Worker.StatementCreator.Extensions.Telemetry
+﻿namespace Expenses.OpenTelemetry.Options
 {
-    internal class ApplicationInsightsOptions
+    public class ApplicationInsightsOptions
     {
         /// <summary>
         /// Gets or sets whether azure application insights telemetry gathering is enabled.

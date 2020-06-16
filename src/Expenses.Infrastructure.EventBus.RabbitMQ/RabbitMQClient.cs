@@ -1,7 +1,9 @@
 ﻿using Expenses.Domain.Core.Events;
 using Expenses.Infrastructure.EventBus.RabbitMQ.Telemetry;
+using Expenses.OpenTelemetry.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using OpenTelemetry.Trace;
 using Polly;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -22,16 +24,20 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
         private EventingBasicConsumer _rabbitMqConsumer;
         private readonly IConfiguration configuration;
         private readonly ILogger<RabbitMQClient> logger;
+        private readonly Tracer tracer;
 
         public event EventHandler<MessageReceivedEventArgs> MessagedReceived;
 
-        public RabbitMQClient(IConfiguration configuration, ILogger<RabbitMQClient> logger)
+        public RabbitMQClient(IConfiguration configuration, 
+            ILogger<RabbitMQClient> logger,
+            TracerFactoryBase tracerFactoryBase)
         {
             this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            tracer = tracerFactoryBase.GetApplicationTracer();
         }
 
-        public void Send<TEvent>(TEvent message) where TEvent : Event
+        public void Send<TEvent>(TEvent message) where TEvent : Domain.Core.Events.Event
         {
             IModel channel = GetChannel();
 
@@ -142,9 +148,33 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
         private void RabbitMqConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
-            string message = DeserializeMessage(e.Body, e.RoutingKey);
+            // ExtractActivity creates the Activity setting the parent based on the RabbitMQ "traceparent" header
+            var activity = e.ExtractActivity("Process single RabbitMQ message");
+            TelemetrySpan span = null;
 
-            OnMessagedReceived(new MessageReceivedEventArgs(message, e.RoutingKey));
+            if (tracer != null)
+            {
+                // OpenTelemetry seems to require the Activity to have started, unlike AI SDK
+                activity.Start();
+                tracer.StartActiveSpanFromActivity(activity.OperationName, activity, SpanKind.Consumer, out span);
+
+                span.SetAttribute(Telemetry.Constants.RoutingKeyTagName, e.RoutingKey);
+            }
+
+            try
+            {
+                string message = DeserializeMessage(e.Body, e.RoutingKey);
+
+                OnMessagedReceived(new MessageReceivedEventArgs(message, e.RoutingKey));
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Unable to proccess message. Routing key: {RoutingKey}", e.RoutingKey);
+            }
+            finally
+            {
+                span?.End();
+            }
         }
     }
 }
