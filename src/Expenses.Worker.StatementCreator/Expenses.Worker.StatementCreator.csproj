@@ -7,12 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTelemetry" Version="0.2.0-alpha.277" />
-    <PackageReference Include="OpenTelemetry.Adapter.AspNetCore" Version="0.2.0-alpha.277" />
-    <PackageReference Include="OpenTelemetry.Adapter.Dependencies" Version="0.2.0-alpha.277" />
-    <PackageReference Include="OpenTelemetry.Exporter.ApplicationInsights" Version="0.2.0-alpha.275" />
-    <PackageReference Include="OpenTelemetry.Exporter.Jaeger" Version="0.2.0-alpha.277" />
-    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="0.2.0-alpha.277" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.2.0" />
   </ItemGroup>
 
