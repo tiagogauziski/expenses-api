@@ -1,8 +1,4 @@
-﻿using Expenses.Domain.Core.Commands;
-using Expenses.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Expenses.Domain.Models;
 
 namespace Expenses.Domain.Commands.Invoice
 {

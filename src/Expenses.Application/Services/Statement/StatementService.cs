@@ -2,12 +2,12 @@
 using Expenses.Application.Common;
 using Expenses.Application.Services.Statement.ViewModel;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Statement;
 using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;

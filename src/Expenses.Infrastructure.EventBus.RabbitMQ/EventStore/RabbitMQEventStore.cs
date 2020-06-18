@@ -1,4 +1,5 @@
-﻿using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Events;
+using Expenses.Infrastructure.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;

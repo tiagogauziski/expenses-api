@@ -1,5 +1,4 @@
-﻿using Expenses.Domain.Core.Events;
-using Expenses.Domain.Interfaces.Events;
+﻿using Expenses.Domain.Interfaces.Events;
 using System.Text.Json;
 
 namespace Expenses.Domain.Events.Statement

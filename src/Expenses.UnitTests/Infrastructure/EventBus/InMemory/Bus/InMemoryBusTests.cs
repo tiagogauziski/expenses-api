@@ -1,5 +1,6 @@
-﻿using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Events;
 using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Events;
 using Expenses.Infrastructure.EventBus.InMemory.Bus;
 using MediatR;
 using Moq;

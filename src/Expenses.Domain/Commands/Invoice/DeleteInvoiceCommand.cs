@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Core.Commands;
+﻿using Expenses.Domain.Commands;
 using Expenses.Domain.Validations.Invoice;
 using System;
 using System.Collections.Generic;

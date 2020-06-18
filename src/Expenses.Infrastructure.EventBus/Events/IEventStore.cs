@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Expenses.Domain.Events;
 
-namespace Expenses.Domain.Core.Events
+namespace Expenses.Infrastructure.EventBus.Events
 {
     public interface IEventStore
     {

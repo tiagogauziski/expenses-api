@@ -1,9 +1,7 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Expenses.Domain.Core.Events
+namespace Expenses.Domain.Events
 {
     public abstract class Event : Message, INotification
     {

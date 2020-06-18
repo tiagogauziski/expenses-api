@@ -1,5 +1,6 @@
-﻿using Expenses.Domain.Core.Commands;
-using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Commands;
+using Expenses.Domain.Events;
+using Expenses.Infrastructure.EventBus.Events;
 using MediatR;
 using System.Threading.Tasks;
 

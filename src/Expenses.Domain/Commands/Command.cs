@@ -1,8 +1,8 @@
 ﻿using System;
-using Expenses.Domain.Core.Events;
+using Expenses.Domain.Events;
 using FluentValidation.Results;
 
-namespace Expenses.Domain.Core.Commands
+namespace Expenses.Domain.Commands
 {
     /// <summary>
     /// Abstract class designed to send commands from UI to application

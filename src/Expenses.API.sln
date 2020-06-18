@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.IntegrationTests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Domain", "Expenses.Domain\Expenses.Domain.csproj", "{D1F9C05A-F5B8-40D2-AA26-FA0194A7765E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Domain.Core", "Expenses.Domain.Core\Expenses.Domain.Core.csproj", "{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus.InMemory", "Expenses.Infrastructure.EventBus.InMemory\Expenses.Infrastructure.EventBus.InMemory.csproj", "{DFA2244C-F5F8-476A-8852-A40D1D872241}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Expenses.Application\Expenses.Application.csproj", "{37AE7C9B-58A0-4393-8464-8AAAF2B48075}"
@@ -33,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application.IoC", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus.RabbitMQ", "Expenses.Infrastructure.EventBus.RabbitMQ\Expenses.Infrastructure.EventBus.RabbitMQ.csproj", "{911A55D3-F698-4F40-8A05-E3C642EAF6C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.OpenTelemetry", "Expenses.OpenTelemetry\Expenses.OpenTelemetry.csproj", "{F3B772DE-0E1E-4B7D-98DF-CDB5144B00B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.OpenTelemetry", "Expenses.OpenTelemetry\Expenses.OpenTelemetry.csproj", "{F3B772DE-0E1E-4B7D-98DF-CDB5144B00B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Expenses.Infrastructure.EventBus", "Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj", "{9FB3249C-1177-4746-A552-B86DE82F0F8C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus", "Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj", "{9FB3249C-1177-4746-A552-B86DE82F0F8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -59,10 +57,6 @@ Global
 		{D1F9C05A-F5B8-40D2-AA26-FA0194A7765E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1F9C05A-F5B8-40D2-AA26-FA0194A7765E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1F9C05A-F5B8-40D2-AA26-FA0194A7765E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75DA5086-C14C-42B3-9EA8-78CF4F5C2D3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DFA2244C-F5F8-476A-8852-A40D1D872241}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DFA2244C-F5F8-476A-8852-A40D1D872241}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFA2244C-F5F8-476A-8852-A40D1D872241}.Release|Any CPU.ActiveCfg = Release|Any CPU

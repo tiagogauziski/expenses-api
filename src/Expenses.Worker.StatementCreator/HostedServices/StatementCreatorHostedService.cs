@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Events;
 using Expenses.Infrastructure.EventBus.RabbitMQ;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

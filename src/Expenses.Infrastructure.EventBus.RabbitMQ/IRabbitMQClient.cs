@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Events;
 
 namespace Expenses.Infrastructure.EventBus.RabbitMQ
 {

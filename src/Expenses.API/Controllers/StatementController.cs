@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Expenses.API.ViewModel;
+﻿using Expenses.API.ViewModel;
 using Expenses.Application.Services.Statement;
 using Expenses.Application.Services.Statement.ViewModel;
-using Expenses.Domain.Core.Events;
+using Expenses.Infrastructure.EventBus.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Expenses.API.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using Expenses.Domain.Core.Commands;
-using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Commands;
+using Expenses.Domain.Events;
 using System.Threading.Tasks;
 
 namespace Expenses.Infrastructure.EventBus

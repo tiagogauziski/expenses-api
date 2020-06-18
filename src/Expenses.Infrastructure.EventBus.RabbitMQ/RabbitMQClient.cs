@@ -1,5 +1,4 @@
-﻿using Expenses.Domain.Core.Events;
-using Expenses.Infrastructure.EventBus.RabbitMQ.Telemetry;
+﻿using Expenses.Infrastructure.EventBus.RabbitMQ.Telemetry;
 using Expenses.OpenTelemetry.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -37,7 +36,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             tracer = tracerFactoryBase.GetApplicationTracer();
         }
 
-        public void Send<TEvent>(TEvent message) where TEvent : Domain.Core.Events.Event
+        public void Send<TEvent>(TEvent message) where TEvent : Domain.Events.Event
         {
             IModel channel = GetChannel();
 
