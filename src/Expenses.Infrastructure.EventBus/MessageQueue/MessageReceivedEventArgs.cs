@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Expenses.Infrastructure.EventBus.RabbitMQ
+namespace Expenses.Infrastructure.EventBus.MessageQueue
 {
     public class MessageReceivedEventArgs : EventArgs
     {

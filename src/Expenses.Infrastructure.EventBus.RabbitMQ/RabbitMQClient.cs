@@ -1,4 +1,5 @@
-﻿using Expenses.Infrastructure.EventBus.RabbitMQ.Telemetry;
+﻿using Expenses.Infrastructure.EventBus.MessageQueue;
+using Expenses.Infrastructure.EventBus.RabbitMQ.Telemetry;
 using Expenses.OpenTelemetry.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -13,10 +14,10 @@ using System.Text.Json;
 
 namespace Expenses.Infrastructure.EventBus.RabbitMQ
 {
-    public class RabbitMQClient : IRabbitMQConsumer
+    public class RabbitMQClient : IMQConsumer, IMQClient
     {
-        private const string EXCHANGE_NAME = "expenses.events";
-        private const int CONNECTION_RETRIES = 6;
+        private const string ExchangeName = "expenses.events";
+        private const int ConnectionRetries = 6;
 
         private IConnection _connection;
         private IModel _channel;
@@ -40,7 +41,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
         {
             IModel channel = GetChannel();
 
-            channel.BasicPublish(exchange: EXCHANGE_NAME,
+            channel.BasicPublish(exchange: ExchangeName,
                      routingKey: typeof(TEvent).AssemblyQualifiedName,
                      basicProperties: null,
                      body: SerializeMessage(message));
@@ -57,7 +58,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
                 autoDelete: false);
             channel.QueueBind(
                 queue: queueName,
-                exchange: EXCHANGE_NAME,
+                exchange: ExchangeName,
                 routingKey: "#");
 
             _rabbitMqConsumer = new EventingBasicConsumer(channel);
@@ -74,7 +75,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
         protected void OnMessagedReceived(MessageReceivedEventArgs e)
         {
-            logger.LogDebug($"Message received");
+            logger.LogDebug($"RabbitMQ message received");
             MessagedReceived?.Invoke(this, e);
         }
 
@@ -112,7 +113,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             //
             Policy
                 .Handle<BrokerUnreachableException>()
-                .WaitAndRetry(CONNECTION_RETRIES, (retry) =>
+                .WaitAndRetry(ConnectionRetries, (retry) =>
                 {
                     return TimeSpan.FromSeconds(Math.Pow(2, retry));
                 }, (exception, timeSpan) => {
@@ -138,7 +139,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 
             _channel = connection.CreateModel().AsActivityEnabled(_connection.Endpoint.HostName);
             _channel.ExchangeDeclare(
-                exchange: EXCHANGE_NAME,
+                exchange: ExchangeName,
                 type: ExchangeType.Topic,
                 durable: true);
 

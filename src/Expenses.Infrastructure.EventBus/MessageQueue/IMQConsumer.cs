@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Expenses.Infrastructure.EventBus.RabbitMQ
+namespace Expenses.Infrastructure.EventBus.MessageQueue
 {
-    public interface IRabbitMQConsumer : IRabbitMQClient
+    public interface IMQConsumer
     {
         void Start(string queueName);
 

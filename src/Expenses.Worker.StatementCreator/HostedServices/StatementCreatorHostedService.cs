@@ -1,5 +1,5 @@
 ﻿using Expenses.Domain.Events;
-using Expenses.Infrastructure.EventBus.RabbitMQ;
+using Expenses.Infrastructure.EventBus.MessageQueue;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,33 +13,33 @@ namespace Expenses.Worker.StatementCreator.HostedServices
 {
     public class StatementCreatorHostedService : BackgroundService
     {
-        private readonly IServiceProvider _serviceProvider;
-        private readonly ILogger _logger;
-        private readonly IRabbitMQConsumer _rabbitMqConsumer;
+        private readonly IServiceProvider serviceProvider;
+        private readonly ILogger logger;
+        private readonly IMQConsumer mqConsumer;
 
         public StatementCreatorHostedService(
             IServiceProvider serviceProvider,
             ILogger<StatementCreatorHostedService> logger,
-            IRabbitMQConsumer rabbitMqConsumer
+            IMQConsumer mqConsumer
             )
         {
-            _serviceProvider = serviceProvider;
-            _logger = logger;
-            _rabbitMqConsumer = rabbitMqConsumer;
+            this.serviceProvider = serviceProvider;
+            this.logger = logger;
+            this.mqConsumer = mqConsumer;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Starting consuming messages...");
-            _rabbitMqConsumer.MessagedReceived += RabbitMqConsumer_MessagedReceived;
-            _rabbitMqConsumer.Start(nameof(StatementCreatorHostedService));
+            logger.LogInformation("Starting consuming messages...");
+            mqConsumer.MessagedReceived += RabbitMqConsumer_MessagedReceived;
+            mqConsumer.Start(nameof(StatementCreatorHostedService));
 
             return Task.CompletedTask;
         }
 
         private async void RabbitMqConsumer_MessagedReceived(object sender, MessageReceivedEventArgs e)
         {
-            _logger.LogInformation($"Consuming message: {e.RoutingKey}");
+            logger.LogInformation($"Consuming message: {e.RoutingKey}");
 
             Event message = null;
             try
@@ -48,11 +48,11 @@ namespace Expenses.Worker.StatementCreator.HostedServices
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failure to deserialize Event message.");
+                logger.LogError(ex, "Failure to deserialize Event message.");
                 return;
             }
 
-            using (var scope = _serviceProvider.CreateScope())
+            using (var scope = serviceProvider.CreateScope())
             {
                 var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
 

@@ -4,18 +4,15 @@ using Expenses.Infrastructure.EventBus.Events;
 using MediatR;
 using System.Threading.Tasks;
 
-namespace Expenses.Infrastructure.EventBus.InMemory.Bus
+namespace Expenses.Infrastructure.EventBus.Bus
 {
-    /// <summary>
-    /// In Memory implementation of IMediatorHandler.
-    /// Responsible for mediating command and event 
-    /// </summary>
-    public sealed class InMemoryBus : IMediatorHandler
+    public sealed class EventBus : IMediatorHandler
     {
         private readonly IMediator _mediator;
         private readonly IEventStore _eventStore;
 
-        public InMemoryBus(IMediator mediator,
+        public EventBus(
+            IMediator mediator,
             IEventStore eventStore)
         {
             _mediator = mediator;

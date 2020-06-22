@@ -4,25 +4,26 @@ using Expenses.Infrastructure.EventBus.MessageQueue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-namespace Expenses.Infrastructure.EventBus.RabbitMQ.EventStore
+namespace Expenses.Infrastructure.EventBus.ServiceBus.EventStore
 {
     /// <summary>
-    /// RabbitMQ implementation of <see cref="IEventStore"/>.
+    /// Azure Service Bus implementation of <see cref="IEventStore"/>.
     /// </summary>
-    public class RabbitMQEventStore : IEventStore
+    public class ServiceBusEventStore : IEventStore
     {
         private readonly IMQClient _rabbitMqClient;
         private List<Event> _events;
 
-        public RabbitMQEventStore(IMQClient rabbitMqClient)
+        public ServiceBusEventStore(IMQClient rabbitMqClient)
         {
             _rabbitMqClient = rabbitMqClient ?? throw new ArgumentNullException(nameof(rabbitMqClient));
             _events = new List<Event>();
         }
 
         /// <summary>
-        /// Save an event into an in-memory datasource
+        /// Save an event into an datasource
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="event"></param>
