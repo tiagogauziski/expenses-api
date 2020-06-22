@@ -1,19 +1,15 @@
 ﻿using Expenses.API.Extensions.Authorization;
 using Expenses.API.Extensions.Swagger;
-using Expenses.API.Extensions.Telemetry;
 using Expenses.API.Middleware;
 using Expenses.Application.IoC;
+using Expenses.OpenTelemetry.Options;
+using Expenses.OpenTelemetry.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
-using System;
-using System.IO;
-using System.Reflection;
 using System.Text.Json.Serialization;
 
 namespace Expenses.API

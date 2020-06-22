@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Expenses.Application.Common;
 using Expenses.Application.Services.Invoice.ViewModel;
 using Expenses.Domain.Commands.Invoice;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Invoice;
-using Expenses.Domain.Interfaces.Models;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Invoice;
+using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Events;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Expenses.Application.Services.Invoice
 {

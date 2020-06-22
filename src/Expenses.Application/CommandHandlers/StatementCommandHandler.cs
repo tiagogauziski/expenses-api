@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Infrastructure.EventBus;
 using MediatR;
 using System;
 using System.Threading;
@@ -180,10 +180,13 @@ namespace Expenses.Application.CommandHandlers
 
             var deletedStatements = await _statementRepository.DeleteByInvoiceIdAsync(invoice.Id);
 
-            await _mediatorHandler.RaiseEvent(new StatementBulkDeletedEvent()
+            foreach(var statement in deletedStatements)
             {
-                Old = deletedStatements
-            });
+                await _mediatorHandler.RaiseEvent(new StatementDeletedEvent()
+                {
+                    Old = statement
+                });
+            }
 
             return true;
         }
@@ -213,7 +216,7 @@ namespace Expenses.Application.CommandHandlers
 
             await _statementRepository.UpdateAsync(newStatement);
 
-            await _mediatorHandler.RaiseEvent(new StatementAmountUpdatedEvent()
+            await _mediatorHandler.RaiseEvent(new StatementUpdatedEvent()
             {
                 Old = oldStatement,
                 New = newStatement

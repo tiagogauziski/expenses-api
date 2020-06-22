@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Core.Commands;
+﻿using Expenses.Domain.Commands;
 using System;
 
 namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus

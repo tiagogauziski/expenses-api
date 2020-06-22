@@ -2,16 +2,15 @@
 using Expenses.Application.Common;
 using Expenses.Application.Services.Statement.ViewModel;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Statement;
+using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Expenses.Application.Services.Statement
@@ -143,7 +142,7 @@ namespace Expenses.Application.Services.Statement
 
             if (result)
             {
-                var updateEvent = _eventStore.GetEvent<StatementAmountUpdatedEvent>();
+                var updateEvent = _eventStore.GetEvent<StatementUpdatedEvent>();
 
                 var data = _mapper.Map<Expenses.Domain.Models.Statement, StatementResponse>(updateEvent.New);
 

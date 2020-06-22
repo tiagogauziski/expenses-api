@@ -1,14 +1,9 @@
 ﻿using Expenses.API.ViewModel;
 using Expenses.Application.Common;
-using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Interfaces.Events;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Threading.Tasks;
 
 namespace Expenses.API.Controllers
 {

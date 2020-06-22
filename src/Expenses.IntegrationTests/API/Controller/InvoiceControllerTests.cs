@@ -16,14 +16,14 @@ using Xunit;
 namespace Expenses.IntegrationTests.API.Controller
 {
     public class InvoiceControllerTests
-        : IClassFixture<CustomWebApplicationFactorySqlite<Startup>>
+        : IClassFixture<CustomWebApplicationFactorySqlite<TestStartup>>
     {
-        private readonly CustomWebApplicationFactorySqlite<Startup> _factory;
+        private readonly CustomWebApplicationFactorySqlite<TestStartup> _factory;
         private readonly HttpClient _client;
 
-        public InvoiceControllerTests(CustomWebApplicationFactorySqlite<Startup> factory)
+        public InvoiceControllerTests(CustomWebApplicationFactorySqlite<TestStartup> factory)
         {
-            _factory = new CustomWebApplicationFactorySqlite<Startup>();
+            _factory = new CustomWebApplicationFactorySqlite<TestStartup>();
 
             _client = _factory.CreateClient(new WebApplicationFactoryClientOptions() { AllowAutoRedirect = false });
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Test", "true");

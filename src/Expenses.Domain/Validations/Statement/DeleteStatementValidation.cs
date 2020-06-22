@@ -1,5 +1,5 @@
 ﻿using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Commands;
+using Expenses.Domain.Commands;
 using FluentValidation;
 using System;
 using System.Collections.Generic;

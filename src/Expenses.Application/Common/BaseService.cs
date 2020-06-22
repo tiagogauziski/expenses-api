@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Core.Events;
+﻿using Expenses.Domain.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Interfaces.Events;
 using System;

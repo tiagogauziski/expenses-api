@@ -1,11 +1,11 @@
 ﻿using Expenses.Application.AutoMapper;
 using Expenses.Application.CommandHandlers;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Infrastructure.EventBus;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -400,12 +400,12 @@ namespace Expenses.UnitTests.Application.CommandHandlers
 
             _mocker.GetMock<IStatementRepository>()
                 .Setup(m => m.DeleteByInvoiceIdAsync(It.IsAny<Guid>()))
-                .ReturnsAsync(new List<Statement>())
+                .ReturnsAsync(new List<Statement>() { new Statement() })
                 .Verifiable("IStatementRepository.DeleteByInvoiceId should have been called");
 
             _mocker.GetMock<IMediatorHandler>()
-                .Setup(m => m.RaiseEvent(It.IsAny<StatementBulkDeletedEvent>()))
-                .Verifiable("An event StatementBulkDeletedEvent should have been raised");
+                .Setup(m => m.RaiseEvent(It.IsAny<StatementDeletedEvent>()))
+                .Verifiable("An event StatementDeletedEvent should have been raised");
 
             //act
             var result = await _statementCommandHandler.Handle(command, CancellationToken.None);
@@ -472,10 +472,10 @@ namespace Expenses.UnitTests.Application.CommandHandlers
                 .Setup(m => m.UpdateAsync(It.IsAny<Statement>()))
                 .Verifiable("IStatementRepository.Update should have been called");
 
-            StatementAmountUpdatedEvent statementEvent = null;
+            StatementUpdatedEvent statementEvent = null;
             _mocker.GetMock<IMediatorHandler>()
-                .Setup(m => m.RaiseEvent(It.IsAny<StatementAmountUpdatedEvent>()))
-                .Callback<StatementAmountUpdatedEvent>(e => statementEvent = e);
+                .Setup(m => m.RaiseEvent(It.IsAny<StatementUpdatedEvent>()))
+                .Callback<StatementUpdatedEvent>(e => statementEvent = e);
 
             //act
             var result = await _statementCommandHandler.Handle(command, CancellationToken.None);

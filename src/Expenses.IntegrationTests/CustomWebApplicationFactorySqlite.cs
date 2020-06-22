@@ -1,11 +1,14 @@
-﻿using Expenses.Infrastructure.SqlServer;
+﻿using Expenses.Application.IoC;
+using Expenses.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
@@ -22,6 +25,20 @@ namespace Expenses.IntegrationTests
         {
             _connection = new SqliteConnection(_connectionString);
             _connection.Open();
+        }
+
+        protected override IHostBuilder CreateHostBuilder()
+        {
+            var builder = Host.CreateDefaultBuilder()
+                              .ConfigureWebHostDefaults(x =>
+                              {
+                                  x.UseStartup<TStartup>().UseTestServer();
+                              })
+                              .ConfigureAppConfiguration((hostingContext, config) =>
+                              {
+                                  config.AddJsonFile("appsettings.json");
+                              });
+            return builder;
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -46,6 +63,9 @@ namespace Expenses.IntegrationTests
 
                     if (descriptor != null)
                         services.Remove(descriptor);
+
+                    // Replace RabbitMQ bus to InMemoryBus to test it locally.
+                    services.AddInMemoryBus();
 
                     // Add ApplicationDbContext using an in-memory database for testing.
                     services.AddEntityFrameworkSqlite();

@@ -1,7 +1,4 @@
-﻿using Expenses.Domain.Core.Commands;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Expenses.Domain.Commands.Statement
 {

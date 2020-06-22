@@ -1,4 +1,4 @@
-﻿using Expenses.Domain.Core.Events;
+﻿using Expenses.Infrastructure.EventBus.Events;
 using Expenses.Infrastructure.EventBus.InMemory.EventStore;
 using Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus;
 using Moq.AutoMock;

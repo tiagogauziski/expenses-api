@@ -1,6 +1,6 @@
-﻿using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Core.Events;
-using Expenses.Infrastructure.EventBus.InMemory.Bus;
+﻿using Expenses.Domain.Events;
+using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Events;
 using MediatR;
 using Moq;
 using Moq.AutoMock;
@@ -18,7 +18,7 @@ namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
         {
             _mocker = new AutoMocker();
 
-            _inMemoryBus = _mocker.CreateInstance<InMemoryBus>();
+            _inMemoryBus = _mocker.CreateInstance<Expenses.Infrastructure.EventBus.Bus.EventBus>();
         }
 
         [Fact]

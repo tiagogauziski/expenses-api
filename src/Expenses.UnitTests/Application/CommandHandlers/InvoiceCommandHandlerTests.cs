@@ -1,16 +1,14 @@
 ﻿using Expenses.Application.AutoMapper;
 using Expenses.Application.CommandHandlers;
 using Expenses.Domain.Commands.Invoice;
-using Expenses.Domain.Core.Bus;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Invoice;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
+using Expenses.Infrastructure.EventBus;
 using Moq;
 using Moq.AutoMock;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;

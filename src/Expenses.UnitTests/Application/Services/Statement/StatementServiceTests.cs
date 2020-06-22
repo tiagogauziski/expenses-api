@@ -2,17 +2,15 @@
 using Expenses.Application.Services.Statement;
 using Expenses.Application.Services.Statement.ViewModel;
 using Expenses.Domain.Commands.Statement;
-using Expenses.Domain.Core.Bus;
-using Expenses.Domain.Core.Events;
 using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
+using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Events;
 using Moq;
 using Moq.AutoMock;
 using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using Xunit;
 
 namespace Expenses.UnitTests.Application.Sevices.Statement
@@ -262,8 +260,8 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
                 .ReturnsAsync(true);
 
             _mocker.GetMock<IEventStore>()
-                .Setup(m => m.GetEvent<StatementAmountUpdatedEvent>())
-                .Returns(new StatementAmountUpdatedEvent()
+                .Setup(m => m.GetEvent<StatementUpdatedEvent>())
+                .Returns(new StatementUpdatedEvent()
                 {
                     New = new Expenses.Domain.Models.Statement() { },
                     Old = new Expenses.Domain.Models.Statement() { }
