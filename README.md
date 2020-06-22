@@ -25,7 +25,19 @@ dotnet test
 * CQRS (Basic implementation)
 * Repository Pattern	
 
-# Few handy commands
+
+# Docker Compose - all in one 
+There is a `docker-compose.yml` that encompase all services required to run the application 
+```
+docker-compose up
+```
+If you want to experience a bigger scale, you can scale the worker:
+```
+docker-compose up
+```
+
+
+# Few handy commands to develop/debug code.
 ## Docker MSSQL Linux
 ```powershell
 docker run `
@@ -63,7 +75,7 @@ docker run -d --name jaeger `
 	-p 14268:14268 `
 	-p 9411:9411 `
 	jaegertracing/all-in-one
-``
+```
 
 ## Run RabbitMQ docker image
 ```poweshell
