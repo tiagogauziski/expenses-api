@@ -13,12 +13,14 @@ namespace Expenses.Infrastructure.EventBus.ServiceBus.EventStore
     /// </summary>
     public class ServiceBusEventStore : IEventStore
     {
-        private readonly IMQClient _rabbitMqClient;
+        private readonly IMQClient mqClient;
+
         private List<Event> _events;
 
-        public ServiceBusEventStore(IMQClient rabbitMqClient)
+        public ServiceBusEventStore(IMQClient mqClient)
         {
-            _rabbitMqClient = rabbitMqClient ?? throw new ArgumentNullException(nameof(rabbitMqClient));
+            this.mqClient = mqClient ?? throw new ArgumentNullException(nameof(mqClient));
+
             _events = new List<Event>();
         }
 
@@ -31,7 +33,7 @@ namespace Expenses.Infrastructure.EventBus.ServiceBus.EventStore
         {
             _events.Add(@event);
 
-            _rabbitMqClient.Send(@event);
+            mqClient.Send(@event);
         }
 
         /// <summary>

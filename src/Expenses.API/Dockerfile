@@ -10,6 +10,7 @@ COPY ["src/Expenses.Domain/Expenses.Domain.csproj", "Expenses.Domain/"]
 COPY ["src/Expenses.Infrastructure.EventBus/Expenses.Infrastructure.EventBus.csproj", "Expenses.Infrastructure.EventBus/"]
 COPY ["src/Expenses.Infrastructure.EventBus.InMemory/Expenses.Infrastructure.EventBus.InMemory.csproj", "Expenses.Infrastructure.EventBus.InMemory/"]
 COPY ["src/Expenses.Infrastructure.EventBus.RabbitMQ/Expenses.Infrastructure.EventBus.RabbitMQ.csproj", "Expenses.Infrastructure.EventBus.RabbitMQ/"]
+COPY ["src/Expenses.Infrastructure.EventBus.ServiceBus/Expenses.Infrastructure.EventBus.ServiceBus.csproj", "Expenses.Infrastructure.EventBus.ServiceBus/"]
 COPY ["src/Expenses.Infrastructure.SqlServer/Expenses.Infrastructure.SqlServer.csproj", "Expenses.Infrastructure.SqlServer/"]
 COPY ["src/Expenses.OpenTelemetry/Expenses.OpenTelemetry.csproj", "Expenses.OpenTelemetry/"]
 RUN dotnet restore "Expenses.API/Expenses.API.csproj"
