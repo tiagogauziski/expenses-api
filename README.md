@@ -33,7 +33,7 @@ docker-compose up
 ```
 If you want to experience a bigger scale, you can scale the worker:
 ```
-docker-compose up
+docker-compose up --scale expenses.worker.statementcreator=5
 ```
 
 
