@@ -2,6 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Authors>Tiago Gauziski</Authors>
+    <Company>Tiago Gauziski</Company>
+    <Product>Expenses</Product>
+    <RepositoryUrl>https://github.com/tiagogauziski/expenses-api</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>

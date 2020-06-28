@@ -36,7 +36,6 @@ If you want to experience a bigger scale, you can scale the worker:
 docker-compose up --scale expenses.worker.statementcreator=5
 ```
 
-
 # Few handy commands to develop/debug code.
 ## Docker MSSQL Linux
 ```powershell
