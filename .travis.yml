@@ -11,7 +11,9 @@ install:
     - dotnet restore
 script:
     - dotnet build
-    - dotnet test
+    - dotnet --help
+    - dotnet nuget --help
+    - nuget --help
 after_success: 
     - cd ../
 # Travis conditional deployment: https://docs.travis-ci.com/user/deployment-v2/conditional
