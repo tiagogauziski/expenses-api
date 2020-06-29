@@ -18,4 +18,4 @@ dotnet nuget add source $NUGET_SOURCE --password $NUGET_PASSWORD --username $NUG
 dotnet pack ./src/ -p:PackageVersion=$SEMVER --configuration Release --output ./nuget_packages/
 
 # Push nuget packages to the server.
-dotnet nuget push ./nuget_packages/*.nupkg --source $NUGET_SOURCE
+dotnet nuget push ./nuget_packages/Expenses.Application.$SEMVER.nupkg --source $NUGET_SOURCE
