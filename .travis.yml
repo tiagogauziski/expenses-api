@@ -15,19 +15,23 @@ before_deploy:
     - cd ../
 deploy:
   - provider: script
+    skip_cleanup: true
     script: bash ./deploy-docker.sh
     on:
       branch: master
   - provider: script
+    skip_cleanup: true
     script: bash ./deploy-docker.sh
     on:
       branch: develop
   - provider: script
+    skip_cleanup: true
     script: bash ./deploy-docker.sh
     on: 
       tags: true
       branch: master
   - provider: script
+    skip_cleanup: true
     script: bash ./deploy-nuget.sh
     on: 
       tags: true
