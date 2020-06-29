@@ -18,4 +18,4 @@ SEMVER="$MAJOR.$MINOR.$BUILD"
 dotnet pack ./src/ -p:PackageVersion=$SEMVER --configuration Release --output ./nuget_packages/
 
 # Push nuget packages to the server.
-dotnet nuget push **/*.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY
+dotnet nuget push **/*.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
