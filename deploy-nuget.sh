@@ -18,4 +18,12 @@ SEMVER="$MAJOR.$MINOR.$BUILD"
 dotnet pack ./src/ -p:PackageVersion=$SEMVER --configuration Release --output ./nuget_packages/
 
 # Push nuget packages to the server.
-dotnet nuget push **/*.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Application.$SEMVER.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Application.IoC.$SEMVER.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Domain.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Infrastructure.EventBus.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Infrastructure.EventBus.InMemory.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Infrastructure.EventBus.RabbitMQ.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Infrastructure.EventBus.ServiceBus.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.Infrastructure.SqlServer.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
+dotnet nuget push nuget_packages/Expenses.OpenTelemetry.nupkg --source $NUGET_SOURCE --api-key $NUGET_APIKEY --skip-duplicate
