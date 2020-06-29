@@ -4,6 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>f1fc4a15-9f73-4dcf-8462-52ae899175f5</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Authors>Tiago Gauziski</Authors>
+    <Product>Expenses</Product>
   </PropertyGroup>
 
   <ItemGroup>

@@ -12,27 +12,9 @@ BUILD=${tag_array[2]}
 SEMVER="$MAJOR.$MINOR.$BUILD"
 
 # Set dotnet nuget username and password
+dotnet nuget update source GitHub --password $NUGET_PASSWORD --username $NUGET_USERNAME --configfile nuget.config --source $NUGET_SOURCE
 
+# Create nuget packages
+dotnet pack ./src/ -p:PackageVersion=$SEMVER --configuration Release --output ./nuget_packages/
 
-# Build NuGet packages
-docker build -f src/Expenses.API/Dockerfile . -t $DOCKER_REPOSITORY
-
-# Login to Docker Hub and upload images
-docker login $DOCKER_REGISTRY --username $DOCKER_LOGIN --password $DOCKER_PASSWORD
-
-if [ -z "$TAG" ]
-then
-    echo "Building from branch $BRANCH"
-
-    docker tag $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$BRANCH
-
-    docker push $DOCKER_REPOSITORY:$BRANCH
-else
-    echo "Building from tag $TAG"
-
-    docker tag $DOCKER_REPOSITORY $DOCKER_REPOSITORY:latest
-    docker tag $DOCKER_REPOSITORY $DOCKER_REPOSITORY:$SEMVER
-
-    docker push $DOCKER_REPOSITORY:$SEMVER
-    docker push $DOCKER_REPOSITORY:latest
-fi
+dotnet nuget push ./nuget_packages/*.nupkg --source $NUGET_SOURCE
