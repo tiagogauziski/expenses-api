@@ -12,7 +12,7 @@ BUILD=${tag_array[2]}
 SEMVER="$MAJOR.$MINOR.$BUILD"
 
 # Set dotnet nuget username and password
-dotnet nuget update source GitHub --password $NUGET_PASSWORD --username $NUGET_USERNAME --configfile nuget.config --source $NUGET_SOURCE
+dotnet nuget add source $NUGET_SOURCE --password $NUGET_PASSWORD --username $NUGET_USERNAME --configfile nuget.config --name GitHub
 
 # Create nuget packages
 dotnet pack ./src/ -p:PackageVersion=$SEMVER --configuration Release --output ./nuget_packages/
