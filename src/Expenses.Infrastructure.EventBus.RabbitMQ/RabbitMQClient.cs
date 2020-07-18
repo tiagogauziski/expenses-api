@@ -9,6 +9,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
@@ -16,6 +17,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
 {
     public class RabbitMQClient : IMQConsumer, IMQClient
     {
+        private const string TypeNameHeader = "AssemblyQualifiedName";
         private const string ExchangeName = "expenses.events";
         private const int ConnectionRetries = 6;
 
@@ -41,13 +43,17 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
         {
             IModel channel = GetChannel();
 
+            IBasicProperties props = channel.CreateBasicProperties();
+            props.Headers = new Dictionary<string, object>();
+            props.Headers.Add(TypeNameHeader, typeof(TEvent).AssemblyQualifiedName);
+
             channel.BasicPublish(exchange: ExchangeName,
-                     routingKey: typeof(TEvent).AssemblyQualifiedName,
-                     basicProperties: null,
+                     routingKey: typeof(TEvent).Name,
+                     basicProperties: props,
                      body: SerializeMessage(message));
         }
 
-        public void Start(string queueName)
+        public void Start(string queueName, string routingKey)
         {
             var channel = GetChannel();
 
@@ -59,7 +65,7 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             channel.QueueBind(
                 queue: queueName,
                 exchange: ExchangeName,
-                routingKey: "#");
+                routingKey: routingKey);
 
             _rabbitMqConsumer = new EventingBasicConsumer(channel);
 
@@ -110,7 +116,6 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             factory = new ConnectionFactory();
             factory.Uri = new Uri(configuration.GetConnectionString("RabbitMQ"));
 
-            //
             Policy
                 .Handle<BrokerUnreachableException>()
                 .WaitAndRetry(ConnectionRetries, (retry) =>
@@ -165,7 +170,9 @@ namespace Expenses.Infrastructure.EventBus.RabbitMQ
             {
                 string message = DeserializeMessage(e.Body, e.RoutingKey);
 
-                OnMessagedReceived(new MessageReceivedEventArgs(message, e.RoutingKey));
+                string fullTypeName = e.BasicProperties.GetCustomProperty<string>(TypeNameHeader);
+
+                OnMessagedReceived(new MessageReceivedEventArgs(message, fullTypeName));
             }
             catch (Exception ex)
             {

@@ -1,4 +1,5 @@
 ﻿using Expenses.Domain.Events;
+using Expenses.Domain.Events.Invoice;
 using Expenses.Infrastructure.EventBus.MessageQueue;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,8 +21,7 @@ namespace Expenses.Worker.StatementCreator.HostedServices
         public StatementCreatorHostedService(
             IServiceProvider serviceProvider,
             ILogger<StatementCreatorHostedService> logger,
-            IMQConsumer mqConsumer
-            )
+            IMQConsumer mqConsumer)
         {
             this.serviceProvider = serviceProvider;
             this.logger = logger;
@@ -32,7 +32,7 @@ namespace Expenses.Worker.StatementCreator.HostedServices
         {
             logger.LogInformation("Starting consuming messages...");
             mqConsumer.MessagedReceived += RabbitMqConsumer_MessagedReceived;
-            mqConsumer.Start(nameof(StatementCreatorHostedService));
+            mqConsumer.Start(nameof(StatementCreatorHostedService), nameof(InvoiceCreatedEvent));
 
             return Task.CompletedTask;
         }

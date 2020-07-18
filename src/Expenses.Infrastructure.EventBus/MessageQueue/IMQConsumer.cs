@@ -4,7 +4,7 @@ namespace Expenses.Infrastructure.EventBus.MessageQueue
 {
     public interface IMQConsumer
     {
-        void Start(string queueName);
+        void Start(string queueName, string routingKey);
 
         void Stop();
 

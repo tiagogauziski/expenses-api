@@ -26,7 +26,7 @@ namespace Expenses.Infrastructure.EventBus.ServiceBus
             IConfiguration configuration,
             ILogger<ServiceBusMQClient> logger)
         {
-            this.logger = logger;
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
 
             var connectionString = configuration.GetConnectionString("ServiceBus") ?? throw new ArgumentNullException("ServiceBus connection string missing!");
 
@@ -43,7 +43,7 @@ namespace Expenses.Infrastructure.EventBus.ServiceBus
             await topicClient.SendAsync(serviceBusMessage);
         }
 
-        public void Start(string queueName)
+        public void Start(string queueName, string routingKey)
         {
             // Configure the message handler options in terms of exception handling, number of concurrent messages to deliver, etc.
             var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
