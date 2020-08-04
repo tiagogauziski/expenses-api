@@ -3,24 +3,22 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Expenses.Domain.Events;
-using Expenses.Domain.Events.Invoice;
 using Expenses.Infrastructure.EventBus.MessageQueue;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Expenses.Worker.StatementCreator.HostedServices
+namespace History.Worker.Expenses.HostedServices
 {
-    public class StatementCreatorHostedService : BackgroundService
+    public class ExpensesHistoryHostedService : BackgroundService
     {
+        private const string AllEventsRoutingKey = "#";
         private readonly IServiceProvider serviceProvider;
         private readonly ILogger logger;
         private readonly IMQConsumer mqConsumer;
 
-        public StatementCreatorHostedService(
+        public ExpensesHistoryHostedService(
             IServiceProvider serviceProvider,
-            ILogger<StatementCreatorHostedService> logger,
+            ILogger<ExpensesHistoryHostedService> logger,
             IMQConsumer mqConsumer)
         {
             this.serviceProvider = serviceProvider;
@@ -32,14 +30,14 @@ namespace Expenses.Worker.StatementCreator.HostedServices
         {
             logger.LogInformation("Starting consuming messages...");
             mqConsumer.MessagedReceived += RabbitMqConsumer_MessagedReceived;
-            mqConsumer.Start(nameof(StatementCreatorHostedService), nameof(InvoiceCreatedEvent));
+            mqConsumer.Start(nameof(ExpensesHistoryHostedService), AllEventsRoutingKey);
 
             return Task.CompletedTask;
         }
 
         private async void RabbitMqConsumer_MessagedReceived(object sender, MessageReceivedEventArgs e)
         {
-            logger.LogInformation($"Consuming message: {e.RoutingKey}");
+            logger.LogInformation("Consuming message: {routingKey}", e.RoutingKey);
 
             Event message = null;
             try
@@ -52,12 +50,7 @@ namespace Expenses.Worker.StatementCreator.HostedServices
                 return;
             }
 
-            using (var scope = serviceProvider.CreateScope())
-            {
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-                await mediator.Publish(message);
-            }
+            logger.LogInformation("Finished History Expenses message consumption!");
         }
     }
 }

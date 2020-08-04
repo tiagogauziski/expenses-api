@@ -1,7 +1,7 @@
 ﻿using Expenses.API.ViewModel;
 using Expenses.Application.Services.Statement;
 using Expenses.Application.Services.Statement.ViewModel;
-using Expenses.Infrastructure.EventBus.Events;
+using Expenses.Infrastructure.EventBus;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ namespace Expenses.API.Controllers
         private readonly IStatementService _statementService;
 
         public StatementController(
-            IEventStore eventStore,
+            IEventBus eventStore,
             IStatementService statementService)
         {
             _statementService = statementService;

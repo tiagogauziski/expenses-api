@@ -11,5 +11,9 @@
         /// Gets or sets jaeger service name (manadatory)
         /// </summary>
         public string ServiceName { get; set; }
+
+        public string AgentHost { get; set; } = "locahost";
+
+        public int AgentPort { get; set; } = 6831;
     }
 }

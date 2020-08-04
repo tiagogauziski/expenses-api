@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using Expenses.Application.AutoMapper;
 using Expenses.Application.CommandHandlers;
 using Expenses.Application.EventHandlers;
@@ -10,9 +11,8 @@ using Expenses.Domain.Events.Invoice;
 using Expenses.Domain.Events.Statement;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using System;
 
-namespace Expenses.Application.IoC
+namespace Expenses.Application
 {
     public static class ApplicationExtensions
     {

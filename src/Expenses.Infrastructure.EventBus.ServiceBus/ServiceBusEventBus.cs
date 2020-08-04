@@ -1,23 +1,22 @@
 ﻿using Expenses.Domain.Events;
-using Expenses.Infrastructure.EventBus.Events;
 using Expenses.Infrastructure.EventBus.MessageQueue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Expenses.Infrastructure.EventBus.ServiceBus.EventStore
+namespace Expenses.Infrastructure.EventBus.ServiceBus
 {
     /// <summary>
-    /// Azure Service Bus implementation of <see cref="IEventStore"/>.
+    /// Azure Service Bus implementation of <see cref="IEventBus"/>.
     /// </summary>
-    public class ServiceBusEventStore : IEventStore
+    public class ServiceBusEventBus : IEventBus
     {
         private readonly IMQClient mqClient;
 
         private List<Event> _events;
 
-        public ServiceBusEventStore(IMQClient mqClient)
+        public ServiceBusEventBus(IMQClient mqClient)
         {
             this.mqClient = mqClient ?? throw new ArgumentNullException(nameof(mqClient));
 

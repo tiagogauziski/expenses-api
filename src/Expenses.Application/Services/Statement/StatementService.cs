@@ -1,4 +1,8 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
 using Expenses.Application.Common;
 using Expenses.Application.Services.Statement.ViewModel;
 using Expenses.Domain.Commands.Statement;
@@ -7,11 +11,7 @@ using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Statement;
 using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.Events;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Expenses.Infrastructure.EventBus.Mediator;
 
 namespace Expenses.Application.Services.Statement
 {
@@ -19,13 +19,13 @@ namespace Expenses.Application.Services.Statement
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;
-        private readonly IEventStore _eventStore;
+        private readonly IEventBus _eventStore;
         private readonly IStatementRepository _statementRepository;
 
         public StatementService(
             IMediatorHandler mediatorHandler,
             IMapper mapper,
-            IEventStore eventStore,
+            IEventBus eventStore,
             IStatementRepository statementRepository)
         {
             _mediatorHandler = mediatorHandler;

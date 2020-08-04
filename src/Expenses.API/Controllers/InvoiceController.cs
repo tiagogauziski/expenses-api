@@ -1,7 +1,6 @@
 ﻿using Expenses.API.ViewModel;
 using Expenses.Application.Services.Invoice;
 using Expenses.Application.Services.Invoice.ViewModel;
-using Expenses.Infrastructure.EventBus.Events;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

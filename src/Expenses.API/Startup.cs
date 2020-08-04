@@ -1,7 +1,6 @@
 ﻿using Expenses.API.Extensions.Authorization;
 using Expenses.API.Extensions.Swagger;
 using Expenses.API.Middleware;
-using Expenses.Application.IoC;
 using Expenses.OpenTelemetry.Options;
 using Expenses.OpenTelemetry.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -11,17 +10,21 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text.Json.Serialization;
+using Expenses.Infrastructure.SqlServer;
+using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.ServiceBus;
+using Expenses.Infrastructure.EventBus.RabbitMQ;
+using Expenses.Application;
 
 namespace Expenses.API
 {
     public class Startup
     {
-        private const string CORS_POLICY = "EXPENSES_CORS_POLICY"; 
+        private const string CORS_POLICY = "EXPENSES_CORS_POLICY";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -69,6 +72,15 @@ namespace Expenses.API
             // Infrastructure Dependencies - Message Bus
             services.AddInfrastructureMessageBus();
 
+            if (IsAzure())
+            {
+                services.AddAzureMessageBus();
+            }
+            else
+            {
+                services.AddRabbitMQMessageBus();
+            }
+
             // Add Authentication Services
             services.AddCustomAuthentication(authOptions);
 
@@ -104,7 +116,7 @@ namespace Expenses.API
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
                 c.OAuthClientId(Configuration.GetValue<string>("Auth0:ClientId"));
                 c.OAuthScopeSeparator(" ");
-            }); 
+            });
 
             app.UseHttpsRedirection();
 
@@ -116,9 +128,15 @@ namespace Expenses.API
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllers();
             });
+        }
+
+        private static bool IsAzure()
+        {
+            return !string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
         }
     }
 }

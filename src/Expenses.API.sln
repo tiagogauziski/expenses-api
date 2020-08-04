@@ -17,8 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application", "Exp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.SqlServer", "Expenses.Infrastructure.SqlServer\Expenses.Infrastructure.SqlServer.csproj", "{E840C193-C908-4FF4-BE3C-20CE171DE31A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7D57B417-CE7D-461A-A9E7-7558E7F33382}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0. Solution Items", "0. Solution Items", "{7D57B417-CE7D-461A-A9E7-7558E7F33382}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		..\.travis.yml = ..\.travis.yml
 		..\deploy-docker.sh = ..\deploy-docker.sh
 		..\deploy-nuget.sh = ..\deploy-nuget.sh
@@ -29,8 +30,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Worker.StatementCreator", "Expenses.Worker.StatementCreator\Expenses.Worker.StatementCreator.csproj", "{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Application.IoC", "Expenses.Application.IoC\Expenses.Application.IoC.csproj", "{434B8FD7-6CFE-407B-934A-9A9C603337DB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus.RabbitMQ", "Expenses.Infrastructure.EventBus.RabbitMQ\Expenses.Infrastructure.EventBus.RabbitMQ.csproj", "{911A55D3-F698-4F40-8A05-E3C642EAF6C7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.OpenTelemetry", "Expenses.OpenTelemetry\Expenses.OpenTelemetry.csproj", "{F3B772DE-0E1E-4B7D-98DF-CDB5144B00B2}"
@@ -38,6 +37,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus", "Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj", "{9FB3249C-1177-4746-A552-B86DE82F0F8C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Expenses.Infrastructure.EventBus.ServiceBus", "Expenses.Infrastructure.EventBus.ServiceBus\Expenses.Infrastructure.EventBus.ServiceBus.csproj", "{D2D0F705-BA89-474C-A86F-109FFE0CF1A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1. Expenses API", "1. Expenses API", "{5A19495E-C256-4B76-BEEB-9F4CCB52D075}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2. Worker - StatementCreator", "2. Worker - StatementCreator", "{7C006F88-21D7-4B6A-98F5-FFCFAB59ECB6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3. Worker - History", "3. Worker - History", "{229701F7-F17B-42D2-A7C8-B60BB665C7FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "History.Worker.Expenses", "History.Worker.Expenses\History.Worker.Expenses.csproj", "{F6FC7339-E38A-4DF0-9479-29E3C702A778}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,10 +84,6 @@ Global
 		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{434B8FD7-6CFE-407B-934A-9A9C603337DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{434B8FD7-6CFE-407B-934A-9A9C603337DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{434B8FD7-6CFE-407B-934A-9A9C603337DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{434B8FD7-6CFE-407B-934A-9A9C603337DB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{911A55D3-F698-4F40-8A05-E3C642EAF6C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{911A55D3-F698-4F40-8A05-E3C642EAF6C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{911A55D3-F698-4F40-8A05-E3C642EAF6C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -97,9 +100,28 @@ Global
 		{D2D0F705-BA89-474C-A86F-109FFE0CF1A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2D0F705-BA89-474C-A86F-109FFE0CF1A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2D0F705-BA89-474C-A86F-109FFE0CF1A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6FC7339-E38A-4DF0-9479-29E3C702A778}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6FC7339-E38A-4DF0-9479-29E3C702A778}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6FC7339-E38A-4DF0-9479-29E3C702A778}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6FC7339-E38A-4DF0-9479-29E3C702A778}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{98FB756F-8CA1-4785-8988-AB31285594D4} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{88B7EFAC-542E-4998-8E92-92158C4618C8} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{C29BC8F2-60A3-4E2E-8473-76BE4113084B} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{D1F9C05A-F5B8-40D2-AA26-FA0194A7765E} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{DFA2244C-F5F8-476A-8852-A40D1D872241} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{37AE7C9B-58A0-4393-8464-8AAAF2B48075} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{E840C193-C908-4FF4-BE3C-20CE171DE31A} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{AA678FCF-78F6-4CE2-9A43-E24B2DDEFEDB} = {7C006F88-21D7-4B6A-98F5-FFCFAB59ECB6}
+		{911A55D3-F698-4F40-8A05-E3C642EAF6C7} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{F3B772DE-0E1E-4B7D-98DF-CDB5144B00B2} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{9FB3249C-1177-4746-A552-B86DE82F0F8C} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{D2D0F705-BA89-474C-A86F-109FFE0CF1A5} = {5A19495E-C256-4B76-BEEB-9F4CCB52D075}
+		{F6FC7339-E38A-4DF0-9479-29E3C702A778} = {229701F7-F17B-42D2-A7C8-B60BB665C7FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ABA490B2-3BBF-48C5-B25C-202A141D2DD1}

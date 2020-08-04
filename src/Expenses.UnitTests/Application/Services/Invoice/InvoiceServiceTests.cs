@@ -8,7 +8,7 @@ using Expenses.Domain.Events.Invoice;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Invoice;
 using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.Events;
+using Expenses.Infrastructure.EventBus.Mediator;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -39,7 +39,7 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
         public async void Create_SuccessfulResult()
         {
             //arrange
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<InvoiceCreatedEvent>())
                 .Returns(new InvoiceCreatedEvent() { New = new Expenses.Domain.Models.Invoice() });
 
@@ -65,7 +65,7 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 
@@ -97,7 +97,7 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
                 .Setup(m => m.SendCommand(It.IsAny<UpdateInvoiceCommand>()))
                 .ReturnsAsync(true);
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<InvoiceUpdatedEvent>())
                 .Returns(new InvoiceUpdatedEvent() {
                     New = new Expenses.Domain.Models.Invoice() { Name = NEW_INVOICE },
@@ -123,7 +123,7 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 
@@ -239,7 +239,7 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
         public async void Delete_SuccessfulResult()
         {
             //arrange
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<InvoiceDeletedEvent>())
                 .Returns(new InvoiceDeletedEvent() { Old = new Expenses.Domain.Models.Invoice() });
 
@@ -270,7 +270,7 @@ namespace Expenses.UnitTests.Application.Sevices.Invoice
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 

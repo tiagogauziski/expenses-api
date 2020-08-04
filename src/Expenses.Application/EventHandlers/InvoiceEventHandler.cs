@@ -1,5 +1,6 @@
 ﻿using Expenses.Domain.Events.Invoice;
 using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Mediator;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;

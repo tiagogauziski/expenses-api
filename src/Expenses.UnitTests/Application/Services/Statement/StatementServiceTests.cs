@@ -6,7 +6,7 @@ using Expenses.Domain.Events;
 using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.Events;
+using Expenses.Infrastructure.EventBus.Mediator;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -34,7 +34,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
         public async void Create_SuccessfulResult()
         {
             //arrange
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<StatementCreatedEvent>())
                 .Returns(new StatementCreatedEvent() { New = new Expenses.Domain.Models.Statement() });
 
@@ -60,7 +60,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 
@@ -89,7 +89,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
                 .Setup(m => m.SendCommand(It.IsAny<UpdateStatementCommand>()))
                 .ReturnsAsync(true);
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<StatementUpdatedEvent>())
                 .Returns(new StatementUpdatedEvent()
                 {
@@ -115,7 +115,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 
@@ -207,7 +207,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
         public async void Delete_SuccessfulResult()
         {
             //arrange
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<StatementDeletedEvent>())
                 .Returns(new StatementDeletedEvent() { Old = new Expenses.Domain.Models.Statement() });
 
@@ -231,7 +231,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 
@@ -259,7 +259,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
                 .Setup(m => m.SendCommand(It.IsAny<UpdateStatementAmountCommand>()))
                 .ReturnsAsync(true);
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<StatementUpdatedEvent>())
                 .Returns(new StatementUpdatedEvent()
                 {
@@ -285,7 +285,7 @@ namespace Expenses.UnitTests.Application.Sevices.Statement
             const string ERROR_MESSAGE = "ErrorMessage";
             const string ERROR_CODE = "ErrorCode";
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.GetEvent<DomainValidationEvent>())
                 .Returns(new DomainValidationEvent(ERROR_MESSAGE, ERROR_CODE));
 

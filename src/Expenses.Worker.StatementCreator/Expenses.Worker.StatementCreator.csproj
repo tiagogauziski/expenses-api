@@ -13,7 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Expenses.Application.IoC\Expenses.Application.IoC.csproj" />
+    <ProjectReference Include="..\Expenses.Application\Expenses.Application.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus.RabbitMQ\Expenses.Infrastructure.EventBus.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus.ServiceBus\Expenses.Infrastructure.EventBus.ServiceBus.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.SqlServer\Expenses.Infrastructure.SqlServer.csproj" />
     <ProjectReference Include="..\Expenses.OpenTelemetry\Expenses.OpenTelemetry.csproj" />
   </ItemGroup>
 

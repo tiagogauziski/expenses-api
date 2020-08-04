@@ -1,5 +1,5 @@
-﻿using Expenses.Infrastructure.EventBus.Events;
-using Expenses.Infrastructure.EventBus.InMemory.EventStore;
+﻿using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.InMemory;
 using Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus;
 using Moq.AutoMock;
 using Xunit;
@@ -9,13 +9,13 @@ namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.EventStore
     public class InMemoryEventStoreTests
     {
         private AutoMocker _mocker;
-        private IEventStore _eventStore;
+        private IEventBus _eventStore;
 
         public InMemoryEventStoreTests()
         {
             _mocker = new AutoMocker();
 
-            _eventStore = _mocker.CreateInstance<InMemoryEventStore>();
+            _eventStore = _mocker.CreateInstance<InMemoryEventBus>();
         }
 
         [Fact]

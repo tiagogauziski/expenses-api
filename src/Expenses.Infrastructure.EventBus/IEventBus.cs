@@ -1,8 +1,8 @@
 ﻿using Expenses.Domain.Events;
 
-namespace Expenses.Infrastructure.EventBus.Events
+namespace Expenses.Infrastructure.EventBus
 {
-    public interface IEventStore
+    public interface IEventBus
     {
         /// <summary>
         /// Save Event into a datasource

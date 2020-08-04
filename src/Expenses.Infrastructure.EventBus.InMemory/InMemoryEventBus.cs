@@ -1,18 +1,17 @@
 ﻿using Expenses.Domain.Events;
-using Expenses.Infrastructure.EventBus.Events;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Expenses.Infrastructure.EventBus.InMemory.EventStore
+namespace Expenses.Infrastructure.EventBus.InMemory
 {
     /// <summary>
-    /// In Memory implementation of IEventStore
+    /// In Memory implementation of <see cref="IEventBus"/>.
     /// </summary>
-    public class InMemoryEventStore : IEventStore
+    public class InMemoryEventBus : IEventBus
     {
         private List<Event> _events;
 
-        public InMemoryEventStore()
+        public InMemoryEventBus()
         {
             _events = new List<Event>();
         }

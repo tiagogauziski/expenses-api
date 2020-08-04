@@ -1,19 +1,18 @@
 ﻿using Expenses.Domain.Commands;
 using Expenses.Domain.Events;
-using Expenses.Infrastructure.EventBus.Events;
 using MediatR;
 using System.Threading.Tasks;
 
-namespace Expenses.Infrastructure.EventBus.Bus
+namespace Expenses.Infrastructure.EventBus.Mediator
 {
-    public sealed class EventBus : IMediatorHandler
+    public sealed class MediatorHandler : IMediatorHandler
     {
         private readonly IMediator _mediator;
-        private readonly IEventStore _eventStore;
+        private readonly IEventBus _eventStore;
 
-        public EventBus(
+        public MediatorHandler(
             IMediator mediator,
-            IEventStore eventStore)
+            IEventBus eventStore)
         {
             _mediator = mediator;
             _eventStore = eventStore;

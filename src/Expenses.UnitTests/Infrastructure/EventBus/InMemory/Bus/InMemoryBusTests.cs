@@ -1,10 +1,10 @@
-﻿using Expenses.Domain.Events;
+﻿using System.Threading;
+using Expenses.Domain.Events;
 using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.Events;
+using Expenses.Infrastructure.EventBus.Mediator;
 using MediatR;
 using Moq;
 using Moq.AutoMock;
-using System.Threading;
 using Xunit;
 
 namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
@@ -18,7 +18,7 @@ namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
         {
             _mocker = new AutoMocker();
 
-            _inMemoryBus = _mocker.CreateInstance<Expenses.Infrastructure.EventBus.Bus.EventBus>();
+            _inMemoryBus = _mocker.CreateInstance<MediatorHandler>();
         }
 
         [Fact]
@@ -45,7 +45,7 @@ namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
                 .Setup(m => m.Publish(It.IsAny<INotification>(), It.IsAny<CancellationToken>()))
                 .Verifiable();
 
-            _mocker.GetMock<IEventStore>()
+            _mocker.GetMock<IEventBus>()
                 .Setup(m => m.Save(It.IsAny<Event>()))
                 .Verifiable();
 
@@ -57,7 +57,7 @@ namespace Expenses.UnitTests.Infrastructure.EventBus.InMemory.Bus
 
             //assert
             _mocker.GetMock<IMediator>().Verify();
-            _mocker.GetMock<IEventStore>().Verify();
+            _mocker.GetMock<IEventBus>().Verify();
         }
     }
 }

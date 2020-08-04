@@ -1,22 +1,21 @@
 ﻿using Expenses.Domain.Events;
-using Expenses.Infrastructure.EventBus.Events;
 using Expenses.Infrastructure.EventBus.MessageQueue;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Expenses.Infrastructure.EventBus.RabbitMQ.EventStore
+namespace Expenses.Infrastructure.EventBus.RabbitMQ
 {
     /// <summary>
-    /// RabbitMQ implementation of <see cref="IEventStore"/>.
+    /// RabbitMQ implementation of <see cref="IEventBus"/>.
     /// </summary>
-    public class RabbitMQEventStore : IEventStore
+    public class RabbitMQEventBus : IEventBus
     {
         private readonly IMQClient mqClient;
 
         private List<Event> _events;
 
-        public RabbitMQEventStore(IMQClient mqClient)
+        public RabbitMQEventBus(IMQClient mqClient)
         {
             this.mqClient = mqClient ?? throw new ArgumentNullException(nameof(mqClient));
             _events = new List<Event>();

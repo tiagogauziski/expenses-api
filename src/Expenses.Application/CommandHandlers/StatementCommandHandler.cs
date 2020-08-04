@@ -5,6 +5,7 @@ using Expenses.Domain.Events.Statement;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Models;
 using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.Mediator;
 using MediatR;
 using System;
 using System.Threading;

@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoMapper;
 using Expenses.Application.Common;
 using Expenses.Application.Services.Invoice.ViewModel;
 using Expenses.Domain.Commands.Invoice;
@@ -8,10 +11,7 @@ using Expenses.Domain.Events.Invoice;
 using Expenses.Domain.Interfaces.Repositories;
 using Expenses.Domain.Queries.Invoice;
 using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.Events;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using Expenses.Infrastructure.EventBus.Mediator;
 
 namespace Expenses.Application.Services.Invoice
 {
@@ -19,13 +19,13 @@ namespace Expenses.Application.Services.Invoice
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IMapper _mapper;
-        private readonly IEventStore _eventStore;
+        private readonly IEventBus _eventStore;
         private readonly IInvoiceRepository _invoiceRepository;
 
         public InvoiceService(
             IMediatorHandler mediatorHandler,
             IMapper mapper,
-            IEventStore eventStore,
+            IEventBus eventStore,
             IInvoiceRepository invoiceRepository)
         {
             _mediatorHandler = mediatorHandler;

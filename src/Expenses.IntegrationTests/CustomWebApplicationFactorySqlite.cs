@@ -1,4 +1,4 @@
-﻿using Expenses.Application.IoC;
+﻿using Expenses.Infrastructure.EventBus.InMemory;
 using Expenses.Infrastructure.SqlServer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
@@ -65,7 +65,7 @@ namespace Expenses.IntegrationTests
                         services.Remove(descriptor);
 
                     // Replace RabbitMQ bus to InMemoryBus to test it locally.
-                    services.AddInMemoryBus();
+                    services.AddInMemoryMessageBus();
 
                     // Add ApplicationDbContext using an in-memory database for testing.
                     services.AddEntityFrameworkSqlite();

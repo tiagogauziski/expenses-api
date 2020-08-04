@@ -36,6 +36,8 @@ namespace Expenses.OpenTelemetry.Extensions
                             .UseJaeger(options =>
                             {
                                 options.ServiceName = TracerServiceName;
+                                options.AgentHost = telemetryOptions.Jaeger.AgentHost;
+                                options.AgentPort = telemetryOptions.Jaeger.AgentPort;
                             });
                     }
                     else if (telemetryOptions.ApplicationInsights.Enabled)

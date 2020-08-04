@@ -1,21 +1,14 @@
-using Expenses.Application;
-using Expenses.Domain.Events.Invoice;
 using Expenses.Infrastructure.EventBus;
-using Expenses.Infrastructure.EventBus.RabbitMQ;
-using Expenses.Infrastructure.EventBus.ServiceBus;
-using Expenses.Infrastructure.SqlServer;
 using Expenses.OpenTelemetry.Extensions;
 using Expenses.OpenTelemetry.Options;
-using Expenses.Worker.StatementCreator.EventHandlers;
-using Expenses.Worker.StatementCreator.HostedServices;
-using MediatR;
+using History.Worker.Expenses.HostedServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Expenses.Worker.StatementCreator
+namespace History.Worker.Expenses
 {
     public class Startup
     {
@@ -35,32 +28,13 @@ namespace Expenses.Worker.StatementCreator
             var telemetryOptions = new TelemetryOptions();
             Configuration.GetSection("Telemetry").Bind(telemetryOptions);
 
-            // Application AutoMapper extension
-            services.AddApplicationAutoMapper();
-
-            // Application Dependencies - Command Handlers only
-            services.AddApplicationCommandHandlers();
-            services.AddScoped<INotificationHandler<InvoiceCreatedEvent>, StatementCreatorEventHandler>();
-
-            // Infrastructure Dependencies - Database
-            services.AddInfrastructureDatabase();
-
             // Infrastructure Dependencies - Message Bus
             services.AddInfrastructureMessageBus();
-
-            if (IsAzure())
-            {
-                services.AddAzureMessageBus();
-            }
-            else
-            {
-                services.AddRabbitMQMessageBus();
-            }
 
             // Configure telemetry.
             services.AddTelemetry(telemetryOptions);
 
-            services.AddHostedService<StatementCreatorHostedService>();
+            services.AddHostedService<ExpensesHistoryHostedService>();
 
         }
 
@@ -82,10 +56,6 @@ namespace Expenses.Worker.StatementCreator
             {
                 endpoints.MapControllers();
             });
-        }
-        private static bool IsAzure()
-        {
-            return !string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
         }
     }
 }

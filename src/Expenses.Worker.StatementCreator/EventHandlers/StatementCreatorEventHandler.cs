@@ -1,12 +1,12 @@
-﻿using Expenses.Application.Engines;
-using Expenses.Application.EventHandlers;
-using Expenses.Domain.Events.Invoice;
-using Expenses.Infrastructure.EventBus;
-using MediatR;
-using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Expenses.Application.Engines;
+using Expenses.Application.EventHandlers;
+using Expenses.Domain.Events.Invoice;
+using Expenses.Infrastructure.EventBus.Mediator;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Expenses.Worker.StatementCreator.EventHandlers
 {
