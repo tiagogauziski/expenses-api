@@ -1,4 +1,6 @@
 using Expenses.Infrastructure.EventBus;
+using Expenses.Infrastructure.EventBus.RabbitMQ;
+using Expenses.Infrastructure.EventBus.ServiceBus;
 using Expenses.OpenTelemetry.Extensions;
 using Expenses.OpenTelemetry.Options;
 using History.Worker.Expenses.HostedServices;
@@ -31,6 +33,15 @@ namespace History.Worker.Expenses
             // Infrastructure Dependencies - Message Bus
             services.AddInfrastructureMessageBus();
 
+            if (IsAzure())
+            {
+                services.AddAzureMessageBus();
+            }
+            else
+            {
+                services.AddRabbitMQMessageBus();
+            }
+
             // Configure telemetry.
             services.AddTelemetry(telemetryOptions);
 
@@ -56,6 +67,11 @@ namespace History.Worker.Expenses
             {
                 endpoints.MapControllers();
             });
+        }
+
+        private static bool IsAzure()
+        {
+            return !string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
         }
     }
 }

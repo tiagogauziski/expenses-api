@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Expenses.Domain\Expenses.Domain.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus.RabbitMQ\Expenses.Infrastructure.EventBus.RabbitMQ.csproj" />
+    <ProjectReference Include="..\Expenses.Infrastructure.EventBus.ServiceBus\Expenses.Infrastructure.EventBus.ServiceBus.csproj" />
     <ProjectReference Include="..\Expenses.Infrastructure.EventBus\Expenses.Infrastructure.EventBus.csproj" />
     <ProjectReference Include="..\Expenses.OpenTelemetry\Expenses.OpenTelemetry.csproj" />
   </ItemGroup>

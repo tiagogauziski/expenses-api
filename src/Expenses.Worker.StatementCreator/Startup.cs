@@ -83,6 +83,7 @@ namespace Expenses.Worker.StatementCreator
                 endpoints.MapControllers();
             });
         }
+
         private static bool IsAzure()
         {
             return !string.IsNullOrEmpty(System.Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME"));
