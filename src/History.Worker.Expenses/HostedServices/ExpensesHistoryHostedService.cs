@@ -35,7 +35,7 @@ namespace History.Worker.Expenses.HostedServices
             return Task.CompletedTask;
         }
 
-        private async void RabbitMqConsumer_MessagedReceived(object sender, MessageReceivedEventArgs e)
+        private void RabbitMqConsumer_MessagedReceived(object sender, MessageReceivedEventArgs e)
         {
             logger.LogInformation("Consuming message: {routingKey}", e.RoutingKey);
 

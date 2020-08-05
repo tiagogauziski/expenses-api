@@ -33,6 +33,22 @@ services:
             - rabbitmq
             - jaeger
             - expenses.api
+    history.worker.expenses:
+        image: history-worker-expenses
+        build: 
+            context: .
+            dockerfile: src/History.Worker.Expenses/Dockerfile
+        environment:
+            ASPNETCORE_ENVIRONMENT: "Production"
+            ConnectionStrings__ExpensesDatabase: "Server=mssql;Database=expenses;User Id=sa;Password=Network@123;"
+            ConnectionStrings__RabbitMQ: "amqp://guest:guest@rabbitmq:5672/"
+            Telemetry__Jaeger__Enabled: "true"
+            Telemetry__Jaeger__AgentHost: "jaeger"
+        depends_on:
+            - mssql
+            - rabbitmq
+            - jaeger
+            - expenses.api
     mssql:
         image: "mcr.microsoft.com/mssql/server"
         environment:
@@ -45,5 +61,7 @@ services:
             RABBITMQ_DEFAULT_PASS: guest
     jaeger:
         image: jaegertracing/all-in-one
+        ports:
+            - "8081:16686"
         environment:
             COLLECTOR_ZIPKIN_HTTP_PORT: 9411
